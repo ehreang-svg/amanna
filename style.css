@@ -1,0 +1,668 @@
+.copyright{
+    position: fixed;
+    bottom: 5px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 11px;
+    color: #666;
+    z-index: 9999;
+    pointer-events: none;
+}
+    
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Poppins', sans-serif;
+background:linear-gradient(135deg,#eef2ff,#f8fafc);
+color:#1e293b;
+}
+
+.hidden{
+display:none !important;
+}
+
+.page{
+padding:20px;
+min-height:100vh;
+}
+
+.jadwal-container{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+align-items:start;
+}
+
+.jadwal-card{
+flex:1;
+padding:12px;
+text-align:center;
+height:auto;
+}
+
+.jadwal-card h3{
+font-size:16px;
+margin-bottom:10px;
+text-align:center;
+font-weight:bold;
+color:#1d4ed8;
+}
+
+.jadwal-card table{
+font-size:12px;
+width:100%;
+text-align:center;
+font-weight:700;
+}
+
+.jadwal-card th,
+.jadwal-card td{
+padding:6px;
+text-align:center;
+font-weight:700;
+vertical-align:middle;
+}
+
+@media(max-width:768px){
+.jadwal-container{
+    flex-direction:column;
+}
+}
+
+/* ================= SPLASH ================= */
+.splash{
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#2563eb,#1e40af);
+color:white;
+text-align:center;
+}
+
+.splash img{
+width:200px;
+height:200px;
+border-radius:30%;
+background:transparant;
+padding:8px;
+margin-bottom:10px;
+}
+
+/* ================= AUTH ================= */
+.auth-box{
+max-width:420px;
+margin:auto;
+margin-top:60px;
+background:white;
+padding:25px;
+border-radius:25px;
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+input,select{
+width:100%;
+padding:14px;
+border:none;
+outline:none;
+border-radius:14px;
+background:#f1f5f9;
+margin-bottom:12px;
+font-size:15px;
+}
+
+button{
+width:100%;
+padding:14px;
+border:none;
+border-radius:14px;
+background:#2563eb;
+color:white;
+font-weight:600;
+cursor:pointer;
+font-size:15px;
+}
+
+.link{
+text-align:center;
+margin-top:10px;
+color:#2563eb;
+cursor:pointer;
+}
+
+/* ================= DASHBOARD ================= */
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.title{
+font-size:22px;
+font-weight:700;
+color:#1d4ed8;
+}
+
+.logout{
+background:#ef4444;
+padding:10px 15px;
+border-radius:12px;
+color:white;
+cursor:pointer;
+}
+
+/* ================= PROFILE ================= */
+.profile{
+background:linear-gradient(135deg,#2563eb,#1e40af);
+padding:20px;
+border-radius:22px;
+display:flex;
+align-items:center;
+gap:15px;
+color:white;
+}
+
+.profile img{
+width:80px;
+height:80px;
+border-radius:50%;
+background:white;
+padding:4px;
+}
+
+/* ================= CARD ================= */
+.card{
+background:white;
+padding:20px;
+border-radius:20px;
+box-shadow:0 10px 25px rgba(0,0,0,.06);
+margin-bottom:20px;
+text-align:center
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+}
+
+.menu-card{
+background:white;
+padding:20px;
+border-radius:20px;
+text-align:center;
+cursor:pointer;
+transition:.2s;
+box-shadow:0 6px 18px rgba(0,0,0,.06);
+}
+
+.menu-card:hover{
+transform:translateY(-5px);
+}
+
+.menu-card img{
+width:50px;
+height:50px;
+margin-bottom:10px;
+}
+
+.back{
+display:inline-block;
+padding:10px 15px;
+background:#2563eb;
+color:white;
+border-radius:12px;
+cursor:pointer;
+margin-bottom:20px;
+}
+
+/* ================= SYSTEM TABLE ================= */
+.page table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+}
+
+.page table th{
+background:#2563eb;
+color:white;
+padding:12px;
+font-size:14px;
+border:none;
+}
+
+.page table td{
+padding:10px;
+border-bottom:1px solid #e2e8f0;
+font-size:14px;
+border:none;
+background:transparent;
+}
+
+textarea{
+width:100%;
+min-height:120px;
+padding:12px;
+border:none;
+outline:none;
+border-radius:14px;
+background:#f1f5f9;
+margin-bottom:12px;
+font-family:'Poppins', sans-serif;
+}
+
+/* ================= STYLE TEMPLATE BARU RAPORT ================= */
+.raport-preview-box {
+background: #fff;
+padding: 20px;
+max-width: 900px;
+margin: auto;
+box-shadow: 0 0 15px rgba(0,0,0,0.1);
+border-radius: 8px;
+}
+
+.container{
+width:210mm;
+margin:auto;
+padding:15mm;
+background:#fff;
+color:#000;
+font-family: Arial, sans-serif;
+font-size:12px;
+}
+
+.container * {
+font-family: Arial, sans-serif !important;
+color: #000 !important;
+}
+
+.header{
+display:flex;
+align-items:center;
+border-bottom:2px solid #000;
+padding:10px;
+}
+
+.logo{
+width:120px;
+height:120px;
+border:1px solid #fff;
+object-fit: contain;
+}
+
+.school{
+flex:1;
+text-align:center;
+line-height:1.4;
+}
+
+.title-cetak{
+text-align:center;
+font-weight:bold;
+font-size:18px;
+margin:15px 0;
+}
+
+.container table{
+width:100%;
+border-collapse:collapse;
+margin-bottom:10px;
+}
+
+.container td, .container th{
+border:1px solid #000 !important;
+padding:6px !important;
+vertical-align:top !important;
+background:transparent !important;
+font-size:12px !important;
+text-align: left;
+}
+
+.container .label{
+width:15%;
+font-weight:bold;
+}
+
+.container .value{
+width:45%;
+}
+
+.container .section-title{
+background:#f3f3f3 !important;
+font-weight:bold;
+text-align:center;
+}
+
+.container .text-area{
+min-height:90px;
+text-align: justify;
+line-height: 1.5;
+}
+
+.container .photo{
+height:190px;
+display:flex;
+align-items:center;
+justify-content:center;
+padding: 5px !important;
+}
+
+.container .photo img {
+max-height: 180px;
+max-width: 100%;
+object-fit: contain;
+display: block;
+margin: auto;
+}
+
+.container .reflection td{
+height:25px;
+}
+
+.container .signature{
+margin-top:20px;
+}
+
+.container .signature td{
+text-align:center;
+height:120px;
+vertical-align: middle !important;
+}
+
+.container.signature tr, .signature td {
+    border: 1px solid #ffffff !important;
+    }
+
+.container .footer-sign{
+height:60px;
+
+}
+
+    .container table:nth-of-type(1), 
+.container table:nth-of-type(1) tr, 
+.container table:nth-of-type(1) td {
+    border: 1px solid #ffffff !important;
+}
+
+       *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 10pt;
+            color: #333333;
+            line-height: 1.4;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f6f9;
+        }
+
+        
+.pageKognitif{
+    width:210mm;
+    min-height:297mm;
+    padding:12mm;
+    background:#fff;
+    box-sizing:border-box;
+    position:relative;
+    margin:10px auto;
+    overflow:hidden;
+}
+
+    .pageKognitif{
+    transform:scale(.94);
+    transform-origin:top center;
+}
+        
+
+        /* --- WATERMARK LOGO LEMBAGA --- */
+.pageKognitif::before{
+    content:"";
+    position:absolute;
+    inset:0;
+
+    background:url("https://iili.io/CKpliI1.png")
+               center center no-repeat;
+
+    background-size:220px;
+
+    opacity:.05;
+    pointer-events:none;
+}
+
+        /* --- LOGO AT THE TOP CENTER (HALAMAN 1) --- */
+        .logoKognitif-containerKognitif {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .schoolKognitif-logoKognitif {
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #1b5e20, #4caf50);
+            border-radius: 50%;
+            display: inline-block;
+            position: relative;
+            border: 3px solid #ffffff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+
+        .schoolKognitif-logoKognitif::before {
+            content: "🕌";
+            font-size: 32px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -55%);
+        }
+
+        .headerKognitif-centerKognitif{
+    margin-bottom:15px;
+}
+
+.headerKognitif-centerKognitif h1{
+    font-size:13pt;
+    margin:0;
+}
+
+.headerKognitif-centerKognitif h2{
+    font-size:10pt;
+    margin-top:2px;
+}
+
+.biodataKognitif-tableKognitif{
+    width:100%;
+    margin-top:20px;
+    margin-bottom:5px;
+    border:none !important;
+    border-collapse:collapse;
+}
+
+.biodataKognitif-tableKognitif tr,
+.biodataKognitif-tableKognitif td{
+    border:none !important;
+    padding:2px 0;
+    vertical-align:top;
+}
+
+
+
+        .biodataKognitif-label {
+            width: 10%;
+            font-weight: bold;
+        }
+
+        .biodataKognitif-colon {
+            width: 2%;
+        }
+
+        .biodataKognitif-value {
+            width: 42%;
+            font-weight: bold;
+        }
+
+        .mainKognitif-tableKognitif {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            font-size: 10px;
+            background: #fff;
+        }
+
+.biodataKognitif-tableKognitif,
+.biodataKognitif-tableKognitif tr,
+.biodataKognitif-tableKognitif td,
+.biodataKognitif-tableKognitif th{
+    border:none !important;
+}
+
+        .mainKognitif-tableKognitif th,
+.mainKognitif-tableKognitif td{
+    padding:2px 4px;
+    font-size:9px;
+    line-height:1.15;
+}
+
+    .mainKognitif-tableKognitif td {
+        text-align: left;
+        }
+
+        .mainKognitif-tableKognitif th{
+    padding:3px;
+    font-size:12px !important;
+}
+        
+
+        .subKognitif-heading{
+    background:#e5e7eb !important;
+    font-weight:700 !important;
+}
+
+.subKognitif-heading td{
+    font-weight:700 !important;
+    font-size:10pt;
+}
+        
+
+    .pageKognitif table th,
+.pageKognitif table td{
+    border:1px solid #000 !important;
+}
+
+.biodataKognitif-tableKognitif td,
+.biodataKognitif-tableKognitif th{
+    border:1px solid #000 !important;
+}
+
+.pageKognitif table th{
+    background:#dbeafe !important;
+    color:#000 !important;
+}
+
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .bold { font-weight: bold; }
+        .italic { font-style: italic; }
+
+        .footerKognitif-section {
+            margin-top: 20px;
+            width: 100%;
+            border: 1px solid #fff;
+        }
+
+        .absensi-box {
+            border: 1px solid #fff;
+            width: 240px;
+            padding: 8px 12px;
+            margin-bottom: 15px;
+            background-color: rgba(255, 255, 255, 0.8);
+            text-align: left;
+        }
+
+        .absensi-box table {
+            width: 100%;
+            border: 1px solid #fff;
+
+        }
+
+        .absensi-box td {
+            padding: 3px 0;
+            border: 1px solid #fff;
+        }
+
+        .notes-section {
+            margin-top: 20px;
+            border: 1px solid #000000;
+            padding: 12px;
+            font-weight: bold;
+            background-color: rgba(250, 250, 250, 0.85);
+        }
+
+        /* --- STRUKTUR STRUKTUR TANDA TANGAN REPOSISI --- */
+        .ttd-container {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .ttd-row-top {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            font-weight: normal;
+        }
+
+        .ttd-row-bottom {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            font-weight: normal;
+        }
+
+        .ttd-block {
+            width: 40%;
+            text-align: center;
+            font-size: 11pt;
+            font-weight: normal;
+        }
+
+        .ttd-space {
+            height: 65px;
+        }
+
+        .school-footer-tag {
+            text-align: center;
+            font-size: 8pt;
+            color: #666666;
+            margin-top: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        @media print{
+
+    body{
+        background:#fff !important;
+    }
+
+    .pageKognitif{
+        width:210mm;
+        min-height:297mm;
+        margin:0;
+        padding:12mm;
+        box-shadow:none;
+        page-break-after:always;
+        zoom:1;
+    }
+
+    .pageKognitif:last-child{
+        page-break-after:auto;
+    }
+}

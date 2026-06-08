@@ -1,0 +1,497 @@
+<!-- SPLASH -->
+<div class="splash" id="splash">
+<img src="https://iili.io/CKpliI1.png">
+<h1>YAYASAN AMANNA</h1>
+<p>Sistem Informasi Sekolah Modern</p>
+</div>
+
+    
+<!-- LOGIN -->
+<div class="auth-box hidden" id="loginPage">
+<h2>LOGIN AKUN</h2>
+<input id="u" placeholder="Username">
+<input id="p" type="password" placeholder="Password">
+<button onclick="login()">Masuk</button>
+</div>
+
+
+<!-- DASHBOARD -->
+<div class="page hidden" id="dashboard">
+<div class="topbar">
+<div class="title">Dashboard</div>
+<div class="logout" onclick="logout()">Logout</div>
+</div>
+
+<div class="profile" onclick="openEditAkun()">
+<img id="foto">
+<div>
+<h2 id="nama"></h2>
+<h3 id="status"></h3>
+<p id="kelas"></p>
+
+<div class="login" onclick="openEditAkun()">Edit Akun</div>
+</div>
+</div>
+
+    
+<div class="jadwal-container">
+    <div class="card jadwal-card">
+        <h3>Jadwal Saat Ini</h3>
+        <div id="jadwalSekarang"></div>
+    </div>
+    
+    <div class="card jadwal-card">
+    <h3>Jadwal Hari Ini</h3>
+    <select id="pilihKelas" onchange="loadJadwalHariIni()">
+        <option value="">Pilih Kelas</option>
+        <option value="RA.A">RA.A</option>
+        <option value="RA.B">RA.B</option>
+        <option value="KELAS 1">KELAS 1</option>
+        <option value="KELAS 2">KELAS 2</option>
+        <option value="KELAS 3">KELAS 3</option>
+        <option value="KELAS 4">KELAS 4</option>
+        <option value="KELAS 5A">KELAS 5A</option>
+        <option value="KELAS 5B">KELAS 5B</option>
+        <option value="KELAS 6">KELAS 6</option>
+    </select>
+    <div id="jadwalHariIni"></div>
+</div>
+</div>
+<br>
+<div class="grid" id="menuBox"></div>
+</div>
+    
+<!--EDIT AKUN-->
+<div class="page hidden" id="editAkun">
+    <div class="topbar">
+        <div class="title">Edit Akun</div>
+        <div class="logout" onclick="nav('dashboard')">Kembali</div>
+    </div>
+
+    <div class="card">
+        <input type="text" id="editNama" placeholder="Nama">
+        <input type="text" id="editUsername" placeholder="Username">
+        <input type="password" id="editPassword" placeholder="Password Baru">
+        
+        <br>
+
+        <button onclick="simpanAkun()">Simpan Perubahan</button>
+    </div>
+</div>
+    
+<!-- SUBMENU -->
+<div class="page hidden" id="submenuPage">
+<div class="back" onclick="goBack()">← Kembali</div>
+<h2 id="menuTitle"></h2>
+<br>
+<div class="grid" id="subBox"></div>
+</div>
+
+<!-- CONTENT -->
+<div class="page hidden" id="contentPage">
+<div class="back" onclick="goBack()">← Kembali</div>
+<div class="card">
+<h2 id="contentTitle"></h2>
+<br>
+<div id="contentBody"></div>
+</div>
+</div>
+
+<!-- ABSEN -->
+<div class="page hidden" id="absenGuruPage">
+<div class="back" onclick="goBack()">← Kembali</div>
+<div class="card">
+<h2>Absensi Guru</h2>
+<br>
+<input id="absenNama" readonly>
+<input id="kehadiran" value="HADIR" readonly>
+<input type="file" id="fotoAbsen" accept="image/*" capture="environment">
+<button onclick="submitAbsen()">Absen Sekarang</button>
+<br><br>
+<div id="lokasiStatus"></div>
+</div>
+</div>
+
+<!-- ABSEN SISWA -->
+<div class="page hidden" id="absenSiswaPage">
+<div class="back" onclick="goBack()">← Kembali</div>
+
+<div class="card">
+<h2>Absensi Siswa</h2>
+<br>
+
+<!-- PILIH KELAS -->
+<select id="kelasFilter" onchange="filterKelas()">
+<option value="">Pilih Kelas</option>
+</select>
+
+<!-- PILIH SISWA (sesuai kelas) -->
+<select id="namaSiswa" onchange="pilihSiswa()">
+<option value="">Pilih Nama Siswa</option>
+</select>
+
+<input id="kelasSiswa" readonly placeholder="Kelas">
+
+<select id="kehadiranSiswa">
+<option value="HADIR">HADIR</option>
+<option value="IZIN">IZIN</option>
+<option value="SAKIT">SAKIT</option>
+</select>
+
+<button onclick="submitAbsenSiswa()">Simpan Absensi</button>
+
+</div>
+</div>
+
+<!-- REKAP ABSEN -->
+<div class="page hidden" id="rekapPage">
+<div class="back" onclick="goBack()">← Kembali</div>
+<div class="card">
+<h2>Rekap Absensi Guru</h2>
+<br>
+<button onclick="exportPDF()">Export Rekap PDF</button>
+<br>
+<select id="filterBulan" onchange="loadRekap()">
+<option value="">Semua Bulan</option>
+<option>Januari</option>
+<option>Februari</option>
+<option>Maret</option>
+<option>April</option>
+<option>Mei</option>
+<option>Juni</option>
+<option>Juli</option>
+<option>Agustus</option>
+<option>September</option>
+<option>Oktober</option>
+<option>November</option>
+<option>Desember</option>
+</select>
+<div id="rekapBox"></div>
+</div>
+</div>
+
+<!-- REKAP SISWA -->
+<div class="page hidden" id="rekapSiswaPage">
+
+    <div class="back" onclick="goBack()">← Kembali</div>
+
+    <div class="card">
+
+        <h2>Rekap Absensi Siswa</h2>
+
+        <br>
+
+        <!-- FILTER BULAN -->
+        <select id="filterBulanSiswa" onchange="loadRekapSiswa()">
+            <option value="">Semua Bulan</option>
+            <option>Januari</option>
+            <option>Februari</option>
+            <option>Maret</option>
+            <option>April</option>
+            <option>Mei</option>
+            <option>Juni</option>
+            <option>Juli</option>
+            <option>Agustus</option>
+            <option>September</option>
+            <option>Oktober</option>
+            <option>November</option>
+            <option>Desember</option>
+        </select>
+
+        <br><br>
+
+        <!-- FILTER KELAS -->
+        <select id="filterKelas" onchange="gantiKelasRekap()">
+            <option value="">Semua Kelas</option>
+        </select>
+
+        <br><br>
+
+        <!-- FILTER SISWA -->
+        <select id="filterNamaSiswaRekap" onchange="loadRekapSiswa()">
+            <option value="">Semua Siswa</option>
+        </select>
+
+        <br><br>
+
+        <button onclick="exportPDFSiswa()">
+            Export Rekap PDF
+        </button>
+
+        <br><br>
+
+        <div id="rekapSiswaBox"></div>
+
+    </div>
+
+</div>
+
+<!-- TABUNGAN -->
+<div class="page hidden" id="tabunganPage">
+<div class="back" onclick="goBack()">← Kembali</div>
+<div class="card">
+<h2>Input Tabungan</h2>
+<br>
+<select id="tabKelas" onchange="loadNamaTabungan()"><option value="">Pilih Kelas</option></select>
+<select id="tabNama"><option value="">Pilih Nama Siswa</option></select>
+<input id="tabNominal" type="number" placeholder="Nominal Tabungan">
+<button onclick="simpanTabungan()">Simpan Tabungan</button>
+</div>
+</div>
+
+<!-- REKAP TABUNGAN -->
+<div class="page hidden" id="rekapTabunganPage">
+<div class="back" onclick="goBack()">← Kembali</div>
+<div class="card">
+<h2>Rekap Tabungan</h2>
+<br>
+<select id="filterKelasTabungan" onchange="loadFilterNamaTabungan();loadRekapTabungan()"><option value="">Semua Kelas</option></select>
+<select id="filterNamaTabungan" onchange="loadRekapTabungan()"><option value="">Semua Siswa</option></select>
+<input type="text" id="filterTanggalTabungan" placeholder="dd/MM/yyyy">
+<select id="filterBulanTabungan">
+<option value="">Semua Bulan</option>
+<option value="01">Januari</option>
+<option value="02">Februari</option>
+<option value="03">Maret</option>
+<option value="04">April</option>
+<option value="05">Mei</option>
+<option value="06">Juni</option>
+<option value="07">Juli</option>
+<option value="08">Agustus</option>
+<option value="09">September</option>
+<option value="10">Oktober</option>
+<option value="11">November</option>
+<option value="12">Desember</option>
+</select>
+<button onclick="loadRekapTabungan()">Tampilkan</button>
+<br><br>
+<button onclick="exportBukuTabungan()">Export Buku Tabungan</button>
+<br><br>
+<div id="rekapTabunganBox"></div>
+</div>
+</div>
+
+<!-- INPUT RAPORT -->
+<div class="page hidden" id="raportPage">
+<div class="back" onclick="goBack()">← Kembali</div>
+<div class="card">
+<h2>Input Raport</h2>
+<select id="rKelas" onchange="loadNamaRaport()">
+    <option value="">Pilih Kelas</option>
+</select>
+
+<select id="rNama">
+    <option value="">Pilih Nama Siswa</option>
+</select>
+    
+<input id="rNik" placeholder="NIK">
+<select id="rFase">
+    <option value="">Pilih Fase</option>
+    <option value="Fondasi">Fondasi</option>
+    <option value="A">A</option>
+    <option value="B">B</option>
+    <option value="C">C</option>
+<input id="rTahun" placeholder="Tahun Ajaran">
+<select id="rSemester">
+    <option value="">Pilih Semester</option>
+    <option value="1 (GANJIL)">1 (GANJIL)</option>
+    <option value="2 (GENAP)">2 (GENAP)</option>
+</select>
+<input id="rTinggi" placeholder="Tinggi Badan">
+<input id="rBerat" placeholder="Berat Badan">
+    <select id="rAgama">
+    <option value="">Pilih predikat agama</option>
+    <option value="sangat baik">A</option>
+    <option value="baik">B</option>
+    <option value="cukup baik">C</option>
+    <option value="perlu bimbingan">D</option>
+    </select>
+
+    <select id="rJatiDiri">
+    <option value="">Pilih predikat jati diri</option>
+    <option value="sangat baik">A</option>
+    <option value="baik">B</option>
+    <option value="cukup baik">C</option>
+    <option value="perlu bimbingan">D</option>
+    </select>
+
+    <select id="rLiterasi">
+    <option value="">Pilih predikat jati diri</option>
+    <option value="sangat baik">A</option>
+    <option value="baik">B</option>
+    <option value="cukup baik">C</option>
+    <option value="perlu bimbingan">D</option>
+    </select>
+
+    <select id="rP5">
+    <option value="">Pilih predikat jati diri</option>
+    <option value="sangat baik">A</option>
+    <option value="baik">B</option>
+    <option value="cukup baik">C</option>
+    <option value="perlu bimbingan">D</option>
+    </select>
+
+    <select id="rPerkembangan">
+    <option value="">Pilih predikat jati diri</option>
+    <option value="sangat baik">A</option>
+    <option value="baik">B</option>
+    <option value="cukup baik">C</option>
+    <option value="perlu bimbingan">D</option>
+    </select>
+
+<input id="rSakit" placeholder="Sakit">
+<input id="rIzin" placeholder="Izin">
+<input id="rAlpa" placeholder="Alpa">
+<input id="rOrtu" placeholder="Nama Orang Tua">
+<input id="rGuru" placeholder="Nama Guru">
+
+<label>Foto Agama</label><input type="file" id="fotoAgama">
+<label>Foto Jati Diri</label><input type="file" id="fotoJati">
+<label>Foto Literasi</label><input type="file" id="fotoLiterasi">
+<label>Foto P5</label><input type="file" id="fotoP5">
+
+<button onclick="previewRaport()">Preview Raport</button>
+</div>
+</div>
+
+<!-- PREVIEW RAPORT -->
+<div class="page hidden" id="previewRaportPage">
+<div class="back" onclick="goBack()">← Kembali</div>
+<button onclick="exportRaportPDF()" style="margin-bottom:20px; background:#16a34a; max-width:200px; margin-left:auto; margin-right:auto; display:block;">Export PDF Sekarang</button>
+<div class="raport-preview-box">
+    <div id="raportContainer"></div>
+</div>
+</div>
+
+<div class="page hidden" id="kognitifPage">
+<div class="back" onclick="goBack()">← Kembali</div>
+
+<div class="card">
+
+    
+<h2>Input Raport Kognitif</h2>
+
+<select id="kKelas" onchange="loadNamaKognitif()">
+    <option value="">Pilih Kelas</option>
+</select>
+
+<select id="kNama">
+    <option value="">Pilih Nama Siswa</option>
+</select>
+    
+<select id="kSemester">
+    <option value="">Pilih Semester</option>
+    <option value="1 (GANJIL)">1 (GANJIL)</option>
+    <option value="2 (GENAP)">2 (GENAP)</option>
+</select>
+<input id="kTahun" placeholder="Tahun Ajaran">
+
+<input id="kIqro" type="number" placeholder="Nilai Bacaan Iqro">
+<input id="kShalat" type="number" placeholder="Nilai Hafalan Bacaan Shalat">
+<input id="kSurah" type="number" placeholder="Nilai Hafalan Surah Pendek">
+<input id="kPraktek" type="number" placeholder="Nilai Praktek Shalat">
+<input id="kMembaca" type="number" placeholder="Nilai Membaca">
+<input id="kTajwid" type="number" placeholder="Nilai Tajwid">
+
+<input id="kDoa" type="number" placeholder="Nilai Doa & Adab">
+<input id="kKitabah" type="number" placeholder="Nilai Tahsinul Kitabah">
+<input id="kDinul" type="number" placeholder="Nilai Dinul Islam">
+<input id="kInggris" type="number" placeholder="Nilai Bahasa Inggris">
+<input id="kBerhitung" type="number" placeholder="Nilai Berhitung">
+
+<input id="kIzin" type="number" placeholder="Jumlah Izin">
+<input id="kSakit" type="number" placeholder="Jumlah Sakit">
+<input id="kLain" type="number" placeholder="Jumlah Lain-lain">
+
+<input id="kWali" placeholder="Nama Wali Kelas">
+<input id="kKepsek" placeholder="Nama Kepala Sekolah">
+
+<hr>
+
+<h3>Perkembangan Kepribadian</h3>
+
+<label>Kesehatan / Kondisi Badan</label>
+<select id="kSehat">
+    <option value="SB">Sangat Baik</option>
+    <option value="B">Baik</option>
+    <option value="N">Normal</option>
+    <option value="PP">Perlu Pengawasan</option>
+</select>
+
+<label>Kebersihan dan Kerapihan</label>
+<select id="kBersih">
+    <option value="SB">Sangat Baik</option>
+    <option value="B">Baik</option>
+    <option value="N">Normal</option>
+    <option value="PP">Perlu Pengawasan</option>
+</select>
+
+<label>Kehadiran dan Kedisiplinan</label>
+<select id="kDisiplin">
+    <option value="SB">Sangat Baik</option>
+    <option value="B">Baik</option>
+    <option value="N">Normal</option>
+    <option value="PP">Perlu Pengawasan</option>
+</select>
+
+<label>Kerjasama</label>
+<select id="kKerjasama">
+    <option value="SB">Sangat Baik</option>
+    <option value="B">Baik</option>
+    <option value="N">Normal</option>
+    <option value="PP">Perlu Pengawasan</option>
+</select>
+
+<label>Penyesuaian Diri</label>
+<select id="kAdaptasi">
+    <option value="SB">Sangat Baik</option>
+    <option value="B">Baik</option>
+    <option value="N">Normal</option>
+    <option value="PP">Perlu Pengawasan</option>
+</select>
+
+<label>Vokal / Kemampuan Berbahasa</label>
+<select id="kVokal">
+    <option value="SB">Sangat Baik</option>
+    <option value="B">Baik</option>
+    <option value="N">Normal</option>
+    <option value="PP">Perlu Pengawasan</option>
+</select>
+
+<label>Kreativitas Belajar</label>
+<select id="kKreatif">
+    <option value="SB">Sangat Baik</option>
+    <option value="B">Baik</option>
+    <option value="N">Normal</option>
+    <option value="PP">Perlu Pengawasan</option>
+</select>
+
+<label>Saran / Peringatan</label>
+<textarea id="kSaran"></textarea>
+
+<label>Tempat</label>
+<input type="text" id="kTempat" value="Cirebon">
+
+<label>Tanggal Raport</label>
+<input type="date" id="kTanggal">
+
+<button onclick="previewKognitif()">
+Preview Kognitif
+</button>
+
+</div>
+</div>
+
+
+<!-- PREVIEW KOGNITIF -->
+<div class="page hidden" id="previewKognitifPage">
+<div class="back" onclick="goBack()">← Kembali</div>
+
+<button onclick="exportKognitifPDF()"
+style="background:#16a34a;margin-bottom:20px;">
+Export PDF
+</button>
+<div class="raport-preview-box">
+<div id="kognitifContainer"></div>
+</div>
+</div>
