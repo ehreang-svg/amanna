@@ -38,7 +38,7 @@ function tampilSoal(){
 let html="";
 dataSoal.forEach((s,index)=>{
 html+=`
-<div class="cardQuiz">
+<div class="cardQuiz" style="text-align:left";>
 <p>
 <b>${s.no}. ${s.soal}</b>
 </p>
