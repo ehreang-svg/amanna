@@ -39,6 +39,9 @@ function nav(id){
     if(id === "raportPage"){
         loadKelasRaport();
     }
+    if(id === "loginQuiz"){
+        mulai();
+    }
 }
 
 function goBack(){
