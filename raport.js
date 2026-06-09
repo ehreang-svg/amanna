@@ -55,7 +55,6 @@ function loadNamaRaport(){
     
     /* ================= KOGNITIF SISWA ================= */
 
-let dataSiswaKognitif = [];
 
 async function loadKognitifSiswa(){
     try{
