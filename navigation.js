@@ -14,6 +14,7 @@ const pages=[
 "previewRaportPage",
 "kognitifPage",
 "previewKognitifPage"
+"loginQuiz"
 ];
 
 
