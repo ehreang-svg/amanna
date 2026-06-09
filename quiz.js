@@ -1,4 +1,3 @@
-let dataSiswaQuiz={};
 async function mulai(){
 const nisn =
 document.getElementById("nisn").value;
