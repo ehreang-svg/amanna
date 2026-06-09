@@ -3,7 +3,7 @@ async function mulai(){
 const nisn =
 document.getElementById("nisn").value;
 const res =
-await fetch(API_URL+"?nisn="+nisn);
+await fetch(Quiz_API+"?nisn="+nisn);
 const data =
 await res.json();
 if(data.error){
@@ -99,7 +99,7 @@ document.getElementById("hasil")
 <h2>Nilai : ${nilai}</h2>
 <h2>Status : ${status}</h2>
 `;
-await fetch(API_URL,{
+await fetch(Quiz_API,{
 method:"POST",
 body:JSON.stringify({
 nisn:dataSiswa.nisn,
