@@ -82,6 +82,7 @@ function handleSubmenu(type,value,title){
         if(value==="absenGuruPage") absenNama.value = user.nama || "";
         if(value==="absenSiswaPage") loadDataSiswa();
         if(value==="rekapPage") loadRekap();
+        if(value==="loginQuiz") mulai();
         if(value==="rekapSiswaPage"){loadKelasRekap().then(()=>{
 
         loadFilterNamaSiswa();
