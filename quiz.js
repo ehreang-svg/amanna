@@ -26,7 +26,7 @@ function tampilSiswaQuiz(){
     }
 
     document.getElementById("siswa").innerHTML = `
-        <div class="card">
+        <div class="cardQuiz">
             <img src="${dataSiswaQuiz.foto || ''}">
             <h3>${dataSiswaQuiz.nama || '-'}</h3>
             <p>NISN : ${dataSiswaQuiz.nisn || '-'}</p>
@@ -38,7 +38,7 @@ function tampilSoal(){
 let html="";
 dataSoal.forEach((s,index)=>{
 html+=`
-<div class="card">
+<div class="cardQuiz">
 <p>
 <b>${s.no}. ${s.soal}</b>
 </p>
