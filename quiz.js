@@ -6,6 +6,7 @@ const res =
 await fetch(Quiz_API+"?nisn="+nisn);
 const data =
 await res.json();
+console.log(data);
 if(data.error){
 alert(data.error);
 return;
@@ -16,18 +17,22 @@ tampilSiswaQuiz();
 tampilSoal();
 }
 function tampilSiswaQuiz(){
-document.getElementById("siswa")
-.innerHTML=
-`
-<div class="card">
-<img src="${dataSiswaQuiz.foto}">
-<h3>${dataSiswaQuiz.nama}</h3>
-<p>NISN :
-${dataSiswaQuiz.nisn}</p>
-<p>Kelas :
-${dataSiswaQuiz.kelas}</p>
-</div>
-`;
+
+    console.log(dataSiswaQuiz);
+
+    if(!dataSiswaQuiz){
+        console.error("Data siswa tidak ditemukan");
+        return;
+    }
+
+    document.getElementById("siswa").innerHTML = `
+        <div class="card">
+            <img src="${dataSiswaQuiz.foto || ''}">
+            <h3>${dataSiswaQuiz.nama || '-'}</h3>
+            <p>NISN : ${dataSiswaQuiz.nisn || '-'}</p>
+            <p>Kelas : ${dataSiswaQuiz.kelas || '-'}</p>
+        </div>
+    `;
 }
 function tampilSoal(){
 let html="";
@@ -102,8 +107,8 @@ document.getElementById("hasil")
 await fetch(Quiz_API,{
 method:"POST",
 body:JSON.stringify({
-nisn:dataSiswa.nisn,
-nama:dataSiswa.nama,
+nisn:dataSiswaQuiz.nisn,
+nama:dataSiswaQuiz.nama,
 nilai:nilai,
 status:status
 })
