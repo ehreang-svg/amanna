@@ -33,16 +33,11 @@ function nav(id){
         history.push(active);
     }
     show(id);
-    if(id === "kognitifPage"){
-        loadKognitifSiswa();
-    }
-    if(id === "raportPage"){
-        loadKelasRaport();
-    }
-    if(id === "loginQuiz"){
-        mulai();
-    }
+    pages.forEach(p=>{
+        console.log(p, document.getElementById(p));
+    });
 }
+
 
 function goBack(){
     if(history.length===0)return;
