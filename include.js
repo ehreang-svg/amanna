@@ -6,6 +6,18 @@ async function loadPages() {
 
     app.innerHTML = await res.text();
 
+    show("splash");
+
+    const user = JSON.parse(
+        localStorage.getItem("user")
+    );
+
+    if(user){
+        setTimeout(()=>{
+            loadDashboard(user);
+        },1200);
+    }
+
     cekLogin();
 }
 
