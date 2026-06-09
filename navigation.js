@@ -13,7 +13,7 @@ const pages=[
 "raportPage",
 "previewRaportPage",
 "kognitifPage",
-"previewKognitifPage"
+"previewKognitifPage",
 "loginQuiz"
 ];
 
