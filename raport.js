@@ -866,10 +866,4 @@ pdf.addImage(
         `Raport_Kognitif_${kNama.value||"Siswa"}.pdf`
     );
 }
-    
 
-window.onload=()=>{
-    show("splash");
-    let user= JSON.parse(localStorage.getItem("user"));
-    if(user){ setTimeout(()=>{ loadDashboard(user); },1200); }
-}
