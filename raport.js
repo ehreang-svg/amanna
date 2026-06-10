@@ -501,25 +501,32 @@ function previewKognitif(){
         <div>
 
             <h2 style="
-                margin-bottom:15px;font-family:"Times New Roman", serif;
-            ">
-                RAUDLATUL ATHFAL AMANNA
-            </h2>
+                <!-- FOOTER COVER -->
+<div>
 
-            <div style="
-                line-height:1.8;
-                font-family:"Times New Roman", serif;
-                font-size:14px;
-                font-weight:bold;
-            ">
-                Blok Jongor Lapang Desa Jagapura Wetan<br>
-                Kecamatan Gegesik<br>
-                Kabupaten Cirebon<br>
-                Provinsi Jawa Barat
-            </div>
+    <h2 style="
+        margin-bottom:15px;
+        font-family:'Times New Roman', serif;
+    ">
+        RAUDLATUL ATHFAL AMANNA
+    </h2>
 
-        </div>
+    <div style="
+        line-height:1.8;
+        font-family:'Times New Roman', serif;
+        font-size:14px;
+    ">
+        <span style="font-style:italic;">
+            Blok Jongor Lapang Desa Jagapura Wetan Kecamatan Gegesik Kabupaten Cirebon
+        </span>
+        <br>
 
+        <span style="font-weight:bold;">
+            PROVINSI JAWA BARAT
+        </span>
+    </div>
+
+</div>
     </div>
 
 </div>
