@@ -341,8 +341,6 @@ text-align:center;
 }
 
 .container .text-area{
-    height:165px;
-    max-height:165px;
     line-height:1.5;
     text-align:justify;
     vertical-align:top !important;
