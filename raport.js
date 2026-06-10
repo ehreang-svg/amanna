@@ -371,7 +371,7 @@ function previewKognitif(){
 
 <!-- ================= COVER ================= -->
 <div class="pageKognitif coverPage"
-style= "background:none; display:none !important;">
+style= "background:none !important;">
 
     <div style="
         height:100%;
