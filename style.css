@@ -711,6 +711,33 @@ font-size:16px;
 .coverPage table td{
     border:none !important;
 }
+/* COVER TANPA WATERMARK */
+.noWatermark,
+.noWatermark *{
+    background-image:none !important;
+}
+
+.noWatermark::before,
+.noWatermark::after{
+    display:none !important;
+    content:none !important;
+}
+
+.noWatermark .watermark{
+    display:none !important;
+}
+
+.coverPage{
+    background:#ffffff !important;
+    position:relative;
+    overflow:hidden;
+}
+
+.coverPage table,
+.coverPage td,
+.coverPage tr{
+    border:none !important;
+}
 
 @media print{
     .coverPage{
