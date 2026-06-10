@@ -1,45 +1,61 @@
 /* ================= RAPORT SISWA ================= */
 
+let dataSiswaRaport = [];
 
 async function loadKelasRaport(){
+
     try{
 
         const res = await fetch(
             TABUNGAN_API + "?action=getDataSiswa"
         );
 
-        const data = await res.json();
+        const result = await res.json();
 
-        if(!data.status){
+        console.log("DATA SISWA:", result);
+
+        if(!result.status){
+
             alert("Gagal memuat data siswa");
             return;
+
         }
 
-        dataSiswaRaport = data.data;
+        dataSiswaRaport = result.data || [];
 
-        const kelasUnik =
-        [...new Set(
-            data.data.map(x => x.kelas)
-        )].sort();
+        const kelasUnik = [
+            ...new Set(
+                dataSiswaRaport.map(x => x.kelas)
+            )
+        ].sort();
 
         rKelas.innerHTML =
         '<option value="">Pilih Kelas</option>';
 
         kelasUnik.forEach(k=>{
-            rKelas.innerHTML +=
-            `<option value="${k}">${k}</option>`;
+
+            rKelas.innerHTML += `
+                <option value="${k}">
+                    ${k}
+                </option>
+            `;
+
         });
 
     }catch(err){
+
         console.log(err);
+
     }
+
 }
 
 function loadNamaRaport(){
 
-    const siswa =
-    dataSiswaRaport.filter(
-        x => x.kelas == rKelas.value
+    const kelas = rKelas.value;
+
+    const siswa = dataSiswaRaport.filter(
+        x => String(x.kelas).trim() === String(kelas).trim()
     );
 
     rNama.innerHTML =
@@ -56,18 +72,23 @@ function loadNamaRaport(){
     });
 
     rNik.value = "";
+
 }
 
 function isiNikRaport(){
 
-    const nama = rNama.value;
-    const kelas = rKelas.value;
+    const nama = String(rNama.value).trim();
+    const kelas = String(rKelas.value).trim();
 
-    const siswa = dataSiswaRaport.find(
-        x =>
-        x.nama === nama &&
-        x.kelas === kelas
+    const siswa = dataSiswaRaport.find(x =>
+
+        String(x.nama).trim() === nama &&
+        String(x.kelas).trim() === kelas
+
     );
+
+    console.log("Cari:", nama, kelas);
+    console.log("Ketemu:", siswa);
 
     if(!siswa){
 
@@ -76,9 +97,11 @@ function isiNikRaport(){
 
     }
 
-    rNik.value = siswa.nik || "";
-}
+    rNik.value = siswa.nik
+        ? String(siswa.nik)
+        : "";
 
+}
     
     /* ================= KOGNITIF SISWA ================= */
 
