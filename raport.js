@@ -371,7 +371,7 @@ function previewKognitif(){
 
 <!-- ================= COVER ================= -->
 <div class="pageKognitif coverPage"
-style= "background:none !important;">
+style= "background:none;">
 
     <div style="
         height:100%;
@@ -423,7 +423,7 @@ style= "background:none !important;">
     <img
         src="https://iili.io/CBoYGIV.png"
         style="
-            width:140px;
+            width:160px;
             height:auto;
             display:block;
             margin:auto;
