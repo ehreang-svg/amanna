@@ -1,7 +1,5 @@
 /* ================= RAPORT SISWA ================= */
 
-let dataSiswaRaport = [];
-
 async function loadKelasRaport(){
 
     try{
