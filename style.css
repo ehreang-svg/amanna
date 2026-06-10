@@ -355,7 +355,7 @@ padding: 5px !important;
 }
 
 .container .photo img {
-max-height: 125px;
+max-height: 120px;
 max-width: 100%;
 object-fit: contain;
 display: block;
