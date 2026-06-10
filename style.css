@@ -343,7 +343,6 @@ text-align:center;
 .container .text-area{
     line-height:1.5;
     text-align:justify;
-    vertical-align:top !important;
 }
 
 .container .photo{
