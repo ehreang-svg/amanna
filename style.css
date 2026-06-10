@@ -422,9 +422,8 @@ height:60px;
     transform-origin:top center;
 }
         
-
-        /* --- WATERMARK LOGO LEMBAGA --- */
-.pageKognitif::before{
+/* WATERMARK HANYA HALAMAN ISI */
+.pageKognitif:not(.coverPage)::before{
     content:"";
     position:absolute;
     inset:0;
@@ -436,6 +435,17 @@ height:60px;
 
     opacity:.05;
     pointer-events:none;
+}
+
+/* COVER TANPA WATERMARK */
+.coverPage::before{
+    display:none !important;
+    content:none !important;
+    background:none !important;
+}
+
+.coverPage{
+    background:#fff !important;
 }
 
         /* --- LOGO AT THE TOP CENTER (HALAMAN 1) --- */
