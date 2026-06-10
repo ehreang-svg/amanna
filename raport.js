@@ -46,12 +46,39 @@ function loadNamaRaport(){
     '<option value="">Pilih Nama Siswa</option>';
 
     siswa.forEach(s=>{
-        rNama.innerHTML +=
-        `<option value="${s.nama}">
-            ${s.nama}
-        </option>`;
+
+        rNama.innerHTML += `
+            <option value="${s.nama}">
+                ${s.nama}
+            </option>
+        `;
+
     });
+
+    rNik.value = "";
 }
+
+function isiNikRaport(){
+
+    const nama = rNama.value;
+    const kelas = rKelas.value;
+
+    const siswa = dataSiswaRaport.find(
+        x =>
+        x.nama === nama &&
+        x.kelas === kelas
+    );
+
+    if(!siswa){
+
+        rNik.value = "";
+        return;
+
+    }
+
+    rNik.value = siswa.nik || "";
+}
+
     
     /* ================= KOGNITIF SISWA ================= */
 
