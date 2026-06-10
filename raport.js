@@ -361,6 +361,90 @@ const rata = Math.round(jumlah / 11);
 
 kognitifContainer.innerHTML=`
 
+kognitifContainer.innerHTML = `
+
+<!-- ================= COVER ================= -->
+<div class="pageKognitif coverPage">
+
+    <div style="
+        height:100%;
+        display:flex;
+        flex-direction:column;
+        justify-content:space-between;
+        text-align:center;
+        padding:40px 20px;
+        box-sizing:border-box;
+    ">
+
+        <div>
+            <h2 style="margin:0;font-size:18pt;">
+                YAYASAN AMANNA
+            </h2>
+
+            <h1 style="
+                margin-top:40px;
+                font-size:22pt;
+                font-weight:bold;
+            ">
+                LAPORAN HASIL BELAJAR
+            </h1>
+
+            <h2 style="
+                margin-top:10px;
+                font-size:18pt;
+            ">
+                RAUDLATUL ATHFAL AMANNA
+            </h2>
+
+            <h3 style="
+                margin-top:5px;
+                font-size:14pt;
+            ">
+                (RA)
+            </h3>
+        </div>
+
+        <div style="
+            margin-top:60px;
+            margin-bottom:60px;
+            text-align:left;
+            width:80%;
+            margin-left:auto;
+            margin-right:auto;
+            font-size:12pt;
+        ">
+            <p><strong>NAMA</strong> : ${nama}</p>
+            <p><strong>NIK</strong> : ${kNik?.value || "-"}</p>
+            <p><strong>NISN / NIS</strong> : ${kNisn?.value || "-"}</p>
+        </div>
+
+        <div>
+            <h2 style="margin:0;">
+                RAUDLATUL ATHFAL AMANNA
+            </h2>
+
+            <p style="
+                margin-top:20px;
+                line-height:1.8;
+                font-size:11pt;
+            ">
+                Blok Jongor Lapang Desa Jagapura Wetan
+                Kecamatan Gegesik
+                <br>
+                KABUPATEN CIREBON
+                <br>
+                PROVINSI JAWA BARAT
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= HALAMAN 1 ================= -->
+<div class="pageKognitif">
+`;
+
 <div class="pageKognitif">
         <div class="logoKognitif-containerKognitif">
             
@@ -539,7 +623,7 @@ style="width:70px;height:auto;"
             </p>
         </div>
 
-        <div class="school-footer-tag">Halaman 1</div>
+        <div class="school-footer-tag">Halaman 2</div>
     </div>
     </div>
     </div>
@@ -743,7 +827,7 @@ year:'numeric'
                     <div class="ttd-space"></div>
                     <div class="normal" style="text-decoration: underline;">${kKepsek.value}</div>
                     <br><br><br><br><br>
-                    <div class="school-footer-tag">Halaman 2</div>
+                    <div class="school-footer-tag">Halaman 3</div>
                 </div>
             </div>
         </div>
