@@ -389,7 +389,7 @@ function previewKognitif(){
         <div>
 
             <h2 style="
-                font-family:"Times New Roman", serif;
+                font-family:"serif";
                 margin-top:20px;
                 font-size:20pt;
                 font-weight:bold;
@@ -399,7 +399,7 @@ function previewKognitif(){
 
             <h1 style="
                 margin-top:30px;
-                font-family:"Times New Roman", serif;
+                font-family:"serif";
                 font-size:24pt;
                 font-weight:bold;
                 letter-spacing:1px;
@@ -409,7 +409,7 @@ function previewKognitif(){
 
             <h2 style="
                 margin-top:15px;
-                font-family:"Times New Roman", serif;
+                font-family:"serif";
                 font-size:18pt;
             ">
                 RAUDLATUL ATHFAL AMANNA
@@ -418,6 +418,7 @@ function previewKognitif(){
             <h3 style="
                 margin-top:5px;
                 font-size:14pt;
+                font-family:"serif";
             ">
                 (RA)
             </h3>
