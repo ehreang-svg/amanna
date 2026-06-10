@@ -343,15 +343,14 @@ text-align:center;
 .container .text-area{
     height:165px;
     min-height:165px;
-    max-height:165px;
     line-height:1.5;
     text-align:justify;
     vertical-align:top !important;
 }
 
 .container .photo{
-    height:160px;
-    width:100%;
+    height:165px;
+    max-width:100%;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -359,8 +358,8 @@ text-align:center;
 }
 
 .container .photo img{
-    width:100%;
-    height:160px;
+    max-width:100%;
+    height:165px;
     object-fit:contain;
     background:#fff;
 }
