@@ -341,27 +341,28 @@ text-align:center;
 }
 
 .container .text-area{
-height:120px;
-text-align: justify;
-line-height: 1.5;
+    height:165px;
+    min-height:165px;
+    max-height:165px;
+    line-height:1.5;
+    text-align:justify;
+    vertical-align:top !important;
 }
 
 .container .photo{
-height:130px;
-width:100%
-display:flex;
-align-items:center;
-justify-content:center;
-padding: 5px !important;
-overflow: hidden;
+    height:130px;
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
 }
 
-.container .photo img {
-max-height: 100%;
-max-width: 100%;
-object-fit: contain;
-display: block;
-align-items:center;
+.container .photo img{
+    width:100%;
+    height:130px;
+    object-fit:contain;
+    background:#fff;
 }
 
 .container .reflection td{
