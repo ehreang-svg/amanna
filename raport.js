@@ -361,7 +361,6 @@ const rata = Math.round(jumlah / 11);
 
 kognitifContainer.innerHTML=`
 
-kognitifContainer.innerHTML = `
 
 <!-- ================= COVER ================= -->
 <div class="pageKognitif coverPage">
@@ -442,8 +441,6 @@ kognitifContainer.innerHTML = `
 </div>
 
 <!-- ================= HALAMAN 1 ================= -->
-<div class="pageKognitif">
-`;
 
 <div class="pageKognitif">
         <div class="logoKognitif-containerKognitif">
