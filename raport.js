@@ -371,7 +371,7 @@ function previewKognitif(){
 
 <!-- ================= COVER ================= -->
 <div class="pageKognitif coverPage"
-style= "background:none";>
+style= "background:none;">
 
     <div style="
         height:100%;
@@ -381,6 +381,8 @@ style= "background:none";>
         text-align:center;
         padding:40px 20px;
         box-sizing:border-box;
+        background:none;
+        
     ">
 
         <div>
@@ -414,21 +416,7 @@ style= "background:none";>
 ">
     (RA)
 </h3>
-
-            <h2 style="
-                margin-top:10px;
-                font-size:18pt;
-            ">
-                RAUDLATUL ATHFAL AMANNA
-            </h2>
-
-            <h3 style="
-                margin-top:5px;
-                font-size:14pt;
-            ">
-                (RA)
-            </h3>
-        </div>
+</div>
 
         <!-- LOGO COVER -->
 <div style="margin-top:20px;">
@@ -455,8 +443,8 @@ style= "background:none";>
         border-collapse:collapse;
     ">
         <tr>
-            <td style="width:35%;padding:10px 0;">
-                Nama
+            <td style="width:35%;padding:10px 0;text-align:left; font-weight:bold;">
+                NAMA
             </td>
             <td style="width:5%;">
                 :
@@ -467,7 +455,7 @@ style= "background:none";>
         </tr>
 
         <tr>
-            <td style="padding:10px 0;">
+            <td style="padding:10px 0;text-align:left; font-weight:bold;">
                 NIK
             </td>
             <td>
@@ -479,7 +467,7 @@ style= "background:none";>
         </tr>
 
         <tr>
-            <td style="padding:10px 0;">
+            <td style="padding:10px 0; text-align:left; font-weight:bold;">
                 NISN
             </td>
             <td>
@@ -498,7 +486,7 @@ style= "background:none";>
                 RAUDLATUL ATHFAL AMANNA
             </h2>
 
-            <p style="
+            <h3 style="
                 margin-top:20px;
                 line-height:1.8;
                 font-size:11pt;
@@ -509,7 +497,7 @@ style= "background:none";>
                 KABUPATEN CIREBON
                 <br>
                 PROVINSI JAWA BARAT
-            </p>
+            </h3>
         </div>
 
     </div>
