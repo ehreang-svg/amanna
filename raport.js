@@ -421,7 +421,7 @@ style= "background:none;">
         <!-- LOGO COVER -->
 <div style="margin-top:20px;">
     <img
-        src="https://iili.io/CKZXD4j.png"
+        src="https://iili.io/CBoYGIV.png"
         style="
             width:140px;
             height:auto;
