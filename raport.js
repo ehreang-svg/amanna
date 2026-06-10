@@ -190,7 +190,7 @@ async function previewRaport(){
         <div class="title-cetak">LAPORAN HASIL BELAJAR PESERTA DIDIK</div>
 
         <!-- Cari dan ganti tabel pertama dengan kode ini -->
-        <table style="width: 100%; border-collapse: collapse;">
+        <table style="width: 100%;hight: 120px; border-collapse: collapse;">
             <tr>
                 <td class="label" style="border: 1px solid #ffffff !important;font-weight:normal;">Nama</td>
                 <td class="value" style="border: 1px solid #ffffff !important;text-transform: capitalize;">: ${rNama.value}</td>
