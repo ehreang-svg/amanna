@@ -436,6 +436,9 @@ style= "background:none;">
     width:75%;
     margin:40px auto;
     font-size:14pt;
+    font-weight:bold;
+    text-align:left;
+    
 ">
 
     <table style="
