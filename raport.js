@@ -370,8 +370,7 @@ function previewKognitif(){
     kognitifContainer.innerHTML = `
 
 <!-- ================= COVER ================= -->
-<div class="pageKognitif coverPage"
-style= "background:none;">
+<div class="pageKognitif coverPage">
 
     <div style="
         height:100%;
