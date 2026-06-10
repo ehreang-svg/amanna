@@ -370,7 +370,6 @@ function previewKognitif(){
     kognitifContainer.innerHTML = `
 
 <!-- ================= COVER ================= -->
-<!-- ================= COVER ================= -->
 <div class="pageKognitif coverPage noWatermark">
 
     <div style="
