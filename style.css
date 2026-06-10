@@ -323,7 +323,6 @@ vertical-align:top !important;
 background:transparent !important;
 font-size:12px !important;
 text-align: left;
-height:125px
 }
 
 .container .label{
@@ -348,7 +347,7 @@ line-height: 1.5;
 }
 
 .container .photo{
-height:125px;
+height:130px;
 width:100%
 display:flex;
 align-items:center;
