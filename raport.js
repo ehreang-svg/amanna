@@ -389,8 +389,9 @@ function previewKognitif(){
         <div>
 
             <h2 style="
+                font-family:"Times New Roman", serif;
                 margin-top:20px;
-                font-size:18pt;
+                font-size:20pt;
                 font-weight:bold;
             ">
                 YAYASAN AMANNA
@@ -398,6 +399,7 @@ function previewKognitif(){
 
             <h1 style="
                 margin-top:30px;
+                font-family:"Times New Roman", serif;
                 font-size:24pt;
                 font-weight:bold;
                 letter-spacing:1px;
@@ -407,6 +409,7 @@ function previewKognitif(){
 
             <h2 style="
                 margin-top:15px;
+                font-family:"Times New Roman", serif;
                 font-size:18pt;
             ">
                 RAUDLATUL ATHFAL AMANNA
@@ -425,7 +428,7 @@ function previewKognitif(){
         <div>
 
             <img
-                src="https://iili.io/CKZXD4j.png"
+                src="https://iili.io/CBoYGIV.png"
                 style="
                     width:180px;
                     height:auto;
@@ -442,6 +445,7 @@ function previewKognitif(){
             margin:20px auto;
             text-align:left;
             font-size:13pt;
+            font-family:"Times New Roman", serif;
         ">
 
             <table style="
@@ -497,14 +501,16 @@ function previewKognitif(){
         <div>
 
             <h2 style="
-                margin-bottom:15px;
+                margin-bottom:15px;font-family:"Times New Roman", serif;
             ">
                 RAUDLATUL ATHFAL AMANNA
             </h2>
 
             <div style="
                 line-height:1.8;
-                font-size:11pt;
+                font-family:"Times New Roman", serif;
+                font-size:14px;
+                font-weight:bold;
             ">
                 Blok Jongor Lapang Desa Jagapura Wetan<br>
                 Kecamatan Gegesik<br>
