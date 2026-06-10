@@ -311,56 +311,63 @@ sederhana untuk mengenali dan mengekspresikan emosi secara positif.</td></tr>
     
 function previewKognitif(){
 
-nav("previewKognitifPage");
+    nav("previewKognitifPage");
 
-const nama = kNama.value;
-const kelas = kKelas.value;
-const semester = kSemester.value;
-const tahun = kTahun.value;
+    const nama = kNama.value;
+    const kelas = kKelas.value;
+    const semester = kSemester.value;
+    const tahun = kTahun.value;
 
-const iqro = Number(kIqro.value || 0);
-const shalat = Number(kShalat.value || 0);
-const surah = Number(kSurah.value || 0);
-const praktek = Number(kPraktek.value || 0);
-const membaca = Number(kMembaca.value || 0);
-const tajwid = Number(kTajwid.value || 0);
+    // Ambil data siswa yang dipilih
+    const siswa = dataSiswaKognitif.find(
+        x => x.nama === nama
+    ) || {};
 
-const doa = Number(kDoa.value || 0);
-const kitabah = Number(kKitabah.value || 0);
-const dinul = Number(kDinul.value || 0);
-const inggris = Number(kInggris.value || 0);
-const berhitung = Number(kBerhitung.value || 0);
+    const nik = siswa.nik || "-";
+    const nisn = siswa.nisn || siswa.nis || "-";
 
-const jumlah =
-iqro +
-shalat +
-surah +
-praktek +
-membaca +
-tajwid +
-doa +
-kitabah +
-dinul +
-inggris +
-berhitung;
+    const iqro = Number(kIqro.value || 0);
+    const shalat = Number(kShalat.value || 0);
+    const surah = Number(kSurah.value || 0);
+    const praktek = Number(kPraktek.value || 0);
+    const membaca = Number(kMembaca.value || 0);
+    const tajwid = Number(kTajwid.value || 0);
 
-const sehat = kSehat.value;
-const bersih = kBersih.value;
-const disiplin = kDisiplin.value;
-const kerjasama = kKerjasama.value;
-const adaptasi = kAdaptasi.value;
-const vokal = kVokal.value;
-const kreatif = kKreatif.value;
+    const doa = Number(kDoa.value || 0);
+    const kitabah = Number(kKitabah.value || 0);
+    const dinul = Number(kDinul.value || 0);
+    const inggris = Number(kInggris.value || 0);
+    const berhitung = Number(kBerhitung.value || 0);
 
-const saran = kSaran.value;
+    const jumlah =
+        iqro +
+        shalat +
+        surah +
+        praktek +
+        membaca +
+        tajwid +
+        doa +
+        kitabah +
+        dinul +
+        inggris +
+        berhitung;
 
-const tempat = kTempat.value;
-const tanggal = kTanggal.value;
+    const sehat = kSehat.value;
+    const bersih = kBersih.value;
+    const disiplin = kDisiplin.value;
+    const kerjasama = kKerjasama.value;
+    const adaptasi = kAdaptasi.value;
+    const vokal = kVokal.value;
+    const kreatif = kKreatif.value;
 
-const rata = Math.round(jumlah / 11);
+    const saran = kSaran.value;
 
-kognitifContainer.innerHTML=`
+    const tempat = kTempat.value;
+    const tanggal = kTanggal.value;
 
+    const rata = Math.round(jumlah / 11);
+
+    kognitifContainer.innerHTML = `
 
 <!-- ================= COVER ================= -->
 <div class="pageKognitif coverPage">
@@ -413,8 +420,8 @@ kognitifContainer.innerHTML=`
             font-size:12pt;
         ">
             <p><strong>NAMA</strong> : ${nama}</p>
-            <p><strong>NIK</strong> : ${kNik?.value || "-"}</p>
-            <p><strong>NISN / NIS</strong> : ${kNisn?.value || "-"}</p>
+            <p><strong>NIK</strong> : ${nik}</p>
+            <p><strong>NISN / NIS</strong> : ${nisn}</p>
         </div>
 
         <div>
