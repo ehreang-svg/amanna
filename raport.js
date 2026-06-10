@@ -383,17 +383,36 @@ function previewKognitif(){
     ">
 
         <div>
-            <h2 style="margin:0;font-size:18pt;">
-                YAYASAN AMANNA
-            </h2>
+<h2 style="
+    margin-top:20px;
+    font-size:18pt;
+    font-weight:bold;
+">
+    YAYASAN AMANNA
+</h2>
 
-            <h1 style="
-                margin-top:40px;
-                font-size:22pt;
-                font-weight:bold;
-            ">
-                LAPORAN HASIL BELAJAR
-            </h1>
+<h1 style="
+    margin-top:30px;
+    font-size:24pt;
+    font-weight:bold;
+    letter-spacing:1px;
+">
+    LAPORAN HASIL BELAJAR
+</h1>
+
+<h2 style="
+    margin-top:15px;
+    font-size:18pt;
+">
+    RAUDLATUL ATHFAL AMANNA
+</h2>
+
+<h3 style="
+    margin-top:5px;
+    font-size:14pt;
+">
+    (RA)
+</h3>
 
             <h2 style="
                 margin-top:10px;
@@ -410,19 +429,68 @@ function previewKognitif(){
             </h3>
         </div>
 
-        <div style="
-            margin-top:60px;
-            margin-bottom:60px;
-            text-align:left;
-            width:80%;
-            margin-left:auto;
-            margin-right:auto;
-            font-size:12pt;
-        ">
-            <p><strong>NAMA</strong> : ${nama}</p>
-            <p><strong>NIK</strong> : ${nik}</p>
-            <p><strong>NISN / NIS</strong> : ${nisn}</p>
-        </div>
+        <!-- LOGO COVER -->
+<div style="margin-top:20px;">
+    <img
+        src="https://iili.io/CKZXD4j.png"
+        style="
+            width:140px;
+            height:auto;
+            display:block;
+            margin:auto;
+        "
+    >
+</div>
+
+<!-- IDENTITAS SISWA -->
+<div style="
+    width:75%;
+    margin:40px auto;
+    font-size:14pt;
+">
+
+    <table style="
+        width:100%;
+        border-collapse:collapse;
+    ">
+        <tr>
+            <td style="width:35%;padding:10px 0;">
+                Nama
+            </td>
+            <td style="width:5%;">
+                :
+            </td>
+            <td style="font-weight:bold;">
+                ${nama}
+            </td>
+        </tr>
+
+        <tr>
+            <td style="padding:10px 0;">
+                NIK
+            </td>
+            <td>
+                :
+            </td>
+            <td>
+                ${nik}
+            </td>
+        </tr>
+
+        <tr>
+            <td style="padding:10px 0;">
+                NISN
+            </td>
+            <td>
+                :
+            </td>
+            <td>
+                ${nisn}
+            </td>
+        </tr>
+    </table>
+
+</div>
 
         <div>
             <h2 style="margin:0;">
