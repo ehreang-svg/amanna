@@ -370,7 +370,8 @@ function previewKognitif(){
     kognitifContainer.innerHTML = `
 
 <!-- ================= COVER ================= -->
-<div class="pageKognitif coverPage">
+<!-- ================= COVER ================= -->
+<div class="pageKognitif coverPage noWatermark">
 
     <div style="
         height:100%;
@@ -380,132 +381,143 @@ function previewKognitif(){
         text-align:center;
         padding:40px 20px;
         box-sizing:border-box;
-        background:none;
-        
+        background:#ffffff;
+        position:relative;
+        z-index:999;
     ">
 
+        <!-- JUDUL -->
         <div>
-<h2 style="
-    margin-top:20px;
-    font-size:18pt;
-    font-weight:bold;
-">
-    YAYASAN AMANNA
-</h2>
 
-<h1 style="
-    margin-top:30px;
-    font-size:24pt;
-    font-weight:bold;
-    letter-spacing:1px;
-">
-    LAPORAN HASIL BELAJAR
-</h1>
+            <h2 style="
+                margin-top:20px;
+                font-size:18pt;
+                font-weight:bold;
+            ">
+                YAYASAN AMANNA
+            </h2>
 
-<h2 style="
-    margin-top:15px;
-    font-size:18pt;
-">
-    RAUDLATUL ATHFAL AMANNA
-</h2>
+            <h1 style="
+                margin-top:30px;
+                font-size:24pt;
+                font-weight:bold;
+                letter-spacing:1px;
+            ">
+                LAPORAN HASIL BELAJAR
+            </h1>
 
-<h3 style="
-    margin-top:5px;
-    font-size:14pt;
-">
-    (RA)
-</h3>
-</div>
-
-        <!-- LOGO COVER -->
-<div style="margin-top:20px;">
-    <img
-        src="https://iili.io/CBoYGIV.png"
-        style="
-            width:160px;
-            height:auto;
-            display:block;
-            margin:auto;
-        "
-    >
-</div>
-
-<!-- IDENTITAS SISWA -->
-<div style="
-    width:75%;
-    margin:40px auto;
-    font-size:14pt;
-    font-weight:bold;
-    text-align:left;
-    
-">
-
-    <table style="
-        width:100%;
-        border-collapse:collapse;
-    ">
-        <tr>
-            <td style="width:35%;padding:10px 0;text-align:left; font-weight:bold;">
-                NAMA
-            </td>
-            <td style="width:5%;">
-                :
-            </td>
-            <td style="font-weight:bold;">
-                ${nama}
-            </td>
-        </tr>
-
-        <tr>
-            <td style="padding:10px 0;text-align:left; font-weight:bold;">
-                NIK
-            </td>
-            <td>
-                :
-            </td>
-            <td>
-                ${nik}
-            </td>
-        </tr>
-
-        <tr>
-            <td style="padding:10px 0; text-align:left; font-weight:bold;">
-                NISN
-            </td>
-            <td>
-                :
-            </td>
-            <td>
-                ${nisn}
-            </td>
-        </tr>
-    </table>
-
-</div>
-
-        <div>
-            <h2 style="margin:0;">
+            <h2 style="
+                margin-top:15px;
+                font-size:18pt;
+            ">
                 RAUDLATUL ATHFAL AMANNA
             </h2>
 
             <h3 style="
-                margin-top:20px;
+                margin-top:5px;
+                font-size:14pt;
+            ">
+                (RA)
+            </h3>
+
+        </div>
+
+        <!-- LOGO -->
+        <div>
+
+            <img
+                src="https://iili.io/CKZXD4j.png"
+                style="
+                    width:180px;
+                    height:auto;
+                    display:block;
+                    margin:auto;
+                "
+            >
+
+        </div>
+
+        <!-- IDENTITAS SISWA -->
+        <div style="
+            width:75%;
+            margin:20px auto;
+            text-align:left;
+            font-size:13pt;
+        ">
+
+            <table style="
+                width:100%;
+                border-collapse:collapse;
+            ">
+
+                <tr>
+                    <td style="
+                        width:30%;
+                        padding:8px 0;
+                        font-weight:bold;
+                    ">
+                        NAMA
+                    </td>
+                    <td style="width:5%;">:</td>
+                    <td style="font-weight:bold;">
+                        ${nama}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="
+                        padding:8px 0;
+                        font-weight:bold;
+                    ">
+                        NIK
+                    </td>
+                    <td>:</td>
+                    <td>
+                        ${nik}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="
+                        padding:8px 0;
+                        font-weight:bold;
+                    ">
+                        NISN
+                    </td>
+                    <td>:</td>
+                    <td>
+                        ${nisn}
+                    </td>
+                </tr>
+
+            </table>
+
+        </div>
+
+        <!-- FOOTER COVER -->
+        <div>
+
+            <h2 style="
+                margin-bottom:15px;
+            ">
+                RAUDLATUL ATHFAL AMANNA
+            </h2>
+
+            <div style="
                 line-height:1.8;
                 font-size:11pt;
             ">
-                Blok Jongor Lapang Desa Jagapura Wetan
-                Kecamatan Gegesik
-                <br>
-                KABUPATEN CIREBON
-                <br>
-                PROVINSI JAWA BARAT
-            </h3>
+                Blok Jongor Lapang Desa Jagapura Wetan<br>
+                Kecamatan Gegesik<br>
+                Kabupaten Cirebon<br>
+                Provinsi Jawa Barat
+            </div>
+
         </div>
 
     </div>
 
 </div>
-
 <!-- ================= HALAMAN 1 ================= -->
 
 <div class="pageKognitif">
