@@ -341,13 +341,13 @@ text-align:center;
 }
 
 .container .text-area{
-min-height:90px;
+height:120px;
 text-align: justify;
 line-height: 1.5;
 }
 
 .container .photo{
-height:265px;
+height:150px;
 width:100%
 display:flex;
 align-items:center;
