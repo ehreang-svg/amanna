@@ -347,7 +347,7 @@ line-height: 1.5;
 }
 
 .container .photo{
-height:190px;
+height:150px;
 display:flex;
 align-items:center;
 justify-content:center;
@@ -355,7 +355,7 @@ padding: 5px !important;
 }
 
 .container .photo img {
-max-height: 180px;
+max-height: 150px;
 max-width: 100%;
 object-fit: contain;
 display: block;
