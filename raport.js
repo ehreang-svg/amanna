@@ -475,7 +475,7 @@ function previewKognitif(){
                         NIK
                     </td>
                     <td>:</td>
-                    <td>
+                    <td style="font-weight:bold;">
                         ${nik}
                     </td>
                 </tr>
@@ -488,7 +488,7 @@ function previewKognitif(){
                         NISN
                     </td>
                     <td>:</td>
-                    <td>
+                    <td style="font-weight:bold;">
                         ${nisn}
                     </td>
                 </tr>
