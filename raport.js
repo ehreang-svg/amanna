@@ -881,25 +881,27 @@ style="width:70px;height:auto;"
                 <tr>
                     <td class="text-center">1.</td>
                     <td class="text-left">Do'a dan adab harian</td>
-                    <span class="text-center">${getPredikat(doa)}</span>
-                    <span class="text-center">${doa}</span>
+                    <td class="text-center">${getPredikat(doa)}</td>
+                    <td class="text-center">${doa}</td>
                     <td>${nama}, ${getHuruf(doa)} dalam Do'a dan adab harian</td>
                 </tr>
                 <tr>
                     <td class="text-center">2.</td>
                     <td class="text-left">Tahsinul kitabah</td>
-                    <span class="text-center">${getPredikat(kitabah)}</span>
-                    <span class="text-center">${kitabah}</span>
+                    <td class="text-center">${getPredikat(kitabah)}</td>
+                    <td class="text-center">${kitabah}</td>
                     <td>${nama}, ${getHuruf(kitabah)} dalam Tahsinul kitabah</td>
                 </tr>
                 <tr>
                     <td class="text-center">3.</td>
                     <td class="text-left">Dinul Islam</td>
-                    <span class="text-center">${getPredikat(dinul)}</span>
-                    <span class="text-center">${dinul}</span>
+                    <td class="text-center">${getPredikat(dinul)}</td>
+                    <td class="text-center">${dinul}</td>
                     <td>${nama}, ${getHuruf(dinul)} dalam Dinul Islam</td>
                 </tr>
                 <tr>
+                <td class="text-center">4.</td>
+                <td class="text-left">B. Inggris</td>
                 <td class="text-center">
     ${isRAA ? "-" : getPredikat(nilaiInggris)}
 </td>
@@ -925,7 +927,7 @@ style="width:70px;height:auto;"
                 </tr>
                 <tr>
                     <td colspan="3" class="bold text-left">JUMLAH NILAI</td>
-                    <td class="text-center bold">${jumlah}</td>
+                    <td colspan="text-center bold">${jumlah}</td>
                     <td></td>
                 </tr>
                 <tr>
