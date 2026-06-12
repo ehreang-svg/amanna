@@ -357,109 +357,17 @@ sederhana untuk mengenali dan mengekspresikan emosi secara positif.</td></tr>
 
 }
 
-async function simpanRaportPAUD(){
-
-  try{
-
-    const payload = {
-
-      action:"simpanRaportPAUD",
-
-      data:{
-
-        nama:rNama.value,
-        kelas:rKelas.value,
-        nik:rNik.value,
-
-        fase:rFase.value,
-        tahun:rTahun.value,
-        semester:rSemester.value,
-        tinggi:rTinggi.value,
-        berat:rBerat.value,
-
-        agama:rAgama.value,
-        jati:rJatiDiri.value,
-        literasi:rLiterasi.value,
-        p5:rP5.value,
-        perkembangan:rPerkembangan.value,
-
-        sakit:rSakit.value,
-        izin:rIzin.value,
-        alpa:rAlpa.value,
-
-        ortu:rOrtu.value,
-        guru:rGuru.value,
-
-         fotoAgama,
-         fotoJati,
-         fotoLiterasi,
-         fotoP5
-
-      }
-
-    };
-
-    const res =
-    await fetch(
-      TABUNGAN_API,
-      {
-
-        method:"POST",
-
-        headers:{
-  "Content-Type":"text/plain;charset=utf-8"
-},
-
-        body:
-        JSON.stringify(payload)
-
-      }
-    );
-
-    const text =
-    await res.text();
-
-    console.log(
-      "Response:",
-      text
-    );
-
-    const hasil =
-    JSON.parse(text);
-
-    if(hasil.status){
-
-      alert(
-        "Data berhasil disimpan"
-      );
-
-    }else{
-
-      alert(
-        hasil.message
-      );
-
-    }
-
-  }catch(err){
-
-    alert(
-      "ERROR : " + err
-    );
-
-    console.error(err);
-
-  }
-
-}
-
-    async function generateRaport() {
+```javascript
+async function simpanRaportPAUD() {
   try {
+
+    // Ambil file input
     const fotoAgamaFile = document.getElementById("fotoAgama");
     const fotoJatiFile = document.getElementById("fotoJati");
     const fotoLiterasiFile = document.getElementById("fotoLiterasi");
     const fotoP5File = document.getElementById("fotoP5");
 
+    // Konversi ke Base64
     const fotoAgama = fotoAgamaFile?.files?.length
       ? await imageToBase64(fotoAgamaFile.files[0])
       : "";
@@ -477,14 +385,35 @@ async function simpanRaportPAUD(){
       : "";
 
     const payload = {
-      action: "generateRaport",
+      action: "simpanRaportPAUD",
       data: {
         nama: rNama.value,
         kelas: rKelas.value,
-        fotoAgama,
-        fotoJati,
-        fotoLiterasi,
-        fotoP5
+        nik: rNik.value,
+
+        fase: rFase.value,
+        tahun: rTahun.value,
+        semester: rSemester.value,
+        tinggi: rTinggi.value,
+        berat: rBerat.value,
+
+        agama: rAgama.value,
+        jati: rJatiDiri.value,
+        literasi: rLiterasi.value,
+        p5: rP5.value,
+        perkembangan: rPerkembangan.value,
+
+        sakit: rSakit.value,
+        izin: rIzin.value,
+        alpa: rAlpa.value,
+
+        ortu: rOrtu.value,
+        guru: rGuru.value,
+
+        fotoAgama: fotoAgama,
+        fotoJati: fotoJati,
+        fotoLiterasi: fotoLiterasi,
+        fotoP5: fotoP5
       }
     };
 
@@ -499,13 +428,14 @@ async function simpanRaportPAUD(){
     const hasil = await res.json();
 
     if (hasil.status) {
-      window.open(hasil.url, "_blank");
+      alert("Data berhasil disimpan");
     } else {
       alert(hasil.message);
     }
+
   } catch (err) {
     console.error(err);
-    alert("Terjadi kesalahan: " + err.message);
+    alert("ERROR: " + err.message);
   }
 }
     
