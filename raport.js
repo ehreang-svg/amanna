@@ -833,45 +833,45 @@ style="width:70px;height:auto;"
                     <td colspan="4">MATERI POKOK</td>
                 </tr>
                 <tr>
-                    <td class="text-left">1.</td>
-                    <td class="text-left">Bacaan Iqro</td>
-                    <span style="display:block; text-align:center;">${getPredikat(iqro)}</span>
-                    <span style="display:block; text-center">${iqro}</span>
-                    <td>${nama}, ${getHuruf(iqro)} dalam Bacaan Iqro</td>
+                     <td class="text-center">1.</td>
+                     <td class="text-left">Bacaan Iqro</td>
+                     <td class="text-center">${getPredikat(iqro)}</td>
+                     <td class="text-center">${iqro}</td>
+                     <td>${nama}, ${getHuruf(iqro)} dalam Bacaan Iqro</td>
                 </tr>
                 <tr>
                     <td class="text-left">2.</td>
                     <td class="text-left">Hafalan bacaan shalat</td>
-                    <span class="text-center">${getPredikat(shalat)}</span>
-                    <span class="text-center">${shalat}</span>
+                    <td class="text-center">${getPredikat(shalat)}</td>
+                    <td class="text-center">${shalat}</td>
                     <td>${nama}, ${getHuruf(shalat)} dalam Hafalan bacaan shalat</td>
                 </tr>
                 <tr>
                     <td class="text-left">3.</td>
                     <td class="text-left">Hafalan surah pendek</td>
-                    <span class="text-center">${getPredikat(surah)}</span>
-                    <span class="text-center">${surah}</span>
+                    <td class="text-center">${getPredikat(surah)}</td>
+                    <td class="text-center">${surah}</td>
                     <td>${nama}, ${getHuruf(surah)} dalam Hafalan surah pendek</td>
                 </tr>
                 <tr>
                     <td class="text-left">4.</td>
                     <td class="text-left">Praktek/amalan shalat</td>
-                    <span class="text-center">${getPredikat(praktek)}</span>
-                    <span class="text-center">${praktek}</span>
+                    <td class="text-center">${getPredikat(praktek)}</td>
+                    <td class="text-center">${praktek}</td>
                     <td>${nama}, ${getHuruf(praktek)} dalam Praktek/ amalan shalat</td>
                 </tr>
                 <tr>
                     <td class="text-left">5.</td>
                     <td class="text-left">Membaca</td>
-                    <span class="text-center">${getPredikat(membaca)}</span>
-                    <span class="text-center">${membaca}</span>
+                    <td class="text-center">${getPredikat(membaca)}</td>
+                    <td class="text-center">${membaca}</td>
                     <td>${nama}, ${getHuruf(membaca)} dalam Membaca</td>
                 </tr>
                 <tr>
                     <td class="text-center">6.</td>
                     <td class="text-left">Ilmu tajwid</td>
-                    <span class="text-center">${getPredikat(tajwid)}</span>
-                    <span class="text-center">${tajwid}</span>
+                    <td class="text-center">${getPredikat(tajwid)}</td>
+                    <td class="text-center">${tajwid}</td>
                     <td>${nama}, ${getHuruf(tajwid)} dalam Ilmu tajwid</td>
                 </tr>
                 <tr class="subKognitif-heading">
@@ -900,30 +900,22 @@ style="width:70px;height:auto;"
                     <td>${nama}, ${getHuruf(dinul)} dalam Dinul Islam</td>
                 </tr>
                 <tr>
-                <td class="text-center">4.</td>
-                <td class="text-left">B. Inggris</td>
-                <td class="text-center">
-    ${isRAA ? "-" : getPredikat(nilaiInggris)}
-</td>
-
-<td class="text-center">
-    ${isRAA ? "-" : nilaiInggris}
-</td>
-
-<td>
-    ${
-        isRAA
-        ? "-"
-        : `${nama}, ${getHuruf(nilaiInggris)} dalam berbahasa inggris`
-    }
-</td>
+     ${!isRAA ? `
+<tr>
+    <td class="text-center">4.</td>
+    <td class="text-left">B. Inggris</td>
+    <td class="text-center">${getPredikat(nilaiInggris)}</td>
+    <td class="text-center">${nilaiInggris}</td>
+    <td>${nama}, ${getHuruf(nilaiInggris)} dalam berbahasa Inggris</td>
+</tr>
+` : ``}
                 </tr>
                 <tr>
-                    <td class="text-center">5.</td>
-                    <td class="text-left">Berhitung</td>
-                    <td class="text-center">${getPredikat(berhitung)}</td>
-                    <td class="text-center">${berhitung}</td>
-                    <td>${nama}, ${getHuruf(berhitung)} dalam Berhitung</td>
+                <td class="text-center">${isRAA ? "4." : "5."}</td>
+                <td class="text-left">Berhitung</td>
+                <td class="text-center">${getPredikat(berhitung)}</td>
+                <td class="text-center">${berhitung}</td>
+                <td>${nama}, ${getHuruf(berhitung)} dalam Berhitung</td>
                 </tr>
                 <tr>
                     <td colspan="3" class="bold text-left">JUMLAH NILAI</td>
