@@ -642,17 +642,7 @@ const nilaiInggris = isRAA
 
         <!-- FOOTER COVER -->
         <div>
-
-            <h2 style="
-                <!-- FOOTER COVER -->
-<div>
-
-    <h2 style="
-        margin-bottom:15px;
-        font-family:serif;
-    ">
-        RAUDLATUL ATHFAL AMANNA
-    </h2>
+    <h2 style="margin-bottom:15px;font-family:serif;">RAUDLATUL ATHFAL AMANNA</h2>
 
     <div style="
         line-height:1.8;
@@ -667,9 +657,6 @@ const nilaiInggris = isRAA
         <span style="font-weight:bold;">
             PROVINSI JAWA BARAT
         </span>
-    </div>
-
-</div>
     </div>
 
 </div>
