@@ -1285,3 +1285,29 @@ pdf.addImage(
     );
 }
 
+
+function toggleBahasaInggris() {
+
+    const kelas = String(kKelas.value).trim().toUpperCase();
+    const inputInggris = document.getElementById("kInggris");
+
+    if (kelas === "RA.A") {
+
+        // Kosongkan nilainya
+        inputInggris.value = "";
+
+        // Nonaktifkan input
+        inputInggris.disabled = true;
+
+        // Ubah placeholder
+        inputInggris.placeholder = "Tidak berlaku untuk RA.A";
+
+    } else {
+
+        // Aktifkan kembali
+        inputInggris.disabled = false;
+
+        // Kembalikan placeholder semula
+        inputInggris.placeholder = "Nilai Bahasa Inggris";
+    }
+}
