@@ -388,7 +388,12 @@ async function simpanRaportPAUD(){
         alpa:rAlpa.value,
 
         ortu:rOrtu.value,
-        guru:rGuru.value
+        guru:rGuru.value,
+
+         fotoAgama,
+         fotoJati,
+         fotoLiterasi,
+         fotoP5
 
       }
 
