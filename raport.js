@@ -448,102 +448,61 @@ async function simpanRaportPAUD(){
 
 }
 
-    async function generateRaport(){
+    async function generateRaport() {
+  try {
+    const fotoAgamaFile = document.getElementById("fotoAgama");
+    const fotoJatiFile = document.getElementById("fotoJati");
+    const fotoLiterasiFile = document.getElementById("fotoLiterasi");
+    const fotoP5File = document.getElementById("fotoP5");
 
-  try{
+    const fotoAgama = fotoAgamaFile?.files?.length
+      ? await imageToBase64(fotoAgamaFile.files[0])
+      : "";
 
-    const fotoAgamaFile =
-    document.getElementById("fotoAgama");
+    const fotoJati = fotoJatiFile?.files?.length
+      ? await imageToBase64(fotoJatiFile.files[0])
+      : "";
 
-    const fotoJatiFile =
-    document.getElementById("fotoJati");
+    const fotoLiterasi = fotoLiterasiFile?.files?.length
+      ? await imageToBase64(fotoLiterasiFile.files[0])
+      : "";
 
-    const fotoLiterasiFile =
-    document.getElementById("fotoLiterasi");
-
-    const fotoP5File =
-    document.getElementById("fotoP5");
-
-    const fotoAgama =
-    fotoAgamaFile.files[0]
-    ? await fileToBase64(
-        fotoAgamaFile.files[0]
-      )
-    : "";
-
-    const fotoJati =
-    fotoJatiFile.files[0]
-    ? await fileToBase64(
-        fotoJatiFile.files[0]
-      )
-    : "";
-
-    const fotoLiterasi =
-    fotoLiterasiFile.files[0]
-    ? await fileToBase64(
-        fotoLiterasiFile.files[0]
-      )
-    : "";
-
-    const fotoP5 =
-    fotoP5File.files[0]
-    ? await fileToBase64(
-        fotoP5File.files[0]
-      )
-    : "";
+    const fotoP5 = fotoP5File?.files?.length
+      ? await imageToBase64(fotoP5File.files[0])
+      : "";
 
     const payload = {
-
-      action:"generateRaport",
-
+      action: "generateRaport",
       data: {
-    nama: rNama.value,
-    kelas: rKelas.value
-  }
-};
-
-    const res =
-    await fetch(
-      TABUNGAN_API,
-      {
-        method:"POST",
-        headers:{
-          "Content-Type":
-          "text/plain;charset=utf-8"
-        },
-        body:JSON.stringify(payload)
+        nama: rNama.value,
+        kelas: rKelas.value,
+        fotoAgama,
+        fotoJati,
+        fotoLiterasi,
+        fotoP5
       }
-    );
+    };
 
-    const txt =
-    await res.text();
+    const res = await fetch(TABUNGAN_API, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify(payload)
+    });
 
-    const hasil =
-    JSON.parse(txt);
+    const hasil = await res.json();
 
-    if(hasil.status){
-
-      window.open(
-        hasil.url,
-        "_blank"
-      );
-
-    }else{
-
-      alert(
-        hasil.message
-      );
-
+    if (hasil.status) {
+      window.open(hasil.url, "_blank");
+    } else {
+      alert(hasil.message);
     }
-
-  }catch(err){
-
-    alert(err);
-
+  } catch (err) {
+    console.error(err);
+    alert("Terjadi kesalahan: " + err.message);
   }
-
 }
-
     
 function previewKognitif(){
 
