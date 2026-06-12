@@ -367,53 +367,56 @@ async function simpanRaportPAUD() {
     const fotoP5File = document.getElementById("fotoP5");
 
     // Konversi ke Base64
-    const fotoAgama = fotoAgamaFile?.files?.length
-      ? await imageToBase64(fotoAgamaFile.files[0])
-      : "";
+    const fotoAgama =
+  fotoAgamaFile.files.length > 0
+    ? await imageToBase64(fotoAgamaFile.files[0])
+    : "";
 
-    const fotoJati = fotoJatiFile?.files?.length
-      ? await imageToBase64(fotoJatiFile.files[0])
-      : "";
+const fotoJati =
+  fotoJatiFile.files.length > 0
+    ? await imageToBase64(fotoJatiFile.files[0])
+    : "";
 
-    const fotoLiterasi = fotoLiterasiFile?.files?.length
-      ? await imageToBase64(fotoLiterasiFile.files[0])
-      : "";
+const fotoLiterasi =
+  fotoLiterasiFile.files.length > 0
+    ? await imageToBase64(fotoLiterasiFile.files[0])
+    : "";
 
-    const fotoP5 = fotoP5File?.files?.length
-      ? await imageToBase64(fotoP5File.files[0])
-      : "";
-
+const fotoP5 =
+  fotoP5File.files.length > 0
+    ? await imageToBase64(fotoP5File.files[0])
+    : "";
+      
     const payload = {
       action: "simpanRaportPAUD",
       data: {
-        nama: rNama.value,
-        kelas: rKelas.value,
-        nik: rNik.value,
+  nama: rNama.value,
+  kelas: rKelas.value,
+  nik: rNik.value,
+  fase: rFase.value,
+  tahun: rTahun.value,
+  semester: rSemester.value,
+  tinggi: rTinggi.value,
+  berat: rBerat.value,
 
-        fase: rFase.value,
-        tahun: rTahun.value,
-        semester: rSemester.value,
-        tinggi: rTinggi.value,
-        berat: rBerat.value,
+  agama: rAgama.value,
+  jati: rJatiDiri.value,
+  literasi: rLiterasi.value,
+  p5: rP5.value,
+  perkembangan: rPerkembangan.value,
 
-        agama: rAgama.value,
-        jati: rJatiDiri.value,
-        literasi: rLiterasi.value,
-        p5: rP5.value,
-        perkembangan: rPerkembangan.value,
+  sakit: rSakit.value,
+  izin: rIzin.value,
+  alpa: rAlpa.value,
 
-        sakit: rSakit.value,
-        izin: rIzin.value,
-        alpa: rAlpa.value,
+  ortu: rOrtu.value,
+  guru: rGuru.value,
 
-        ortu: rOrtu.value,
-        guru: rGuru.value,
-
-        fotoAgama: fotoAgama,
-        fotoJati: fotoJati,
-        fotoLiterasi: fotoLiterasi,
-        fotoP5: fotoP5
-      }
+  fotoAgama: fotoAgama,
+  fotoJati: fotoJati,
+  fotoLiterasi: fotoLiterasi,
+  fotoP5: fotoP5
+}
     };
 
     const res = await fetch(TABUNGAN_API, {
