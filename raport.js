@@ -594,7 +594,7 @@ const nilaiInggris = isRAA
         doa +
         kitabah +
         dinul +
-        inggris +
+        nilaiInggris +
         berhitung;
 
     const sehat = kSehat.value;
@@ -899,12 +899,21 @@ style="width:70px;height:auto;"
                     <td class="text-center">${dinul}</td>
                     <td>${nama}, ${getHuruf(dinul)} dalam Dinul Islam</td>
                 </tr>
-                <tr>
-                    <td class="text-center">4.</td>
-                    <td class="text-left">Bahasa Inggris</td>
-                    <td class="text-center">${getPredikat(inggris)}</td>
-                    <td class="text-center">${inggris}</td>
-                    <td>${nama}, ${getHuruf(inggris)} dalam berbahasa inggris</td>
+                <tr><td class="text-center">
+    ${isRAA ? "-" : getPredikat(nilaiInggris)}
+</td>
+
+<td class="text-center">
+    ${isRAA ? "-" : nilaiInggris}
+</td>
+
+<td>
+    ${
+        isRAA
+        ? "-"
+        : `${nama}, ${getHuruf(nilaiInggris)} dalam berbahasa inggris`
+    }
+</td>
                 </tr>
                 <tr>
                     <td class="text-center">5.</td>
