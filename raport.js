@@ -1172,6 +1172,38 @@ pdf.addImage(
     );
 }
 
+async function generateRaport() {
+  try {
+
+    const payload = {
+      action: "generateRaport",
+      data: {
+        nama: rNama.value,
+        kelas: rKelas.value
+      }
+    };
+
+    const res = await fetch(TABUNGAN_API, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const hasil = await res.json();
+
+    if (hasil.status) {
+      window.open(hasil.url, "_blank");
+    } else {
+      alert(hasil.message || "Gagal membuat raport.");
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("Terjadi kesalahan: " + err.message);
+  }
+}
 
 function toggleBahasaInggris() {
 
