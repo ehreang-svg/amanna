@@ -572,7 +572,16 @@ function previewKognitif(){
     const doa = Number(kDoa.value || 0);
     const kitabah = Number(kKitabah.value || 0);
     const dinul = Number(kDinul.value || 0);
-    const inggris = Number(kInggris.value || 0);
+    const isRAA = String(kelas).trim().toUpperCase() === "RA.A";
+
+const inggris = isRAA
+    ? "-"
+    : Number(kInggris.value || 0);
+
+// Nilai numerik untuk perhitungan
+const nilaiInggris = isRAA
+    ? 0
+    : Number(kInggris.value || 0);
     const berhitung = Number(kBerhitung.value || 0);
 
     const jumlah =
@@ -600,8 +609,9 @@ function previewKognitif(){
 
     const tempat = kTempat.value;
     const tanggal = kTanggal.value;
-
-    const rata = Math.round(jumlah / 11);
+    
+    const jumlahMapel = isRAA ? 10 : 11;
+    const rata = Math.round(jumlah / jumlahMapel);
 
     kognitifContainer.innerHTML = `
 
