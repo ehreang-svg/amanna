@@ -835,8 +835,8 @@ style="width:70px;height:auto;"
                 <tr>
                     <td class="text-left">1.</td>
                     <td class="text-left">Bacaan Iqro</td>
-                    <span class="text-center">${getPredikat(iqro)}</span>
-                    <span class="text-center">${iqro}</span>
+                    <span style="display:block; text-align:center;">${getPredikat(iqro)}</span>
+                    <span style="display:block; text-center">${iqro}</span>
                     <td>${nama}, ${getHuruf(iqro)} dalam Bacaan Iqro</td>
                 </tr>
                 <tr>
