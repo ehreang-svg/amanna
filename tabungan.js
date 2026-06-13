@@ -111,8 +111,12 @@ async function cetakKwitansi() {
 
         const d = json.data;
 
-       const get = (key) => Number(d[key] || 0);
+// DEBUG WAJIB (sementara)
+console.log(d);
 
+const get = (key) => Number(d[key] || 0);
+
+// 🔥 NAMA & KELAS SEKARANG PASTI ADA
 const nama = d.NAMA;
 const kelas = d.KELAS;
 
@@ -121,14 +125,15 @@ const jumlahTabungan = get("JUMBLAHTABUNGAN");
 const seragamOR = get("SERAGAMOR");
 const seragamSekolah = get("SERAGAMSEKOLAH");
 const imtihan = get("IMTIHAN");
-const biayaSekolah = get("BSEKOLAH");
+const bsekolah = get("BSEKOLAH");
 
 const bon = get("BON");
 const adm = get("ADM");
 const kitab = get("KITAB");
 const wisuda = get("WISUDA");
 
-const raport = get("RAPORT");
+// ⚠️ INI PENTING
+const raport = get("RAPORT");   // bukan RAPORT + UJIAN
 const infaq = get("INFAQ");
 const renang = get("RENANG");
 
@@ -136,7 +141,7 @@ const jumlahCabutan =
     seragamOR +
     seragamSekolah +
     imtihan +
-    biayaSekolah +
+    bsekolah +
     bon +
     adm +
     kitab +
