@@ -1207,6 +1207,44 @@ async function generateRaport() {
   }
 }
 
+async function generateKognitif() {
+
+  try {
+
+    const payload = {
+      action: "generateKognitif",
+      data: {
+        nama: kNama.value,
+        kelas: kKelas.value
+      }
+    };
+
+    const res = await fetch(TABUNGAN_API, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const hasil = await res.json();
+
+    if (hasil.status) {
+      window.open(hasil.url, "_blank");
+    } else {
+      alert(hasil.message || "Gagal membuat dokumen.");
+    }
+
+  } catch (err) {
+
+    console.error(err);
+    alert(err.message);
+
+  }
+
+}
+
+
 function toggleBahasaInggris() {
 
     const kelas = String(kKelas.value).trim().toUpperCase();
