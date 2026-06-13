@@ -19,14 +19,29 @@ function loadNamaTabungan(){
 }
 
 
-async function simpanTabungan(){
-    try{
-        if(!tabNama.value || !tabKelas.value || !tabNominal.value){ alert("Semua kolom tabungan wajib diisi"); return; }
-        const payload = { action:"inputTabungan", nama:tabNama.value, kelas:tabKelas.value, nominal:tabNominal.value };
-        const res = await fetch(TABUNGAN_API,{ method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(payload) });
-        const data = JSON.parse(await res.text());
-        if(data.status){ alert("Tabungan berhasil disimpan"); tabNominal.value=""; } else { alert(data.message); }
-    }catch(err){ alert("Error : " + err); }
+async function simpanTabungan() {
+    console.log(tabNama.value);
+    console.log(tabKelas.value);
+    console.log(tabNominal.value);
+
+    const payload = {
+        action: "inputTabungan",
+        nama: tabNama.value,
+        kelas: tabKelas.value,
+        nominal: tabNominal.value
+    };
+
+    console.log(payload);
+
+    const res = await fetch(TABUNGAN_API, {
+        method: "POST",
+        headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+    });
+
+    console.log(await res.text());
 }
 
 async function loadFilterKelasTabungan(){
