@@ -68,6 +68,129 @@ async function loadRekapTabungan(){
     }catch(err){ alert(err); }
 }
 
+async function cetakKwitansi() {
+
+    try {
+
+        const nama =
+            document.getElementById("filterNamaTabungan").value;
+
+        const kelas =
+            document.getElementById("filterKelasTabungan").value;
+
+        if (!nama || !kelas) {
+            alert("Pilih siswa terlebih dahulu");
+            return;
+        }
+
+        const res = await fetch(
+            TABUNGAN_API +
+            "?action=getKwitansi" +
+            "&nama=" + encodeURIComponent(nama) +
+            "&kelas=" + encodeURIComponent(kelas)
+        );
+
+        const json = await res.json();
+
+        if (!json.status) {
+            alert(json.message);
+            return;
+        }
+
+        const d = json.data;
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({
+            orientation: "portrait",
+            unit: "cm",
+            format: "a5"
+        });
+
+        let y = 1;
+
+        doc.setFontSize(16);
+        doc.setFont("helvetica", "bold");
+        doc.text("KWITANSI CABUTAN TABUNGAN", 7.4, y, {
+            align: "center"
+        });
+
+        y += 1;
+
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+
+        doc.text("Nama", 1, y);
+        doc.text(": " + d["Nama"], 3.5, y);
+
+        y += 0.6;
+
+        doc.text("Kelas", 1, y);
+        doc.text(": " + d["Kelas"], 3.5, y);
+
+        y += 1;
+
+        const rows = [
+            ["Jumlah Tabungan", d["JUMLAH TABUNGAN"]],
+            ["Seragam OR", d["SERAGAM OR"]],
+            ["Seragam Sekolah", d["SERAGAM sekolah"]],
+            ["Imtihan", d["IMTIHAN"]],
+            ["B. Sekolah", d["B.SEKOLAH"]],
+            ["BON", d["BON"]],
+            ["ADM", d["ADM"]],
+            ["Kitab", d["KITAB"]],
+            ["Wisuda", d["WISUDA"]],
+            ["Raport + Ujian", d["RAPORT + UJIAN"]],
+            ["Infaq", d["INFAQ"]],
+            ["Renang", d["RENANG"]],
+            ["Jumlah Cabutan", d["JUMLAH CABUTAN"]],
+            ["Sisa Tabungan", d["SISA TABUNGAN"]]
+        ];
+
+        rows.forEach(r => {
+
+            doc.text(r[0], 1, y);
+
+            doc.text(
+                ": Rp " +
+                Number(r[1] || 0).toLocaleString("id-ID"),
+                6,
+                y
+            );
+
+            y += 0.55;
+        });
+
+        y += 0.8;
+
+        doc.text(
+            "..................................",
+            10,
+            y
+        );
+
+        y += 0.5;
+
+        doc.text(
+            "Petugas",
+            10.7,
+            y
+        );
+
+        doc.save(
+            "Kwitansi_" +
+            nama.replace(/\s+/g, "_") +
+            ".pdf"
+        );
+
+    } catch (err) {
+
+        alert(err);
+
+    }
+
+}
+
+
 async function exportBukuTabungan() {
     const { jsPDF } = window.jspdf; const doc = new jsPDF({ orientation: "landscape", unit: "cm", format: [10, 15] });
     const nama = document.getElementById("filterNamaTabungan").value || "-"; const kelas = document.getElementById("filterKelasTabungan").value || "-";
