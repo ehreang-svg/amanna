@@ -140,8 +140,7 @@ async function cetakKwitansi() {
         // =========================
         // NILAI UTAMA
         // =========================
-        const jumlahTabungan =
-            get("JUMLAHTABUNGAN", "JUMLAH_TABUNGAN", "JUMLAH TABUNGAN", "TABUNGAN");
+        const jumlahTabungan = Number(d.JUMLAHTABUNGAN || 0);
 
         // =========================
         // CABUTAN (SEMUA ITEM)
