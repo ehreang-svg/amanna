@@ -111,35 +111,42 @@ async function cetakKwitansi() {
 
         const d = json.data;
 
-        const get = (key) => Number(d[key] || 0);
+       const get = (key) => Number(d[key] || 0);
 
-        const jumlahTabungan = get("JUMBLAHTABUNGAN");
-        const seragamOR = get("SERAGAMOR");
-        const seragamSekolah = get("SERAGAMSEKOLAH");
-        const imtihan = get("IMTIHAN");
-        const biayaSekolah = get("BSEKOLAH");
-        const bon = get("BON");
-        const adm = get("ADM");
-        const kitab = get("KITAB");
-        const wisuda = get("WISUDA");
-        const raport = get("RAPORT");
-        const infaq = get("INFAQ");
-        const renang = get("RENANG");
+const nama = d.NAMA;
+const kelas = d.KELAS;
 
-        const jumlahCabutan =
-            seragamOR +
-            seragamSekolah +
-            imtihan +
-            biayaSekolah +
-            bon +
-            adm +
-            kitab +
-            wisuda +
-            raport +
-            infaq +
-            renang;
+const jumlahTabungan = get("JUMBLAHTABUNGAN");
 
-        const sisaTabungan = jumlahTabungan - jumlahCabutan;
+const seragamOR = get("SERAGAMOR");
+const seragamSekolah = get("SERAGAMSEKOLAH");
+const imtihan = get("IMTIHAN");
+const biayaSekolah = get("BSEKOLAH");
+
+const bon = get("BON");
+const adm = get("ADM");
+const kitab = get("KITAB");
+const wisuda = get("WISUDA");
+
+const raport = get("RAPORT");
+const infaq = get("INFAQ");
+const renang = get("RENANG");
+
+const jumlahCabutan =
+    seragamOR +
+    seragamSekolah +
+    imtihan +
+    biayaSekolah +
+    bon +
+    adm +
+    kitab +
+    wisuda +
+    raport +
+    infaq +
+    renang;
+
+const sisaTabungan =
+    jumlahTabungan - jumlahCabutan;
 
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF({ orientation: "portrait", unit: "cm", format: "a5" });
