@@ -1232,3 +1232,74 @@ function toggleBahasaInggris() {
         inputInggris.placeholder = "Nilai Bahasa Inggris";
     }
 }
+
+async function simpanKognitif() {
+
+  try {
+
+    const payload = {
+      action: "simpanKognitif",
+      data: {
+        nama: kNama.value,
+        kelas: kKelas.value,
+        semester: kSemester.value,
+        tahun: kTahun.value,
+
+        iqro: kIqro.value,
+        shalat: kShalat.value,
+        surah: kSurah.value,
+        praktek: kPraktek.value,
+        membaca: kMembaca.value,
+        tajwid: kTajwid.value,
+
+        doa: kDoa.value,
+        kitabah: kKitabah.value,
+        dinul: kDinul.value,
+        inggris: kInggris.value,
+        berhitung: kBerhitung.value,
+
+        sehat: kSehat.value,
+        bersih: kBersih.value,
+        disiplin: kDisiplin.value,
+        kerjasama: kKerjasama.value,
+        adaptasi: kAdaptasi.value,
+        vokal: kVokal.value,
+        kreatif: kKreatif.value,
+
+        sakit: kSakit.value,
+        izin: kIzin.value,
+        lain: kLain.value,
+
+        saran: kSaran.value,
+
+        tempat: kTempat.value,
+        tanggal: kTanggal.value,
+        wali: kWali.value,
+        kepsek: kKepsek.value
+      }
+    };
+
+    const res = await fetch(TABUNGAN_API, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const hasil = await res.json();
+
+    if (hasil.status) {
+      alert("Data Kognitif berhasil disimpan.");
+    } else {
+      alert(hasil.message);
+    }
+
+  } catch (err) {
+
+    console.error(err);
+    alert("ERROR: " + err.message);
+
+  }
+
+}
