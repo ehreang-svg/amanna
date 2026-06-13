@@ -84,7 +84,6 @@ async function loadRekapTabungan(){
 }
 
 async function cetakKwitansi() {
-
     try {
 
         const namaFilter = document.getElementById("filterNamaTabungan").value;
@@ -111,12 +110,6 @@ async function cetakKwitansi() {
 
         const d = json.data;
 
-        console.log("RAW KWITANSI DATA:", d);
-        console.log("KEYS:", Object.keys(d));
-
-        // =========================
-        // HELPER AMAN
-        // =========================
         const cleanNumber = (v) => {
             if (v === null || v === undefined || v === "") return 0;
             return Number(String(v).replace(/\./g, "").replace(/,/g, "")) || 0;
@@ -131,20 +124,11 @@ async function cetakKwitansi() {
             return 0;
         };
 
-        // =========================
-        // IDENTITAS
-        // =========================
         const nama = d.NAMA || "";
         const kelas = d.KELAS || "";
 
-        // =========================
-        // NILAI UTAMA
-        // =========================
         const jumlahTabungan = Number(d.JUMLAHTABUNGAN || 0);
 
-        // =========================
-        // CABUTAN (SEMUA ITEM)
-        // =========================
         const seragamOR = get("SERAGAMOR", "SERAGAM OR");
         const seragamSekolah = get("SERAGAMSEKOLAH", "SERAGAM SEKOLAH");
         const imtihan = get("IMTIHAN");
@@ -154,83 +138,104 @@ async function cetakKwitansi() {
         const adm = get("ADM");
         const kitab = get("KITAB");
         const wisuda = get("WISUDA");
-
         const raport = get("RAPORT");
         const infaq = get("INFAQ");
         const renang = get("RENANG");
 
-        // =========================
-        // JUMLAH CABUTAN
-        // =========================
         const jumlahCabutan =
-            seragamOR +
-            seragamSekolah +
-            imtihan +
-            bsekolah +
-            bon +
-            adm +
-            kitab +
-            wisuda +
-            raport +
-            infaq +
-            renang;
+            seragamOR + seragamSekolah + imtihan + bsekolah +
+            bon + adm + kitab + wisuda + raport + infaq + renang;
 
         const sisaTabungan = jumlahTabungan - jumlahCabutan;
 
-        // =========================
-        // PDF
-        // =========================
         const { jsPDF } = window.jspdf;
 
         const doc = new jsPDF({
             orientation: "portrait",
-            unit: "cm",
-            format: "a5"
+            unit: "mm",
+            format: "a6"
         });
 
-        let y = 1;
+        const pageW = doc.internal.pageSize.getWidth();
+
+        let y = 10;
+
+        // ================= HEADER BOX =================
+        doc.setDrawColor(0);
+        doc.setLineWidth(0.5);
+        doc.rect(5, 5, pageW - 10, 18);
 
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(16);
-        doc.text("KWITANSI TABUNGAN SISWA", 7.4, y, { align: "center" });
+        doc.setFontSize(12);
+        doc.text("KWITANSI TABUNGAN SISWA", pageW / 2, 12, { align: "center" });
 
-        y += 1;
-
+        doc.setFontSize(8);
         doc.setFont("helvetica", "normal");
-        doc.setFontSize(10);
+        doc.text("Sekolah / Lembaga Pendidikan", pageW / 2, 17, { align: "center" });
 
-        doc.text("Nama", 1, y);
-        doc.text(": " + nama, 4, y);
+        y = 28;
 
-        y += 0.6;
+        // ================= IDENTITAS =================
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "normal");
 
-        doc.text("Kelas", 1, y);
-        doc.text(": " + kelas, 4, y);
+        doc.text("Nama", 6, y);
+        doc.text(": " + nama, 22, y);
 
-        y += 0.8;
+        y += 5;
 
-        const rows = [
-            ["Jumlah Tabungan", jumlahTabungan],
-            ["Seragam OR", seragamOR],
-            ["Seragam Sekolah", seragamSekolah],
-            ["Imtihan", imtihan],
-            ["B. Sekolah", bsekolah],
-            ["BON", bon],
-            ["ADM", adm],
-            ["Kitab", kitab],
-            ["Wisuda", wisuda],
-            ["Raport", raport],
-            ["Infaq", infaq],
-            ["Renang", renang],
-            ["Jumlah Cabutan", jumlahCabutan],
-            ["Sisa Tabungan", sisaTabungan]
-        ];
+        doc.text("Kelas", 6, y);
+        doc.text(": " + kelas, 22, y);
 
-        rows.forEach(r => {
-            doc.text(r[0], 1, y);
-            doc.text(": Rp " + Number(r[1]).toLocaleString("id-ID"), 7, y);
-            y += 0.55;
-        });
+        y += 6;
+
+        // garis
+        doc.line(5, y, pageW - 5, y);
+        y += 6;
+
+        // ================= TABLE =================
+        const drawRow = (label, value, bold = false) => {
+            doc.setFont("helvetica", bold ? "bold" : "normal");
+            doc.text(label, 6, y);
+
+            doc.text(
+                ": Rp " + Number(value).toLocaleString("id-ID"),
+                pageW - 6,
+                y,
+                { align: "right" }
+            );
+            y += 5;
+        };
+
+        drawRow("Jumlah Tabungan", jumlahTabungan);
+
+        drawRow("Seragam OR", seragamOR);
+        drawRow("Seragam Sekolah", seragamSekolah);
+        drawRow("Imtihan", imtihan);
+        drawRow("B. Sekolah", bsekolah);
+        drawRow("BON", bon);
+        drawRow("ADM", adm);
+        drawRow("Kitab", kitab);
+        drawRow("Wisuda", wisuda);
+        drawRow("Raport", raport);
+        drawRow("Infaq", infaq);
+        drawRow("Renang", renang);
+
+        doc.line(5, y, pageW - 5, y);
+        y += 6;
+
+        drawRow("Jumlah Cabutan", jumlahCabutan, true);
+        drawRow("Sisa Tabungan", sisaTabungan, true);
+
+        // ================= FOOTER =================
+        y += 5;
+        doc.setFontSize(7);
+        doc.text(
+            "Dicetak otomatis oleh sistem Yayasan Amanna",
+            pageW / 2,
+            doc.internal.pageSize.getHeight() - 6,
+            { align: "center" }
+        );
 
         doc.save("Kwitansi_" + nama.replace(/\s+/g, "_") + ".pdf");
 
