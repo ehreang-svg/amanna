@@ -88,37 +88,35 @@ async function cetakKwitansi() {
     try {
 
         const namaFilter = document.getElementById("filterNamaTabungan").value;
-        const kelasFilter = document.getElementById("filterKelasTabungan").value;
+const kelasFilter = document.getElementById("filterKelasTabungan").value;
 
-        if (!namaFilter || !kelasFilter) {
-            alert("Pilih siswa terlebih dahulu");
-            return;
-        }
+if (!namaFilter || !kelasFilter) {
+    alert("Pilih siswa terlebih dahulu");
+    return;
+}
 
-        const res = await fetch(
-            TABUNGAN_API +
-            "?action=getKwitansi" +
-            "&nama=" + encodeURIComponent(namaFilter) +
-            "&kelas=" + encodeURIComponent(kelasFilter)
-        );
+const res = await fetch(
+    TABUNGAN_API +
+    "?action=getKwitansi" +
+    "&nama=" + encodeURIComponent(namaFilter) +
+    "&kelas=" + encodeURIComponent(kelasFilter)
+);
 
-        const json = await res.json();
+const json = await res.json();
 
-        if (!json.status) {
-            alert(json.message);
-            return;
-        }
+if (!json.status) {
+    alert(json.message);
+    return;
+}
 
-        const d = json.data;
+const d = json.data;
 
-        console.log(d);
+// FIX SAFE NUMBER
+const get = (key) => Number(d[key] ?? 0);
 
-        const get = (key) => Number(d[key] || 0);
-
-        // ✅ PAKAI VARIABEL BARU (NO CONFLICT)
-        const nama = d.NAMA;
-        const kelas = d.KELAS;
-
+// FIX IDENTIFIER
+const nama = d.NAMA;
+const kelas = d.KELAS;
         const jumlahTabungan = get("JUMBLAHTABUNGAN");
 
         const seragamOR = get("SERAGAMOR");
