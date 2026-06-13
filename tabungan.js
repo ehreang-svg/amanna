@@ -87,10 +87,10 @@ async function cetakKwitansi() {
 
     try {
 
-        const nama = document.getElementById("filterNamaTabungan").value;
-        const kelas = document.getElementById("filterKelasTabungan").value;
+        const namaFilter = document.getElementById("filterNamaTabungan").value;
+        const kelasFilter = document.getElementById("filterKelasTabungan").value;
 
-        if (!nama || !kelas) {
+        if (!namaFilter || !kelasFilter) {
             alert("Pilih siswa terlebih dahulu");
             return;
         }
@@ -98,8 +98,8 @@ async function cetakKwitansi() {
         const res = await fetch(
             TABUNGAN_API +
             "?action=getKwitansi" +
-            "&nama=" + encodeURIComponent(nama) +
-            "&kelas=" + encodeURIComponent(kelas)
+            "&nama=" + encodeURIComponent(namaFilter) +
+            "&kelas=" + encodeURIComponent(kelasFilter)
         );
 
         const json = await res.json();
@@ -111,50 +111,51 @@ async function cetakKwitansi() {
 
         const d = json.data;
 
-// DEBUG WAJIB (sementara)
-console.log(d);
+        console.log(d);
 
-const get = (key) => Number(d[key] || 0);
+        const get = (key) => Number(d[key] || 0);
 
-// 🔥 NAMA & KELAS SEKARANG PASTI ADA
-const nama = d.NAMA;
-const kelas = d.KELAS;
+        // ✅ PAKAI VARIABEL BARU (NO CONFLICT)
+        const nama = d.NAMA;
+        const kelas = d.KELAS;
 
-const jumlahTabungan = get("JUMBLAHTABUNGAN");
+        const jumlahTabungan = get("JUMBLAHTABUNGAN");
 
-const seragamOR = get("SERAGAMOR");
-const seragamSekolah = get("SERAGAMSEKOLAH");
-const imtihan = get("IMTIHAN");
-const bsekolah = get("BSEKOLAH");
+        const seragamOR = get("SERAGAMOR");
+        const seragamSekolah = get("SERAGAMSEKOLAH");
+        const imtihan = get("IMTIHAN");
+        const bsekolah = get("BSEKOLAH");
 
-const bon = get("BON");
-const adm = get("ADM");
-const kitab = get("KITAB");
-const wisuda = get("WISUDA");
+        const bon = get("BON");
+        const adm = get("ADM");
+        const kitab = get("KITAB");
+        const wisuda = get("WISUDA");
 
-// ⚠️ INI PENTING
-const raport = get("RAPORT");   // bukan RAPORT + UJIAN
-const infaq = get("INFAQ");
-const renang = get("RENANG");
+        const raport = get("RAPORT");
+        const infaq = get("INFAQ");
+        const renang = get("RENANG");
 
-const jumlahCabutan =
-    seragamOR +
-    seragamSekolah +
-    imtihan +
-    bsekolah +
-    bon +
-    adm +
-    kitab +
-    wisuda +
-    raport +
-    infaq +
-    renang;
+        const jumlahCabutan =
+            seragamOR +
+            seragamSekolah +
+            imtihan +
+            bsekolah +
+            bon +
+            adm +
+            kitab +
+            wisuda +
+            raport +
+            infaq +
+            renang;
 
-const sisaTabungan =
-    jumlahTabungan - jumlahCabutan;
+        const sisaTabungan = jumlahTabungan - jumlahCabutan;
 
         const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ orientation: "portrait", unit: "cm", format: "a5" });
+        const doc = new jsPDF({
+            orientation: "portrait",
+            unit: "cm",
+            format: "a5"
+        });
 
         let y = 1;
 
@@ -182,7 +183,7 @@ const sisaTabungan =
             ["Seragam OR", seragamOR],
             ["Seragam Sekolah", seragamSekolah],
             ["Imtihan", imtihan],
-            ["Biaya Sekolah", biayaSekolah],
+            ["B. Sekolah", bsekolah],
             ["BON", bon],
             ["ADM", adm],
             ["Kitab", kitab],
@@ -203,6 +204,7 @@ const sisaTabungan =
         doc.save("Kwitansi_" + nama.replace(/\s+/g, "_") + ".pdf");
 
     } catch (err) {
+        console.log(err);
         alert(err);
     }
 }
