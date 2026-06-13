@@ -117,7 +117,11 @@ const get = (key) => Number(d[key] ?? 0);
 // FIX IDENTIFIER
 const nama = d.NAMA;
 const kelas = d.KELAS;
-        const jumlahTabungan = get("JUMLAHTABUNGAN");
+        const jumlahTabungan =
+    get("JUMLAHTABUNGAN") ||
+    get("JUMLAH TABUNGAN") ||
+    get("JUMLAH_TABUNGAN") ||
+    0;
 
         const seragamOR = get("SERAGAMOR");
         const seragamSekolah = get("SERAGAMSEKOLAH");
