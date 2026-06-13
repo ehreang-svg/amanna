@@ -658,6 +658,8 @@ const nilaiInggris = isRAA
             PROVINSI JAWA BARAT
         </span>
     </div>
+    </div>
+    </div>
 
 </div>
 <!-- ================= HALAMAN 1 ================= -->
