@@ -88,45 +88,68 @@ async function cetakKwitansi() {
     try {
 
         const namaFilter = document.getElementById("filterNamaTabungan").value;
-const kelasFilter = document.getElementById("filterKelasTabungan").value;
+        const kelasFilter = document.getElementById("filterKelasTabungan").value;
 
-if (!namaFilter || !kelasFilter) {
-    alert("Pilih siswa terlebih dahulu");
-    return;
-}
+        if (!namaFilter || !kelasFilter) {
+            alert("Pilih siswa terlebih dahulu");
+            return;
+        }
 
-const res = await fetch(
-    TABUNGAN_API +
-    "?action=getKwitansi" +
-    "&nama=" + encodeURIComponent(namaFilter) +
-    "&kelas=" + encodeURIComponent(kelasFilter)
-);
+        const res = await fetch(
+            TABUNGAN_API +
+            "?action=getKwitansi" +
+            "&nama=" + encodeURIComponent(namaFilter) +
+            "&kelas=" + encodeURIComponent(kelasFilter)
+        );
 
-const json = await res.json();
+        const json = await res.json();
 
-if (!json.status) {
-    alert(json.message);
-    return;
-}
+        if (!json.status) {
+            alert(json.message);
+            return;
+        }
 
-const d = json.data;
+        const d = json.data;
 
-// FIX SAFE NUMBER
-const get = (key) => Number(d[key] ?? 0);
+        console.log("RAW KWITANSI DATA:", d);
+        console.log("KEYS:", Object.keys(d));
 
-// FIX IDENTIFIER
-const nama = d.NAMA;
-const kelas = d.KELAS;
+        // =========================
+        // HELPER AMAN
+        // =========================
+        const cleanNumber = (v) => {
+            if (v === null || v === undefined || v === "") return 0;
+            return Number(String(v).replace(/\./g, "").replace(/,/g, "")) || 0;
+        };
+
+        const get = (...keys) => {
+            for (let k of keys) {
+                if (d[k] !== undefined && d[k] !== null && d[k] !== "") {
+                    return cleanNumber(d[k]);
+                }
+            }
+            return 0;
+        };
+
+        // =========================
+        // IDENTITAS
+        // =========================
+        const nama = d.NAMA || "";
+        const kelas = d.KELAS || "";
+
+        // =========================
+        // NILAI UTAMA
+        // =========================
         const jumlahTabungan =
-    get("JUMLAHTABUNGAN") ||
-    get("JUMLAH TABUNGAN") ||
-    get("JUMLAH_TABUNGAN") ||
-    0;
+            get("JUMLAHTABUNGAN", "JUMLAH_TABUNGAN", "JUMLAH TABUNGAN", "TABUNGAN");
 
-        const seragamOR = get("SERAGAMOR");
-        const seragamSekolah = get("SERAGAMSEKOLAH");
+        // =========================
+        // CABUTAN (SEMUA ITEM)
+        // =========================
+        const seragamOR = get("SERAGAMOR", "SERAGAM OR");
+        const seragamSekolah = get("SERAGAMSEKOLAH", "SERAGAM SEKOLAH");
         const imtihan = get("IMTIHAN");
-        const bsekolah = get("BSEKOLAH");
+        const bsekolah = get("BSEKOLAH", "B SEKOLAH");
 
         const bon = get("BON");
         const adm = get("ADM");
@@ -137,6 +160,9 @@ const kelas = d.KELAS;
         const infaq = get("INFAQ");
         const renang = get("RENANG");
 
+        // =========================
+        // JUMLAH CABUTAN
+        // =========================
         const jumlahCabutan =
             seragamOR +
             seragamSekolah +
@@ -152,7 +178,11 @@ const kelas = d.KELAS;
 
         const sisaTabungan = jumlahTabungan - jumlahCabutan;
 
+        // =========================
+        // PDF
+        // =========================
         const { jsPDF } = window.jspdf;
+
         const doc = new jsPDF({
             orientation: "portrait",
             unit: "cm",
@@ -210,7 +240,6 @@ const kelas = d.KELAS;
         alert(err);
     }
 }
-
 async function exportBukuTabungan() {
     const { jsPDF } = window.jspdf; const doc = new jsPDF({ orientation: "landscape", unit: "cm", format: [10, 15] });
     const nama = document.getElementById("filterNamaTabungan").value || "-"; const kelas = document.getElementById("filterKelasTabungan").value || "-";
