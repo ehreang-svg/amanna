@@ -171,7 +171,7 @@ async function cetakKwitansi() {
 
         doc.setFontSize(8);
         doc.setFont("helvetica", "normal");
-        doc.text("Sekolah / Lembaga Pendidikan", pageW / 2, 17, { align: "center" });
+        doc.text("YAYASAN AMANNA", pageW / 2, 17, { align: "center" });
 
         y = 28;
 
