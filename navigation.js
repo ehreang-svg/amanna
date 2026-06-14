@@ -15,7 +15,8 @@ const pages=[
 "kognitifPage",
 "previewKognitifPage",
 "loginQuiz",
-"cabutanPage"
+"cabutanPage",
+"identitasPage"
 ];
 
 
@@ -74,6 +75,10 @@ function nav(id){
 
      if (id === "cabutanPage") {
         loadKelasCabutan();
+    }
+
+    if (id === "identitasPage") {
+        simpanIdentitasSiswa();
     }
 
 }
