@@ -446,28 +446,34 @@ async function simpanIdentitasSiswa() {
             });
         }
 
-        const data = {
-            namaPanggilan: document.getElementById("iNamaPanggilan").value,
-            nama: document.getElementById("iNama").value,
-            kelas: document.getElementById("iKelas").value,
-            nik: document.getElementById("iNik").value,
-            nisn: document.getElementById("iNisn").value,
-            jk: document.getElementById("iGender").value,
-            ttl: document.getElementById("iTTL").value,
-            agama: document.getElementById("iAgama").value,
-            anakKe: document.getElementById("iAnakKe").value,
-            tahunMasuk: document.getElementById("iTahunMasuk").value,
-            ayah: document.getElementById("iAyah").value,
-            ibu: document.getElementById("iIbu").value,
-            kerjaAyah: document.getElementById("iKerjaAyah").value,
-            kerjaIbu: document.getElementById("iKerjaIbu").value,
-            desa: document.getElementById("iDesa").value,
-            kecamatan: document.getElementById("iKecamatan").value,
-            kabupaten: document.getElementById("iKabupaten").value,
-            provinsi: document.getElementById("iProvinsi").value,
-            kodePos: document.getElementById("iKodePos").value,
-            foto: fotoBase64
-        };
+const data = {
+    namaPanggilan: document.getElementById("iNamaPanggilan").value,
+    nama: document.getElementById("iNama").value,
+    kelas: document.getElementById("iKelas").value,
+    nik: document.getElementById("iNik").value,
+    nisn: document.getElementById("iNisn").value,
+
+    jenisKelamin: document.getElementById("iGender").value,
+
+    ttl: document.getElementById("iTTL").value,
+    agama: document.getElementById("iAgama").value,
+    anakKe: document.getElementById("iAnakKe").value,
+    tahunMasuk: document.getElementById("iTahunMasuk").value,
+
+    namaAyah: document.getElementById("iAyah").value,
+    namaIbu: document.getElementById("iIbu").value,
+
+    pekerjaanAyah: document.getElementById("iKerjaAyah").value,
+    pekerjaanIbu: document.getElementById("iKerjaIbu").value,
+
+    desa: document.getElementById("iDesa").value,
+    kecamatan: document.getElementById("iKecamatan").value,
+    kabupaten: document.getElementById("iKabupaten").value,
+    provinsi: document.getElementById("iProvinsi").value,
+    kodePos: document.getElementById("iKodePos").value,
+
+    foto: fotoBase64
+};
 
         const res = await fetch(TABUNGAN_API, {
             method: "POST",
