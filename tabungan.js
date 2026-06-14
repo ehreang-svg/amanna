@@ -486,3 +486,7 @@ async function simpanIdentitasSiswa() {
     }
 }
 
+async function exportIdentitasSiswa(no) { 
+    try { const res = await fetch( TABUNGAN_API + "?action=exportIdentitasSiswa&no=" + encodeURIComponent(no) );
+         const data = await res.json(); if (!data.status) { alert(data.message); return; }
+         window.open(data.pdfUrl, "_blank"); } catch (err) { alert(err); } }
