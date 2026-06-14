@@ -85,51 +85,22 @@ async function loadRekapTabungan(){
 
 let dataSiswaCabutan = [];
 async function loadKelasCabutan() {
-
-    try {
-
-        const res = await fetch(
-            TABUNGAN_API + "?action=getDataSiswa"
-        );
-
-        const json = await res.json();
-
-        if (!json.status) {
-            alert("Gagal memuat data siswa");
-            return;
-        }
-
-        dataSiswaCabutan = json.data;
-
-        const select = document.getElementById("cabKelas");
-
-        select.innerHTML =
-            '<option value="">Pilih Kelas</option>';
-
-        const kelasUnik = [
-            ...new Set(
-                dataSiswaCabutan.map(s => s.kelas)
-            )
-        ].sort();
-
-        kelasUnik.forEach(kelas => {
-
-            select.innerHTML +=
-                `<option value="${kelas}">
-                    ${kelas}
-                </option>`;
-
-        });
-
-    } catch (err) {
-
-        console.log(err);
-        alert(err);
-
-    }
-
+        try{
+        const res = await fetch(TABUNGAN_API + "?action=getDataSiswa"); const data = await res.json();
+        if(!data.status){ alert("Gagal memuat data siswa"); return; }
+        dataSiswaTabungan = data.data;
+        const kelasUnik = [...new Set(data.data.map(x=>x.kelas))].sort();
+        tabKelas.innerHTML = `<option value="">Pilih Kelas</option>`;
+        kelasUnik.forEach(k=>{ tabKelas.innerHTML += `<option value="${k}">${k}</option>`; });
+        tabNama.innerHTML = `<option value="">Pilih Nama Siswa</option>`;
+    }catch(err){ console.log(err); }
 }
-function loadNamaCabutan() { const siswa = dataSiswaCabutan.filter( s => s.kelas == cabKelas.value ); cabNama.innerHTML = "<option value=''>Pilih Nama</option>"; siswa.forEach(s => { cabNama.innerHTML += `<option value="${s.nama}"> ${s.nama} </option>`; }); }
+
+function loadNamaCabutan() {
+const siswa = dataSiswaTabungan.filter(x => x.kelas == tabKelas.value);
+    tabNama.innerHTML = `<option value="">Pilih Nama Siswa</option>`;
+    siswa.forEach(s=>{ tabNama.innerHTML += `<option value="${s.nama}">${s.nama}</option>`; });}
+
 async function simpanCabutan() { if (!cabNama.value) { alert("Pilih siswa"); return; } const payload = { action: "inputCabutan", nama: cabNama.value, kelas: cabKelas.value, jenis: cabJenis.value, nominal: Number( cabNominal.value || 0 ) }; const res = await fetch( TABUNGAN_API, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) } ); const hasil = await res.json(); alert(hasil.message); }
 
 async function cetakKwitansi() {
