@@ -16,8 +16,7 @@ const pages=[
 "previewKognitifPage",
 "loginQuiz",
 "cabutanPage",
-"identitasPage",
-"exportIdentitasPage"
+"identitasPage"
 ];
 
 
