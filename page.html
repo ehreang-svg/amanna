@@ -557,3 +557,63 @@ placeholder="Masukkan NISN">
 <form id="quiz" Style="text-align:left"></form>
 <div id="hasil" Style="text-align:left"></div>
 </div>
+
+<!-- INPUT IDENTITAS SISWA -->
+<div class="page hidden" id="identitasPage">
+    <div class="back" onclick="goBack()">← Kembali</div>
+
+    <div class="card">
+        <h2>Input Identitas Siswa</h2>
+
+        <input id="iNamaPanggilan" placeholder="Nama Panggilan">
+        <input id="iNama" placeholder="Nama Lengkap">
+
+        <select id="iKelas">
+            <option value="">Pilih Kelas</option>
+            <option>RA.A</option>
+            <option>RA.B</option>
+            <option>KELAS 1</option>
+            <option>KELAS 2</option>
+            <option>KELAS 3</option>
+            <option>KELAS 4</option>
+            <option>KELAS 5A</option>
+            <option>KELAS 5B</option>
+            <option>KELAS 6</option>
+        </select>
+
+        <input id="iNik" placeholder="NIK">
+        <input id="iNisn" placeholder="NISN">
+
+        <select id="iGender">
+            <option value="">Jenis Kelamin</option>
+            <option>LAKI-LAKI</option>
+            <option>PEREMPUAN</option>
+        </select>
+
+        <input id="iTTL" placeholder="Tempat, Tanggal Lahir">
+        <input id="iAgama" placeholder="Agama">
+        <input id="iAnakKe" type="number" placeholder="Anak Ke">
+        <input id="iTahunMasuk" placeholder="Tahun Masuk">
+
+        <input id="iAyah" placeholder="Nama Ayah">
+        <input id="iIbu" placeholder="Nama Ibu">
+
+        <input id="iKerjaAyah" placeholder="Pekerjaan Ayah">
+        <input id="iKerjaIbu" placeholder="Pekerjaan Ibu">
+
+        <input id="iDesa" placeholder="Desa">
+        <input id="iKecamatan" placeholder="Kecamatan">
+        <input id="iKabupaten" placeholder="Kabupaten">
+        <input id="iProvinsi" placeholder="Provinsi">
+        <input id="iKodePos" placeholder="Kode Pos">
+
+        <label>Foto Siswa</label>
+        <input type="file" id="iFoto" accept="image/*">
+
+        <br><br>
+
+        <button onclick="simpanIdentitasSiswa()">
+            Simpan Identitas
+        </button>
+    </div>
+</div>
