@@ -1,87 +1,149 @@
-const pages=[
-"splash",
-"loginPage",
-"dashboard",
-"submenuPage",
-"contentPage",
-"absenGuruPage",
-"rekapPage",
-"absenSiswaPage",
-"rekapSiswaPage",
-"tabunganPage",
-"rekapTabunganPage",
-"raportPage",
-"previewRaportPage",
-"kognitifPage",
-"previewKognitifPage",
-"loginQuiz",
-"cabutanPage",
-"identitasPage"
+/* ===========================
+   DAFTAR HALAMAN
+=========================== */
+
+const pages = [
+    "splash",
+    "loginPage",
+    "dashboard",
+    "submenuPage",
+    "contentPage",
+    "absenGuruPage",
+    "rekapPage",
+    "absenSiswaPage",
+    "rekapSiswaPage",
+    "tabunganPage",
+    "rekapTabunganPage",
+    "raportPage",
+    "previewRaportPage",
+    "kognitifPage",
+    "previewKognitifPage",
+    "loginQuiz",
+    "cabutanPage",
+    "identitasPage",
+    "exportIdentitasPage"
 ];
 
+/* ===========================
+   RIWAYAT NAVIGASI
+=========================== */
 
-function show(id){
+const pageHistory = [];
 
-    pages.forEach(p=>{
+/* ===========================
+   TAMPILKAN HALAMAN
+=========================== */
+
+function show(id) {
+
+    // Sembunyikan semua halaman
+    pages.forEach(function (p) {
 
         const el = document.getElementById(p);
 
-        if(el){
+        if (el) {
             el.classList.add("hidden");
-        }else{
-            console.error("ID tidak ditemukan:", p);
         }
 
     });
 
+    // Tampilkan halaman tujuan
     const target = document.getElementById(id);
 
-    if(target){
+    if (target) {
+
         target.classList.remove("hidden");
-    }else{
-        console.error("Target tidak ditemukan:", id);
+
+    } else {
+
+        console.error("Target tidak ditemukan :", id);
+
     }
 
 }
 
+/* ===========================
+   NAVIGASI
+=========================== */
 
-function nav(id){
+function nav(id) {
 
-    const active = pages.find(p=>{
+    // Cari halaman yang sedang aktif
+    let active = null;
+
+    pages.forEach(function (p) {
 
         const el = document.getElementById(p);
 
-        return el && !el.classList.contains("hidden");
+        if (el && !el.classList.contains("hidden")) {
+            active = p;
+        }
 
     });
 
-    if(active && active !== id){
-        history.push(active);
+    // Simpan riwayat
+    if (active && active !== id) {
+        pageHistory.push(active);
     }
 
+    // Tampilkan halaman tujuan
     show(id);
 
-    if(id==="kognitifPage"){
-        loadKognitifSiswa();
+    // Jalankan fungsi khusus bila ada
+    if (id === "kognitifPage") {
+
+        if (typeof loadKognitifSiswa === "function") {
+            loadKognitifSiswa();
+        }
+
     }
 
-    if(id==="raportPage"){
-        loadKelasRaport();
+    if (id === "raportPage") {
+
+        if (typeof loadKelasRaport === "function") {
+            loadKelasRaport();
+        }
+
     }
 
-    if(id==="loginQuiz"){
-        mulai();
+    if (id === "loginQuiz") {
+
+        if (typeof mulai === "function") {
+            mulai();
+        }
+
     }
 
-     if (id === "cabutanPage") {
-        loadKelasCabutan();
+    if (id === "cabutanPage") {
+
+        if (typeof loadKelasCabutan === "function") {
+            loadKelasCabutan();
+        }
+
     }
 
+    if (id === "exportIdentitasPage") {
+
+        if (typeof loadKelasExportIdentitas === "function") {
+            loadKelasExportIdentitas();
+        }
+
+    }
 
 }
 
+/* ===========================
+   KEMBALI
+=========================== */
 
-function goBack(){
-    if(history.length===0)return;
-    show(history.pop());
+function goBack() {
+
+    if (pageHistory.length === 0) {
+        return;
+    }
+
+    const lastPage = pageHistory.pop();
+
+    show(lastPage);
+
 }
