@@ -553,7 +553,6 @@ let dataSiswaIdentitas = [];
 
 async function loadDataIdentitas() {
     try {
-
         const res = await fetch(TABUNGAN_API + "?action=getDataSiswa");
         const result = await res.json();
 
@@ -570,7 +569,11 @@ async function loadDataIdentitas() {
         kelasSelect.innerHTML = `<option value="">Pilih Kelas</option>`;
         namaSelect.innerHTML = `<option value="">Pilih Nama Siswa</option>`;
 
-        const kelasUnik = [...new Set(dataSiswaIdentitas.map(x => x.kelas).filter(Boolean))].sort();
+        const kelasUnik = [...new Set(
+            dataSiswaIdentitas
+                .map(x => x.kelas)
+                .filter(Boolean)
+        )].sort();
 
         kelasUnik.forEach(kelas => {
             kelasSelect.innerHTML += `<option value="${kelas}">${kelas}</option>`;
@@ -579,6 +582,7 @@ async function loadDataIdentitas() {
     } catch (err) {
         console.log(err);
     }
+    console.log("DATA SISWA:", dataSiswaIdentitas);
 }
 /* ===================== LOAD NAMA ===================== */
 
@@ -589,14 +593,24 @@ function loadNamaIdentitas() {
 
     namaSelect.innerHTML = `<option value="">Pilih Nama Siswa</option>`;
 
-    if (!dataSiswaIdentitas.length) return;
+    if (!dataSiswaIdentitas || dataSiswaIdentitas.length === 0) {
+        console.log("data kosong");
+        return;
+    }
 
     const filtered = dataSiswaIdentitas.filter(s =>
-        String(s.kelas || "").trim() === String(kelas).trim()
+        String(s.kelas || "").trim() === String(kelas || "").trim()
     );
 
+    if (filtered.length === 0) {
+        console.log("tidak ada siswa di kelas:", kelas);
+        return;
+    }
+
     filtered.forEach(siswa => {
-        namaSelect.innerHTML += `<option value="${siswa.nama}">${siswa.nama}</option>`;
+        if (siswa.nama) {
+            namaSelect.innerHTML += `<option value="${siswa.nama}">${siswa.nama}</option>`;
+        }
     });
 }
 
