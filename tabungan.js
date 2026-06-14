@@ -83,6 +83,11 @@ async function loadRekapTabungan(){
     }catch(err){ alert(err); }
 }
 
+let dataSiswaCabutan = [];
+async function loadKelasCabutan() { const res = await fetch( TABUNGAN_API + "?action=getDataSiswa" ); const json = await res.json(); dataSiswaCabutan = json.data; const kelas = [...new Set( dataSiswaCabutan.map(x => x.kelas) )].sort(); cabKelas.innerHTML = "<option value=''>Pilih Kelas</option>"; kelas.forEach(k => { cabKelas.innerHTML += `<option value="${k}">${k}</option>`; }); }
+function loadNamaCabutan() { const siswa = dataSiswaCabutan.filter( s => s.kelas == cabKelas.value ); cabNama.innerHTML = "<option value=''>Pilih Nama</option>"; siswa.forEach(s => { cabNama.innerHTML += `<option value="${s.nama}"> ${s.nama} </option>`; }); }
+async function simpanCabutan() { if (!cabNama.value) { alert("Pilih siswa"); return; } const payload = { action: "inputCabutan", nama: cabNama.value, kelas: cabKelas.value, jenis: cabJenis.value, nominal: Number( cabNominal.value || 0 ) }; const res = await fetch( TABUNGAN_API, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) } ); const hasil = await res.json(); alert(hasil.message); }
+
 async function cetakKwitansi() {
     try {
 
