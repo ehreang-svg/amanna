@@ -430,3 +430,59 @@ async function exportBukuTabungan() {
     doc.text("TOTAL SALDO : Rp " + total.toLocaleString("id-ID"), 0.7, 9.45); doc.setFont("helvetica", "normal"); doc.setFontSize(7);
     doc.text("Petugas", 2.2, 10.2); doc.text("Orang Tua", 10.7, 10.2); doc.line(1.5, 11.0, 4.5, 11.0); doc.line(9.8, 11.0, 13.0, 11.0); doc.save(`Buku_Tabungan_${nama}.pdf`);
 }
+
+async function simpanIdentitasSiswa() {
+    try {
+
+        const fotoFile = document.getElementById("iFoto").files[0];
+
+        let fotoBase64 = "";
+
+        if (fotoFile) {
+            fotoBase64 = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = e => resolve(e.target.result);
+                reader.readAsDataURL(fotoFile);
+            });
+        }
+
+        const data = {
+            namaPanggilan: document.getElementById("iNamaPanggilan").value,
+            nama: document.getElementById("iNama").value,
+            kelas: document.getElementById("iKelas").value,
+            nik: document.getElementById("iNik").value,
+            nisn: document.getElementById("iNisn").value,
+            jk: document.getElementById("iGender").value,
+            ttl: document.getElementById("iTTL").value,
+            agama: document.getElementById("iAgama").value,
+            anakKe: document.getElementById("iAnakKe").value,
+            tahunMasuk: document.getElementById("iTahunMasuk").value,
+            ayah: document.getElementById("iAyah").value,
+            ibu: document.getElementById("iIbu").value,
+            kerjaAyah: document.getElementById("iKerjaAyah").value,
+            kerjaIbu: document.getElementById("iKerjaIbu").value,
+            desa: document.getElementById("iDesa").value,
+            kecamatan: document.getElementById("iKecamatan").value,
+            kabupaten: document.getElementById("iKabupaten").value,
+            provinsi: document.getElementById("iProvinsi").value,
+            kodePos: document.getElementById("iKodePos").value,
+            foto: fotoBase64
+        };
+
+        const res = await fetch(TABUNGAN_API, {
+            method: "POST",
+            body: JSON.stringify({
+                action: "simpanIdentitasSiswa",
+                data: data
+            })
+        });
+
+        const hasil = await res.text();
+
+        alert(hasil);
+
+    } catch (err) {
+        alert(err);
+    }
+}
+
