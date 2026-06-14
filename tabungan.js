@@ -519,3 +519,69 @@ async function exportIdentitasSiswa(nama, kelas) {
     }
 
 }
+
+document
+.getElementById("filterKelasIdentitas")
+.addEventListener("change", loadNamaIdentitas);
+
+async function loadNamaIdentitas() {
+
+    const kelas =
+        document.getElementById("filterKelasIdentitas").value;
+
+    const res = await fetch(
+        TABUNGAN_API + "?action=getDataSiswa"
+    );
+
+    const hasil = await res.json();
+
+    const select =
+        document.getElementById("filterNamaIdentitas");
+
+    select.innerHTML =
+        '<option value="">Pilih Nama Siswa</option>';
+
+    hasil.data
+        .filter(s => s.kelas === kelas)
+        .forEach(s => {
+
+            select.innerHTML += `
+                <option value="${s.nama}">
+                    ${s.nama}
+                </option>
+            `;
+
+        });
+
+}
+
+async function exportIdentitasDipilih() {
+
+    const nama =
+        document.getElementById("filterNamaIdentitas").value;
+
+    const kelas =
+        document.getElementById("filterKelasIdentitas").value;
+
+    if (!nama || !kelas) {
+        alert("Pilih kelas dan nama siswa terlebih dahulu.");
+        return;
+    }
+
+    const res = await fetch(
+        TABUNGAN_API +
+        "?action=exportIdentitasSiswa" +
+        "&nama=" + encodeURIComponent(nama) +
+        "&kelas=" + encodeURIComponent(kelas)
+    );
+
+    const data = await res.json();
+
+    if (!data.status) {
+        alert(data.message);
+        return;
+    }
+
+    window.open(data.pdfUrl, "_blank");
+
+}
