@@ -551,8 +551,6 @@ async function exportIdentitasDipilih() {
 
 let dataSiswaIdentitas = [];
 
-let dataSiswaIdentitas = [];
-
 async function loadDataIdentitas() {
     try {
 
