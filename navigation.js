@@ -17,7 +17,7 @@ const pages=[
 "loginQuiz",
 "cabutanPage",
 "identitasPage",
-""exportIdentitasPage"
+"exportIdentitasPage"
 ];
 
 
