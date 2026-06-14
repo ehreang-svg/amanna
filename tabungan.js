@@ -83,26 +83,151 @@ async function loadRekapTabungan(){
     }catch(err){ alert(err); }
 }
 
+/* ===================== CABUTAN ===================== */
+
 let dataSiswaCabutan = [];
+
+/* ===================== LOAD KELAS ===================== */
+
 async function loadKelasCabutan() {
-        try{
-        const res = await fetch(TABUNGAN_API + "?action=getDataSiswa"); const data = await res.json();
-        if(!data.status){ alert("Gagal memuat data siswa"); return; }
-        dataSiswaTabungan = data.data;
-        const kelasUnik = [...new Set(data.data.map(x=>x.kelas))].sort();
-        tabKelas.innerHTML = `<option value="">Pilih Kelas</option>`;
-        kelasUnik.forEach(k=>{ tabKelas.innerHTML += `<option value="${k}">${k}</option>`; });
-        tabNama.innerHTML = `<option value="">Pilih Nama Siswa</option>`;
-    }catch(err){ console.log(err); }
+
+    try {
+
+        const res = await fetch(
+            TABUNGAN_API + "?action=getDataSiswa"
+        );
+
+        const result = await res.json();
+
+        if (!result.status) {
+            alert("Gagal memuat data siswa");
+            return;
+        }
+
+        dataSiswaCabutan = result.data;
+
+        const cabKelas = document.getElementById("cabKelas");
+        const cabNama = document.getElementById("cabNama");
+
+        cabKelas.innerHTML =
+            `<option value="">Pilih Kelas</option>`;
+
+        const kelasUnik = [
+            ...new Set(
+                dataSiswaCabutan.map(x => x.kelas)
+            )
+        ].sort();
+
+        kelasUnik.forEach(kelas => {
+
+            cabKelas.innerHTML +=
+                `<option value="${kelas}">
+                    ${kelas}
+                </option>`;
+
+        });
+
+        cabNama.innerHTML =
+            `<option value="">Pilih Nama Siswa</option>`;
+
+    } catch (err) {
+
+        console.log(err);
+        alert(err);
+
+    }
+
 }
 
+/* ===================== LOAD NAMA ===================== */
+
 function loadNamaCabutan() {
-const siswa = dataSiswaTabungan.filter(x => x.kelas == tabKelas.value);
-    tabNama.innerHTML = `<option value="">Pilih Nama Siswa</option>`;
-    siswa.forEach(s=>{ tabNama.innerHTML += `<option value="${s.nama}">${s.nama}</option>`; });}
 
-async function simpanCabutan() { if (!cabNama.value) { alert("Pilih siswa"); return; } const payload = { action: "inputCabutan", nama: cabNama.value, kelas: cabKelas.value, jenis: cabJenis.value, nominal: Number( cabNominal.value || 0 ) }; const res = await fetch( TABUNGAN_API, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) } ); const hasil = await res.json(); alert(hasil.message); }
+    const cabKelas =
+        document.getElementById("cabKelas");
 
+    const cabNama =
+        document.getElementById("cabNama");
+
+    const kelas = cabKelas.value;
+
+    cabNama.innerHTML =
+        `<option value="">Pilih Nama Siswa</option>`;
+
+    const daftar = dataSiswaCabutan.filter(
+        x => String(x.kelas).trim() === String(kelas).trim()
+    );
+
+    daftar.forEach(siswa => {
+
+        cabNama.innerHTML +=
+            `<option value="${siswa.nama}">
+                ${siswa.nama}
+            </option>`;
+
+    });
+
+}
+
+/* ===================== SIMPAN CABUTAN ===================== */
+
+async function simpanCabutan() {
+
+    try {
+
+        const payload = {
+
+            action: "inputCabutan",
+
+            nama:
+                document.getElementById("cabNama").value,
+
+            kelas:
+                document.getElementById("cabKelas").value,
+
+            jenis:
+                document.getElementById("cabJenis").value,
+
+            nominal:
+                Number(
+                    document.getElementById("cabNominal").value || 0
+                )
+
+        };
+
+        if (!payload.nama) {
+            alert("Pilih nama siswa.");
+            return;
+        }
+
+        const res = await fetch(
+            TABUNGAN_API,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type":
+                        "text/plain;charset=utf-8"
+                },
+                body: JSON.stringify(payload)
+            }
+        );
+
+        const hasil = await res.json();
+
+        alert(hasil.message);
+
+        if (hasil.status) {
+            document.getElementById("cabNominal").value = 0;
+        }
+
+    } catch (err) {
+
+        console.log(err);
+        alert(err);
+
+    }
+
+}
 async function cetakKwitansi() {
     try {
 
