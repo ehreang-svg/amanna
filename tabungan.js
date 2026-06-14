@@ -354,7 +354,7 @@ async function cetakKwitansi() {
 
         drawRow("Jumlah Tabungan", jumlahTabungan);
 
-        drawRow("Seragam OR", seragamOR);
+        drawRow("Seragam Polisi + OR", seragamOR);
         drawRow("Seragam Sekolah", seragamSekolah);
         drawRow("Imtihan", imtihan);
         drawRow("B. Sekolah", bsekolah);
