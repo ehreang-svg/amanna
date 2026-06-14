@@ -526,8 +526,11 @@ document
 
 async function loadNamaIdentitas() {
 
-    const kelas =
-        document.getElementById("filterKelasIdentitas").value;
+    const kelas = document
+        .getElementById("filterKelasIdentitas")
+        .value
+        .trim()
+        .toUpperCase();
 
     const res = await fetch(
         TABUNGAN_API + "?action=getDataSiswa"
@@ -535,23 +538,31 @@ async function loadNamaIdentitas() {
 
     const hasil = await res.json();
 
-    const select =
-        document.getElementById("filterNamaIdentitas");
+    const select = document.getElementById("filterNamaIdentitas");
 
     select.innerHTML =
         '<option value="">Pilih Nama Siswa</option>';
 
-    hasil.data
-        .filter(s => s.kelas === kelas)
-        .forEach(s => {
+    if (!hasil.status) {
+        alert("Gagal mengambil data siswa");
+        return;
+    }
 
-            select.innerHTML += `
-                <option value="${s.nama}">
-                    ${s.nama}
-                </option>
-            `;
+    hasil.data.forEach(function (siswa) {
 
-        });
+        if (
+            String(siswa.kelas).trim().toUpperCase() === kelas
+        ) {
+
+            const opt = document.createElement("option");
+            opt.value = siswa.nama;
+            opt.textContent = siswa.nama;
+
+            select.appendChild(opt);
+
+        }
+
+    });
 
 }
 
