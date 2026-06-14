@@ -528,9 +528,6 @@ async function exportIdentitasSiswa(nama, kelas) {
 
 }
 
-document
-.getElementById("filterKelasIdentitas")
-.addEventListener("change", loadNamaIdentitas);
 
 async function exportIdentitasDipilih() {
 
@@ -613,8 +610,8 @@ async function loadDataIdentitas() {
 
 function loadNamaIdentitas() {
 
-    const kelas =
-        document.getElementById("filterKelasIdentitas")
+    const kelas = document
+        .getElementById("filterKelasIdentitas")
         .value
         .trim();
 
@@ -624,6 +621,12 @@ function loadNamaIdentitas() {
     namaSelect.innerHTML =
         '<option value="">Pilih Nama Siswa</option>';
 
+    // 🔥 INI PENTING
+    if (!dataSiswaIdentitas || dataSiswaIdentitas.length === 0) {
+        console.log("dataSiswaIdentitas masih kosong");
+        return;
+    }
+
     dataSiswaIdentitas.forEach(function (siswa) {
 
         if (
@@ -631,7 +634,6 @@ function loadNamaIdentitas() {
         ) {
 
             const opt = document.createElement("option");
-
             opt.value = siswa.nama;
             opt.textContent = siswa.nama;
 
