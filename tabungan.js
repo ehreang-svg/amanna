@@ -310,19 +310,19 @@ async function cetakKwitansi() {
         doc.setLineWidth(0.5);
         doc.rect(5, 5, pageW - 10, 18);
 
-        doc.setFont("helvetica", "bold");
+        doc.setFont("courier", "bold");
         doc.setFontSize(12);
         doc.text("KWITANSI TABUNGAN SISWA", pageW / 2, 12, { align: "center" });
 
         doc.setFontSize(8);
-        doc.setFont("helvetica", "normal");
+        doc.setFont("courier", "bold");
         doc.text("YAYASAN AMANNA", pageW / 2, 17, { align: "center" });
 
         y = 28;
 
         // ================= IDENTITAS =================
         doc.setFontSize(9);
-        doc.setFont("helvetica", "normal");
+        doc.setFont("courier", "normal");
 
         doc.text("Nama", 6, y);
         doc.text(": " + nama, 22, y);
@@ -340,7 +340,7 @@ async function cetakKwitansi() {
 
         // ================= TABLE =================
         const drawRow = (label, value, bold = false) => {
-            doc.setFont("helvetica", bold ? "bold" : "normal");
+            doc.setFont("courier", bold ? "bold" : "normal");
             doc.text(label, 6, y);
 
             doc.text(
