@@ -597,16 +597,17 @@ function loadNamaIdentitas() {
         return;
     }
 
-    const filtered = dataSiswaIdentitas.filter(s =>
-        String(s.kelas || "").trim() === String(kelas).trim()
-    );
+filtered.forEach(siswa => {
 
-    filtered.forEach(siswa => {
-        const opt = document.createElement("option");
-        opt.value = siswa.nama;
-        opt.textContent = siswa.nama;
-        namaSelect.appendChild(opt);
-    });
+    const nama =
+        siswa.nama || siswa.NAMA || siswa.Nama || "-";
+
+    const opt = document.createElement("option");
+    opt.value = nama;
+    opt.textContent = nama;
+
+    namaSelect.appendChild(opt);
+});
 }
 
 document.addEventListener("DOMContentLoaded", () => {
