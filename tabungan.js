@@ -608,11 +608,3 @@ function loadNamaIdentitas() {
         namaSelect.appendChild(opt);
     });
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-    loadDataIdentitas();
-
-    document
-        .getElementById("filterKelasIdentitas")
-        .addEventListener("change", loadNamaIdentitas);
-});
