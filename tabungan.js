@@ -600,12 +600,6 @@ async function loadDataIdentitas() {
 
         });
 
-        document.addEventListener("DOMContentLoaded", function () {
-
-    document
-        .getElementById("filterKelasIdentitas")
-        .addEventListener("change", loadNamaIdentitas);
-
     } catch (err) {
 
         console.error(err);
