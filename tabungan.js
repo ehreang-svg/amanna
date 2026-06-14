@@ -582,33 +582,36 @@ async function loadDataIdentitas() {
         console.log(err);
     }
     console.log("DATA SISWA:", dataSiswaIdentitas);
+    
+console.log("KELAS SAMPLE:", dataSiswaIdentitas[0]?.kelas);
+console.log("NAMA SAMPLE:", dataSiswaIdentitas[0]?.nama);
 }
 /* ===================== LOAD NAMA ===================== */
 
 function loadNamaIdentitas() {
 
-    const kelas = document.getElementById("filterKelasIdentitas").value;
+    const kelasEl = document.getElementById("filterKelasIdentitas");
     const namaSelect = document.getElementById("filterNamaIdentitas");
+
+    const kelas = (kelasEl.value || "").trim();
 
     namaSelect.innerHTML = `<option value="">Pilih Nama Siswa</option>`;
 
-    if (!dataSiswaIdentitas || dataSiswaIdentitas.length === 0) {
-        console.log("data kosong");
-        return;
-    }
+    console.log("Kelas dipilih:", kelas);
 
-    const filtered = dataSiswaIdentitas.filter(s =>
-        String(s.kelas || "").trim() === String(kelas || "").trim()
-    );
+    const filtered = dataSiswaIdentitas.filter(s => {
+        return String(s.kelas || "").trim() === kelas;
+    });
 
-    if (filtered.length === 0) {
-        console.log("tidak ada siswa di kelas:", kelas);
-        return;
-    }
+    console.log("Hasil filter:", filtered);
 
     filtered.forEach(siswa => {
         if (siswa.nama) {
-            namaSelect.innerHTML += `<option value="${siswa.nama}">${siswa.nama}</option>`;
+            namaSelect.innerHTML += `
+                <option value="${siswa.nama}">
+                    ${siswa.nama}
+                </option>
+            `;
         }
     });
 }
@@ -616,7 +619,9 @@ function loadNamaIdentitas() {
 document.addEventListener("DOMContentLoaded", () => {
     loadDataIdentitas();
 
-    document
-        .getElementById("filterKelasIdentitas")
-        .addEventListener("change", loadNamaIdentitas);
-});
+    const kelasEl = document.getElementById("filterKelasIdentitas");
+
+    kelasEl.addEventListener("change", () => {
+        console.log("CHANGE TRIGGERED");
+        loadNamaIdentitas();
+    });
