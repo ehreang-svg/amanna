@@ -14,7 +14,8 @@ const pages=[
 "previewRaportPage",
 "kognitifPage",
 "previewKognitifPage",
-"loginQuiz"
+"loginQuiz",
+"cabutanPage"
 ];
 
 
@@ -69,6 +70,10 @@ function nav(id){
 
     if(id==="loginQuiz"){
         mulai();
+    }
+
+     if (id === "cabutanPage") {
+        loadKelasCabutan();
     }
 
 }
