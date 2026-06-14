@@ -497,17 +497,25 @@ async function exportIdentitasSiswa(nama, kelas) {
     try {
 
         const res = await fetch(
+
             TABUNGAN_API +
+
             "?action=exportIdentitasSiswa" +
+
             "&nama=" + encodeURIComponent(nama) +
+
             "&kelas=" + encodeURIComponent(kelas)
+
         );
 
         const data = await res.json();
 
         if (!data.status) {
+
             alert(data.message);
+
             return;
+
         }
 
         window.open(data.pdfUrl, "_blank");
@@ -526,43 +534,51 @@ document
 
 async function loadNamaIdentitas() {
 
-    const kelas = document
-        .getElementById("filterKelasIdentitas")
-        .value
-        .trim()
-        .toUpperCase();
+    try {
 
-    const res = await fetch(
-        TABUNGAN_API + "?action=getDataSiswa"
-    );
+        const kelas = document
+            .getElementById("filterKelasIdentitas")
+            .value
+            .trim()
+            .toUpperCase();
 
-    const hasil = await res.json();
+        const res = await fetch(
+            TABUNGAN_API + "?action=getDataSiswa"
+        );
 
-    const select = document.getElementById("filterNamaIdentitas");
+        const hasil = await res.json();
 
-    select.innerHTML =
-        '<option value="">Pilih Nama Siswa</option>';
+        const namaSelect =
+            document.getElementById("filterNamaIdentitas");
 
-    if (!hasil.status) {
-        alert("Gagal mengambil data siswa");
-        return;
+        namaSelect.innerHTML =
+            '<option value="">Pilih Nama Siswa</option>';
+
+        hasil.data.forEach(function (siswa) {
+
+            if (
+                String(siswa.kelas)
+                    .trim()
+                    .toUpperCase() === kelas
+            ) {
+
+                const opt =
+                    document.createElement("option");
+
+                opt.value = siswa.nama;
+                opt.textContent = siswa.nama;
+
+                namaSelect.appendChild(opt);
+
+            }
+
+        });
+
+    } catch (err) {
+
+        alert(err);
+
     }
-
-    hasil.data.forEach(function (siswa) {
-
-        if (
-            String(siswa.kelas).trim().toUpperCase() === kelas
-        ) {
-
-            const opt = document.createElement("option");
-            opt.value = siswa.nama;
-            opt.textContent = siswa.nama;
-
-            select.appendChild(opt);
-
-        }
-
-    });
 
 }
 
@@ -575,25 +591,14 @@ async function exportIdentitasDipilih() {
         document.getElementById("filterKelasIdentitas").value;
 
     if (!nama || !kelas) {
+
         alert("Pilih kelas dan nama siswa terlebih dahulu.");
+
         return;
+
     }
 
-    const res = await fetch(
-        TABUNGAN_API +
-        "?action=exportIdentitasSiswa" +
-        "&nama=" + encodeURIComponent(nama) +
-        "&kelas=" + encodeURIComponent(kelas)
-    );
-
-    const data = await res.json();
-
-    if (!data.status) {
-        alert(data.message);
-        return;
-    }
-
-    window.open(data.pdfUrl, "_blank");
+    await exportIdentitasSiswa(nama, kelas);
 
 }
 
@@ -608,42 +613,37 @@ async function loadDataIdentitas() {
         const hasil = await res.json();
 
         if (!hasil.status) {
-            alert("Gagal mengambil data siswa.");
+            alert("Gagal mengambil data siswa");
             return;
         }
 
-        const selectNama =
-            document.getElementById("filterNamaIdentitas");
-
-        const selectKelas =
+        const kelasSelect =
             document.getElementById("filterKelasIdentitas");
 
-        selectNama.innerHTML =
-            '<option value="">Pilih Nama Siswa</option>';
+        const namaSelect =
+            document.getElementById("filterNamaIdentitas");
 
-        selectKelas.innerHTML =
+        kelasSelect.innerHTML =
             '<option value="">Pilih Kelas</option>';
 
-        // Menghindari kelas yang duplikat
-        const daftarKelas = [];
+        namaSelect.innerHTML =
+            '<option value="">Pilih Nama Siswa</option>';
+
+        const daftar = [];
 
         hasil.data.forEach(function (siswa) {
 
-            // Tambah nama
-            const optNama = document.createElement("option");
-            optNama.value = siswa.nama;
-            optNama.textContent = siswa.nama;
-            selectNama.appendChild(optNama);
+            const k = String(siswa.kelas).trim();
 
-            // Tambah kelas jika belum ada
-            if (!daftarKelas.includes(siswa.kelas)) {
+            if (!daftar.includes(k)) {
 
-                daftarKelas.push(siswa.kelas);
+                daftar.push(k);
 
-                const optKelas = document.createElement("option");
-                optKelas.value = siswa.kelas;
-                optKelas.textContent = siswa.kelas;
-                selectKelas.appendChild(optKelas);
+                const opt = document.createElement("option");
+                opt.value = k;
+                opt.textContent = k;
+
+                kelasSelect.appendChild(opt);
 
             }
 
