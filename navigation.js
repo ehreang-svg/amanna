@@ -125,7 +125,7 @@ function nav(id) {
     if (id === "exportIdentitasPage") {loadDataIdentitas();
         }
 
-    }
+    
 
 }
 
