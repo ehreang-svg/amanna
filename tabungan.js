@@ -492,7 +492,30 @@ const data = {
     }
 }
 
-async function exportIdentitasSiswa(no) { 
-    try { const res = await fetch( TABUNGAN_API + "?action=exportIdentitasSiswa&no=" + encodeURIComponent(no) );
-         const data = await res.json(); if (!data.status) { alert(data.message); return; }
-         window.open(data.pdfUrl, "_blank"); } catch (err) { alert(err); } }
+async function exportIdentitasSiswa(nama, kelas) {
+
+    try {
+
+        const res = await fetch(
+            TABUNGAN_API +
+            "?action=exportIdentitasSiswa" +
+            "&nama=" + encodeURIComponent(nama) +
+            "&kelas=" + encodeURIComponent(kelas)
+        );
+
+        const data = await res.json();
+
+        if (!data.status) {
+            alert(data.message);
+            return;
+        }
+
+        window.open(data.pdfUrl, "_blank");
+
+    } catch (err) {
+
+        alert(err);
+
+    }
+
+}
