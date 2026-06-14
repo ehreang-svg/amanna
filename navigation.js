@@ -122,10 +122,7 @@ function nav(id) {
 
     }
 
-    if (id === "exportIdentitasPage") {
-
-        if (typeof loadKelasExportIdentitas === "function") {
-            loadKelasExportIdentitas();
+    if (id === "exportIdentitasPage") {loadDataIdentitas();
         }
 
     }
