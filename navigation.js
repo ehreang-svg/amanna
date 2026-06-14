@@ -78,6 +78,9 @@ function nav(id){
         loadKelasCabutan();
     }
 
+    if (id === "exportIdentitasPage") {
+        exportIdentitasPage();
+    }
 
 }
 
