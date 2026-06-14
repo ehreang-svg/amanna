@@ -123,10 +123,8 @@ function nav(id) {
     }
 
     if (id === "exportIdentitasPage") {
-        if (typeof loadDataIdentitas === "function") {
-            loadDataIdentitas();
-        }
-    }    
+    loadDataIdentitas();
+}
 
 }
 
