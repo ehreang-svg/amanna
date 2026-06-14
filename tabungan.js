@@ -608,6 +608,15 @@ async function loadDataIdentitas() {
 
 }
 
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    document
+        .getElementById("filterKelasIdentitas")
+        .addEventListener("change", loadNamaIdentitas);
+
+});
+
 function loadNamaIdentitas() {
 
     const kelas = document
