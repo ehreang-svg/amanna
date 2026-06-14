@@ -596,3 +596,63 @@ async function exportIdentitasDipilih() {
     window.open(data.pdfUrl, "_blank");
 
 }
+
+async function loadDataIdentitas() {
+
+    try {
+
+        const res = await fetch(
+            TABUNGAN_API + "?action=getDataSiswa"
+        );
+
+        const hasil = await res.json();
+
+        if (!hasil.status) {
+            alert("Gagal mengambil data siswa.");
+            return;
+        }
+
+        const selectNama =
+            document.getElementById("filterNamaIdentitas");
+
+        const selectKelas =
+            document.getElementById("filterKelasIdentitas");
+
+        selectNama.innerHTML =
+            '<option value="">Pilih Nama Siswa</option>';
+
+        selectKelas.innerHTML =
+            '<option value="">Pilih Kelas</option>';
+
+        // Menghindari kelas yang duplikat
+        const daftarKelas = [];
+
+        hasil.data.forEach(function (siswa) {
+
+            // Tambah nama
+            const optNama = document.createElement("option");
+            optNama.value = siswa.nama;
+            optNama.textContent = siswa.nama;
+            selectNama.appendChild(optNama);
+
+            // Tambah kelas jika belum ada
+            if (!daftarKelas.includes(siswa.kelas)) {
+
+                daftarKelas.push(siswa.kelas);
+
+                const optKelas = document.createElement("option");
+                optKelas.value = siswa.kelas;
+                optKelas.textContent = siswa.kelas;
+                selectKelas.appendChild(optKelas);
+
+            }
+
+        });
+
+    } catch (err) {
+
+        alert(err);
+
+    }
+
+}
