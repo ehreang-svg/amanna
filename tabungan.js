@@ -585,43 +585,56 @@ async function loadDataIdentitas() {
     
 console.log("KELAS SAMPLE:", dataSiswaIdentitas[0]?.kelas);
 console.log("NAMA SAMPLE:", dataSiswaIdentitas[0]?.nama);
+console.log("SAMPLE DATA:", dataSiswaIdentitas[0]);
 }
 /* ===================== LOAD NAMA ===================== */
 
 function loadNamaIdentitas() {
 
-    const kelasEl = document.getElementById("filterKelasIdentitas");
-    const namaSelect = document.getElementById("filterNamaIdentitas");
+    const kelas = document
+        .getElementById("filterKelasIdentitas")
+        .value;
 
-    const kelas = (kelasEl.value || "").trim();
+    const namaSelect = document
+        .getElementById("filterNamaIdentitas");
 
     namaSelect.innerHTML = `<option value="">Pilih Nama Siswa</option>`;
 
     console.log("Kelas dipilih:", kelas);
 
     const filtered = dataSiswaIdentitas.filter(s => {
-        return String(s.kelas || "").trim() === kelas;
+        return String(s.kelas || "")
+            .trim()
+            .toLowerCase() === kelas.trim().toLowerCase();
     });
 
-    console.log("Hasil filter:", filtered);
+    console.log("HASIL FILTER:", filtered);
 
     filtered.forEach(siswa => {
-        if (siswa.nama) {
-            namaSelect.innerHTML += `
-                <option value="${siswa.nama}">
-                    ${siswa.nama}
-                </option>
-            `;
-        }
+        namaSelect.innerHTML += `
+            <option value="${siswa.nama}">
+                ${siswa.nama}
+            </option>
+        `;
     });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+
     loadDataIdentitas();
 
-    const kelasEl = document.getElementById("filterKelasIdentitas");
+    setTimeout(() => {
+        const el = document.getElementById("filterKelasIdentitas");
 
-    kelasEl.addEventListener("change", () => {
-        console.log("CHANGE TRIGGERED");
-        loadNamaIdentitas();
-    });
+        if (!el) {
+            console.error("filterKelasIdentitas tidak ditemukan");
+            return;
+        }
+
+        el.addEventListener("change", () => {
+            console.log("CHANGE OK");
+            loadNamaIdentitas();
+        });
+
+    }, 500);
+});
