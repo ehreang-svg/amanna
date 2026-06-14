@@ -532,53 +532,6 @@ document
 .getElementById("filterKelasIdentitas")
 .addEventListener("change", loadNamaIdentitas);
 
-async function loadNamaIdentitas() {
-
-    try {
-
-        const kelas = document
-            .getElementById("filterKelasIdentitas")
-            .value;
-
-        const res = await fetch(
-            TABUNGAN_API + "?action=getDataSiswa"
-        );
-
-        const hasil = await res.json();
-
-        const select =
-            document.getElementById("filterNamaIdentitas");
-
-        select.innerHTML =
-            '<option value="">Pilih Nama Siswa</option>';
-
-        if (!hasil.status) return;
-
-        hasil.data.forEach(function (siswa) {
-
-            if (
-                String(siswa.kelas).trim() ===
-                String(kelas).trim()
-            ) {
-
-                const opt = document.createElement("option");
-
-                opt.value = siswa.nama;
-                opt.textContent = siswa.nama;
-
-                select.appendChild(opt);
-
-            }
-
-        });
-
-    } catch (err) {
-
-        console.log(err);
-
-    }
-
-}
 async function exportIdentitasDipilih() {
 
     const nama =
@@ -599,6 +552,8 @@ async function exportIdentitasDipilih() {
 
 }
 
+let dataSiswaIdentitas = [];
+
 async function loadDataIdentitas() {
 
     try {
@@ -609,27 +564,36 @@ async function loadDataIdentitas() {
 
         const hasil = await res.json();
 
-        if (!hasil.status) return;
+        if (!hasil.status) {
+            alert("Gagal mengambil data siswa");
+            return;
+        }
+
+        dataSiswaIdentitas = hasil.data;
 
         const kelasSelect =
             document.getElementById("filterKelasIdentitas");
 
+        const namaSelect =
+            document.getElementById("filterNamaIdentitas");
+
         kelasSelect.innerHTML =
             '<option value="">Pilih Kelas</option>';
 
-        const daftar = [];
+        namaSelect.innerHTML =
+            '<option value="">Pilih Nama Siswa</option>';
 
-        hasil.data.forEach(function (siswa) {
+        const daftarKelas = [];
 
-            const kelas = String(siswa.kelas).trim();
+        dataSiswaIdentitas.forEach(function (siswa) {
 
-            if (!daftar.includes(kelas)) {
+            const kelas = String(siswa.kelas || "").trim();
 
-                daftar.push(kelas);
+            if (kelas && !daftarKelas.includes(kelas)) {
 
-                const opt =
-                    document.createElement("option");
+                daftarKelas.push(kelas);
 
+                const opt = document.createElement("option");
                 opt.value = kelas;
                 opt.textContent = kelas;
 
@@ -641,8 +605,40 @@ async function loadDataIdentitas() {
 
     } catch (err) {
 
-        console.log(err);
+        console.error(err);
 
     }
+
+}
+
+function loadNamaIdentitas() {
+
+    const kelas =
+        document.getElementById("filterKelasIdentitas")
+        .value
+        .trim();
+
+    const namaSelect =
+        document.getElementById("filterNamaIdentitas");
+
+    namaSelect.innerHTML =
+        '<option value="">Pilih Nama Siswa</option>';
+
+    dataSiswaIdentitas.forEach(function (siswa) {
+
+        if (
+            String(siswa.kelas || "").trim() === kelas
+        ) {
+
+            const opt = document.createElement("option");
+
+            opt.value = siswa.nama;
+            opt.textContent = siswa.nama;
+
+            namaSelect.appendChild(opt);
+
+        }
+
+    });
 
 }
