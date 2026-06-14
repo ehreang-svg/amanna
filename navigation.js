@@ -77,9 +77,6 @@ function nav(id){
         loadKelasCabutan();
     }
 
-    if (id === "identitasPage") {
-        simpanIdentitasSiswa();
-    }
 
 }
 
