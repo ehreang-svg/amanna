@@ -26,53 +26,55 @@ async function loadKelasTabungan() {
 } // ← KURUNG PENUTUP FUNGSI HILANG
 
 async function simpanTabungan() {
-    console.log(tabNama.value);
-    console.log(tabKelas.value);
-    console.log(tabNominal.value);
+    try {
 
-    const payload = {
-        action: "inputTabungan",
-        nama: tabNama.value,
-        kelas: tabKelas.value,
-        nominal: tabNominal.value
-    };
+        const nama = tabNama.value.trim();
+        const kelas = tabKelas.value.trim();
+        const nominal = Number(tabNominal.value);
 
-    console.log(payload);
+        if (!kelas) {
+            alert("Pilih kelas terlebih dahulu");
+            return;
+        }
 
-    const res = await fetch(TABUNGAN_API, {
-        method: "POST",
-        headers: {
-            "Content-Type": "text/plain;charset=utf-8"
-        },
-        body: JSON.stringify(payload)
-    });
+        if (!nama) {
+            alert("Pilih siswa terlebih dahulu");
+            return;
+        }
 
-    console.log(await res.text());
-}
+        if (!nominal || nominal <= 0) {
+            alert("Nominal tabungan tidak valid");
+            return;
+        }
 
-async function simpanTabungan() {
-    console.log(tabNama.value);
-    console.log(tabKelas.value);
-    console.log(tabNominal.value);
+        const payload = {
+            action: "inputTabungan",
+            nama: nama,
+            kelas: kelas,
+            nominal: nominal
+        };
 
-    const payload = {
-        action: "inputTabungan",
-        nama: tabNama.value,
-        kelas: tabKelas.value,
-        nominal: tabNominal.value
-    };
+        const res = await fetch(TABUNGAN_API, {
+            method: "POST",
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify(payload)
+        });
 
-    console.log(payload);
+        const hasil = await res.json();
 
-    const res = await fetch(TABUNGAN_API, {
-        method: "POST",
-        headers: {
-            "Content-Type": "text/plain;charset=utf-8"
-        },
-        body: JSON.stringify(payload)
-    });
+        alert(hasil.message);
 
-    console.log(await res.text());
+        if (hasil.status) {
+            tabNominal.value = "";
+            await loadRekapTabungan();
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert("Gagal menyimpan tabungan");
+    }
 }
 
 async function loadFilterKelasTabungan(){
@@ -897,51 +899,95 @@ async function updateIdentitasSiswa() {
 
 }
 async function loadKelasEditIdentitas() {
+
     try {
-        const res = await fetch(TABUNGAN_API + "?action=getDataSiswa");
+
+        const res = await fetch(
+            TABUNGAN_API + "?action=getDataSiswa"
+        );
+
         const result = await res.json();
 
-        const data = Array.isArray(result) ? result : result.data;
-
-        if (!data || !Array.isArray(data)) {
-            console.log("DATA INVALID:", result);
+        if (!result.status) {
+            alert("Gagal memuat data siswa");
             return;
         }
 
-        dataSiswaEdit = data;
+        dataSiswaEdit = result.data || [];
 
-        const kelasSelect = document.getElementById("editFilterKelas");
-        kelasSelect.innerHTML = `<option value="">Pilih Kelas</option>`;
+        const kelasSelect =
+            document.getElementById("editFilterKelas");
 
-        const kelasUnik = [...new Set(data.map(s => s.kelas).filter(Boolean))];
+        kelasSelect.innerHTML =
+            `<option value="">Pilih Kelas</option>`;
 
-        kelasUnik.forEach(k => {
-            kelasSelect.innerHTML += `<option value="${k}">${k}</option>`;
+        const kelasUnik = [
+            ...new Set(
+                dataSiswaEdit
+                    .map(s => s.kelas)
+                    .filter(Boolean)
+            )
+        ].sort();
+
+        kelasUnik.forEach(kelas => {
+
+            kelasSelect.innerHTML += `
+                <option value="${kelas}">
+                    ${kelas}
+                </option>
+            `;
+
         });
 
-        console.log("KELAS LOADED:", kelasUnik);
-
     } catch (err) {
+
         console.error(err);
+        alert("Gagal memuat data kelas");
+
     }
-}
-    
-    function loadNamaEditIdentitas() {
+}    
+ function loadNamaEditIdentitas() {
 
-    const kelas = document.getElementById("editFilterKelas").value;
-    const namaSelect = document.getElementById("editFilterNama");
+    const kelas =
+        document.getElementById("editFilterKelas").value;
 
-    namaSelect.innerHTML = `<option value="">Pilih Nama</option>`;
+    const namaSelect =
+        document.getElementById("editFilterNama");
 
-    const filtered = dataSiswaEdit.filter(s =>
-        String(s.kelas).trim().toLowerCase() === String(kelas).trim().toLowerCase()
-    );
+    namaSelect.innerHTML =
+        `<option value="">Pilih Nama</option>`;
 
-    console.log("FILTER:", filtered);
+    if (!kelas) return;
 
-    filtered.forEach(s => {
-        namaSelect.innerHTML += `<option value="${s.nama}">${s.nama}</option>`;
-    });
+    if (!Array.isArray(dataSiswaEdit)) {
+        console.error("dataSiswaEdit tidak valid");
+        return;
+    }
+
+    const filtered =
+        dataSiswaEdit.filter(siswa =>
+            String(siswa.kelas)
+                .trim()
+                .toLowerCase() ===
+            String(kelas)
+                .trim()
+                .toLowerCase()
+        );
+
+    filtered
+        .sort((a, b) =>
+            a.nama.localeCompare(b.nama)
+        )
+        .forEach(siswa => {
+
+            namaSelect.innerHTML += `
+                <option value="${siswa.nama}">
+                    ${siswa.nama}
+                </option>
+            `;
+
+        });
+
 }
 function loadEditIdentitas() {
     const nama = document.getElementById("editFilterNama").value;
