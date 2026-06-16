@@ -11,7 +11,6 @@ async function loadKelasTabungan(){
         tabNama.innerHTML = `<option value="">Pilih Nama Siswa</option>`;
     }catch(err){ console.log(err); }
 }
-}
 
 function loadNamaTabungan(){
     const siswa = dataSiswaTabungan.filter(x => x.kelas == tabKelas.value);
@@ -34,19 +33,17 @@ async function simpanTabungan() {
 
     console.log(payload);
 
- const res = await fetch(TABUNGAN_API,{
-    method:"POST",
-    headers:{
-        "Content-Type":"text/plain;charset=utf-8"
-    },
-    body:JSON.stringify(payload)
-});
+    const res = await fetch(TABUNGAN_API, {
+        method: "POST",
+        headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+    });
 
-const text = await res.text();
-
-console.log("RESPONSE =", text);
-
+    console.log(await res.text());
 }
+
 async function loadFilterKelasTabungan(){
     try{
         const res = await fetch(TABUNGAN_API + "?action=getDataSiswa"); const data = await res.json(); if(!data.status) return;
