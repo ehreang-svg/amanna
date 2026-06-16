@@ -129,6 +129,13 @@ function nav(id) {
 
 }
 
+       if (id === "editIdentitasPage") {
+    if (typeof loadKelasEditIdentitas === "function") {
+        loadKelasEditIdentitas();
+    }
+}
+
+
 /* ===========================
    KEMBALI
 =========================== */
