@@ -1,3 +1,9 @@
+if (window.__TABUNGAN_LOADED__) {
+    console.warn("tabungan.js sudah diload, skip");
+    throw new Error("Duplicate load blocked");
+}
+window.__TABUNGAN_LOADED__ = true;
+
 /* ================= GLOBAL SAFE STATE ================= */
 
 window.dataSiswaTabungan = window.dataSiswaTabungan || [];
