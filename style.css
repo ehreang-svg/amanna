@@ -27,15 +27,17 @@ display:none !important;
 }
 
 .page{
-padding:20px;
-min-height:100vh;
+    width:100%;
+    min-height:100vh;
+    padding:20px;
+    margin:0 auto;
 }
 
 .jadwal-container{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
-align-items:start;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(450px,1fr));
+    gap:20px;
+    width:100%;
 }
 
 .jadwal-card{
@@ -69,8 +71,9 @@ vertical-align:middle;
 }
 
 @media(max-width:768px){
-.jadwal-container{
-    flex-direction:column;
+    .jadwal-container{
+        grid-template-columns:1fr;
+    }
 }
 }
 
@@ -97,13 +100,13 @@ margin-bottom:10px;
 
 /* ================= AUTH ================= */
 .auth-box{
-max-width:420px;
-margin:auto;
-margin-top:60px;
-background:white;
-padding:25px;
-border-radius:25px;
-box-shadow:0 10px 25px rgba(0,0,0,.08);
+    width:100%;
+    max-width:700px;
+    margin:30px auto;
+    background:#fff;
+    padding:25px;
+    border-radius:25px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
 }
 
 input,select{
@@ -188,9 +191,10 @@ text-align:center
 }
 
 .grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:20px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:20px;
+    width:100%;
 }
 
 .menu-card{
@@ -211,6 +215,14 @@ transform:translateY(-5px);
 width:50px;
 height:50px;
 margin-bottom:10px;
+}
+
+.menu-card{
+    min-height:180px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
 }
 
 .back{
@@ -259,13 +271,13 @@ font-family:'Poppins', sans-serif;
 }
 
 /* ================= STYLE TEMPLATE BARU RAPORT ================= */
-.raport-preview-box {
-background: #fff;
-padding: 20px;
-max-width: 900px;
-margin: auto;
-box-shadow: 0 0 15px rgba(0,0,0,0.1);
-border-radius: 8px;
+.raport-preview-box{
+    width:100%;
+    max-width:1200px;
+    margin:20px auto;
+    background:#fff;
+    padding:20px;
+    border-radius:10px;
 }
 
 .container{
@@ -752,4 +764,53 @@ font-size:16px;
     .coverPage{
     page-break-after:always;
     }
+}
+
+body{
+    margin:0;
+    padding:0;
+    width:100%;
+    min-height:100vh;
+    overflow-x:hidden;
+}
+
+img{
+    max-width:100%;
+    height:auto;
+}
+
+table{
+    display:block;
+    overflow-x:auto;
+    white-space:nowrap;
+}
+
+@media (max-width:768px){
+
+    .page{
+        padding:12px;
+    }
+
+    .profile{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    .topbar{
+        flex-direction:column;
+        gap:10px;
+        align-items:flex-start;
+    }
+
+    .title{
+        font-size:20px;
+    }
+
+    button,
+    input,
+    select,
+    textarea{
+        font-size:16px;
+    }
+
 }
