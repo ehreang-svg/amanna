@@ -91,7 +91,7 @@ async function loadRekapTabungan(){
 
 /* ===================== CABUTAN ===================== */
 
-let dataSiswaCabutan = [];
+
 
 /* ===================== LOAD KELAS ===================== */
 
@@ -710,73 +710,183 @@ async function exportKartuSiswa() {
   window.open(json.pdfUrl, "_blank");
 }
 
-let dataSiswaEdit = [];
+
 async function updateIdentitasSiswa() {
+
     try {
 
         // ================= FOTO =================
-        const file = document.getElementById("editFoto").files[0];
+
+        const fotoInput =
+            document.getElementById("editFoto");
+
+        const file =
+            fotoInput ? fotoInput.files[0] : null;
+
         let foto = "";
 
         if (file) {
+
             foto = await new Promise((resolve, reject) => {
+
                 const reader = new FileReader();
-                reader.onload = e => resolve(e.target.result);
-                reader.onerror = err => reject(err);
+
+                reader.onload = e =>
+                    resolve(e.target.result);
+
+                reader.onerror = reject;
+
                 reader.readAsDataURL(file);
+
             });
+
         }
 
-        // ================= DATA FORM =================
+        // ================= VALIDASI =================
+
+        const nama =
+            document.getElementById("editNama").value.trim();
+
+        const kelas =
+            document.getElementById("editKelas").value.trim();
+
+        if (!nama) {
+            alert("Nama siswa wajib diisi");
+            return;
+        }
+
+        if (!kelas) {
+            alert("Kelas wajib diisi");
+            return;
+        }
+
+        // ================= DATA =================
+
         const data = {
-            namaPanggilan: document.getElementById("editNamaPanggilan").value,
-            nama: document.getElementById("editNama").value,
-            kelas: document.getElementById("editKelas").value,
-            nik: document.getElementById("editNik").value,
-            nisn: document.getElementById("editNisn").value,
-            jenisKelamin: document.getElementById("editGender").value,
-            ttl: document.getElementById("editTTL").value,
-            agama: document.getElementById("editAgama").value,
-            anakKe: document.getElementById("editAnakKe").value,
-            tahunMasuk: document.getElementById("editTahunMasuk").value,
-            namaAyah: document.getElementById("editAyah").value,
-            namaIbu: document.getElementById("editIbu").value,
-            pekerjaanAyah: document.getElementById("editKerjaAyah").value,
-            pekerjaanIbu: document.getElementById("editKerjaIbu").value,
-            desa: document.getElementById("editDesa").value,
-            kecamatan: document.getElementById("editKecamatan").value,
-            kabupaten: document.getElementById("editKabupaten").value,
-            provinsi: document.getElementById("editProvinsi").value,
-            kodePos: document.getElementById("editKodePos").value,
-            foto: foto
+
+            namaPanggilan:
+                document.getElementById("editNamaPanggilan").value,
+
+            nama:
+                nama,
+
+            kelas:
+                kelas,
+
+            nik:
+                document.getElementById("editNik").value,
+
+            nisn:
+                document.getElementById("editNisn").value,
+
+            jenisKelamin:
+                document.getElementById("editGender").value,
+
+            ttl:
+                document.getElementById("editTTL").value,
+
+            agama:
+                document.getElementById("editAgama").value,
+
+            anakKe:
+                document.getElementById("editAnakKe").value,
+
+            tahunMasuk:
+                document.getElementById("editTahunMasuk").value,
+
+            namaAyah:
+                document.getElementById("editAyah").value,
+
+            namaIbu:
+                document.getElementById("editIbu").value,
+
+            pekerjaanAyah:
+                document.getElementById("editKerjaAyah").value,
+
+            pekerjaanIbu:
+                document.getElementById("editKerjaIbu").value,
+
+            desa:
+                document.getElementById("editDesa").value,
+
+            kecamatan:
+                document.getElementById("editKecamatan").value,
+
+            kabupaten:
+                document.getElementById("editKabupaten").value,
+
+            provinsi:
+                document.getElementById("editProvinsi").value,
+
+            kodePos:
+                document.getElementById("editKodePos").value,
+
+            foto:
+                foto
+
         };
 
-        // ================= FETCH API =================
+        // ================= KIRIM =================
+
         const res = await fetch(TABUNGAN_API, {
+
             method: "POST",
+
+            headers: {
+                "Content-Type":
+                    "text/plain;charset=utf-8"
+            },
+
             body: JSON.stringify({
+
                 action: "updateIdentitasSiswa",
+
                 data: data
+
             })
+
         });
 
         const json = await res.json();
 
-        // ================= RESPONSE =================
+        console.log(json);
+
         if (!json.status) {
-            alert(json.message || "Gagal update data");
+
+            alert(
+                json.message ||
+                "Gagal memperbarui data"
+            );
+
             return;
         }
 
-        alert("Update berhasil");
+        alert("Data berhasil diperbarui");
 
-        // ================= OPTIONAL RESET FOTO =================
-        document.getElementById("editFoto").value = "";
+        // ================= RESET FOTO =================
+
+        if (fotoInput) {
+            fotoInput.value = "";
+        }
+
+        // ================= REFRESH DATA =================
+
+        await loadKelasEditIdentitas();
 
     } catch (err) {
-        console.error("Update Error:", err);
-        alert("Terjadi kesalahan: " + err.message);
+
+        console.error(
+            "Update Identitas Error:",
+            err
+        );
+
+        alert(
+            "Terjadi kesalahan : " +
+            err.message
+        );
+
     }
+
 }
 async function loadKelasEditIdentitas() {
     try {
