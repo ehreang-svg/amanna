@@ -18,12 +18,14 @@ async function api(action,data={}){
         "?action=" +
         encodeURIComponent(action);
 
-    const res =
-        await fetch(url);
+    console.log(url);
+
+    const res = await fetch(url);
 
     return await res.json();
 
 }
+
 /* =========================
 TABUNGAN
 ========================= */
