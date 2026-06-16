@@ -826,7 +826,17 @@ async function updateIdentitasSiswa() {
         };
 
         // ================= KIRIM =================
+const bodyData = JSON.stringify({
+    action: "updateIdentitasSiswa",
+    data: data
+});
 
+console.log(
+    "Payload Size:",
+    (bodyData.length / 1024).toFixed(2),
+    "KB"
+);
+        
         const res = await fetch(TABUNGAN_API, {
 
             method: "POST",
