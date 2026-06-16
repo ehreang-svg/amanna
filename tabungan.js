@@ -4,6 +4,11 @@ if (window.__TABUNGAN_LOADED__) {
 }
 window.__TABUNGAN_LOADED__ = true;
 
+if (window.__TABUNGAN_LOADED__) {
+    throw new Error("Duplicate tabungan.js blocked");
+}
+window.__TABUNGAN_LOADED__ = true;
+
 /* ================= GLOBAL SAFE STATE ================= */
 
 window.dataSiswaTabungan = window.dataSiswaTabungan || [];
