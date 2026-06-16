@@ -33,16 +33,18 @@ async function simpanTabungan() {
 
     console.log(payload);
 
-    const res = await fetch(TABUNGAN_API, {
-        method: "POST",
-        headers: {
-            "Content-Type": "text/plain;charset=utf-8"
-        },
-        body: JSON.stringify(payload)
-    });
+ const res = await fetch(TABUNGAN_API,{
+    method:"POST",
+    headers:{
+        "Content-Type":"text/plain;charset=utf-8"
+    },
+    body:JSON.stringify(payload)
+});
 
-    console.log(await res.text());
-}
+const text = await res.text();
+
+console.log("RESPONSE =", text);
+
 
 async function loadFilterKelasTabungan(){
     try{
