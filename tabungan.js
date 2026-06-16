@@ -560,39 +560,39 @@ async function simpanIdentitasSiswa() {
 }
 
 async function exportIdentitasSiswa(nama, kelas) {
-
     try {
-
         const res = await fetch(
-
             TABUNGAN_API +
-
             "?action=exportIdentitasSiswa" +
-
             "&nama=" + encodeURIComponent(nama) +
-
             "&kelas=" + encodeURIComponent(kelas)
-
         );
 
         const data = await res.json();
 
         if (!data.status) {
-
             alert(data.message);
-
             return;
-
         }
 
-        window.open(data.pdfUrl, "_blank");
+        // Hanya buka/cetak PDF
+        window.location.href = data.pdfUrl;
 
     } catch (err) {
-
         alert(err);
+    }
+}
 
+async function exportIdentitasDipilih() {
+    const nama = document.getElementById("filterNamaIdentitas").value;
+    const kelas = document.getElementById("filterKelasIdentitas").value;
+
+    if (!nama || !kelas) {
+        alert("Pilih kelas dan nama siswa terlebih dahulu.");
+        return;
     }
 
+    await exportIdentitasSiswa(nama, kelas);
 }
 
 
