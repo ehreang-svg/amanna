@@ -6,6 +6,7 @@ const pages = [
     "splash",
     "loginPage",
     "dashboard",
+    "editAkun",
     "submenuPage",
     "contentPage",
     "absenGuruPage",
@@ -24,7 +25,6 @@ const pages = [
     "editIdentitasPage",
     "exportIdentitasPage"
 ];
-
 /* ===========================
    STATE NAVIGASI
 =========================== */
