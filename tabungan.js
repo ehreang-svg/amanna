@@ -15,41 +15,34 @@ async function api(action, data = {}) {
 
     try {
 
-        const res = await fetch(window.TABUNGAN_API, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                action,
-                data
-            })
-        });
+        const res = await fetch(
+            TABUNGAN_API,
+            {
+                method: "POST",
+                body: JSON.stringify({
+                    action,
+                    data
+                })
+            }
+        );
 
         const text = await res.text();
 
-        try {
-            return JSON.parse(text);
-        } catch {
+        return JSON.parse(text);
 
-            console.error("Response bukan JSON:", text);
-
-            return {
-                status:false,
-                message:"Response bukan JSON"
-            };
-        }
-
-    } catch(err) {
+    } catch (err) {
 
         console.error(err);
 
         return {
-            status:false,
-            message:err.message
+            status: false,
+            message: err.message
         };
+
     }
+
 }
+
 /* =========================
 TABUNGAN
 ========================= */
@@ -57,8 +50,13 @@ TABUNGAN
 async function loadKelasTabungan() {
 
 
+const res = await fetch(
+    TABUNGAN_API +
+    "?action=getDataSiswa"
+);
+
 const result =
-    await api("getDataSiswa");
+await res.json();
 
 if (!result.status) {
     alert("Gagal memuat data siswa");
@@ -193,8 +191,13 @@ CABUTAN
 async function loadKelasCabutan() {
 
 
+const res = await fetch(
+    TABUNGAN_API +
+    "?action=getDataSiswa"
+);
+
 const result =
-    await api("getDataSiswa");
+await res.json();
 
 if (!result.status) return;
 
@@ -271,8 +274,13 @@ EDIT IDENTITAS
 async function loadKelasEditIdentitas() {
 
 
+const res = await fetch(
+    TABUNGAN_API +
+    "?action=getDataSiswa"
+);
+
 const result =
-    await api("getDataSiswa");
+await res.json();
 
 if (!result.status) return;
 
