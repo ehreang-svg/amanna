@@ -696,3 +696,22 @@ async function exportKartuSiswa() {
 
   window.open(json.pdfUrl, "_blank");
 }
+
+function exportToPDF() {
+    const element = document.getElementById("print-area");
+
+    html2pdf()
+        .set({
+            filename: "Kartu_Siswa.pdf",
+            margin: 5,
+            image: { type: "jpeg", quality: 1 },
+            html2canvas: { scale: 3, useCORS: true },
+            jsPDF: {
+                unit: "mm",
+                format: "a4",
+                orientation: "portrait"
+            }
+        })
+        .from(element)
+        .save();
+}
