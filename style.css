@@ -753,3 +753,199 @@ font-size:16px;
     page-break-after:always;
     }
 }
+
+/* ================= KTS ================= */
+body { 
+            font-family: 'Helvetica Neue', Arial, sans-serif; 
+            background: #f4f6f9; 
+            margin: 0;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        /* --- STYLING FORM INPUT --- */
+        .form-container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 450px;
+            margin-bottom: 35px;
+            border: 1px solid #e0e0e0;
+        }
+        .form-container h3 {
+            margin-top: 0;
+            color: #00875a;
+            border-bottom: 2px solid #ffcc00;
+            padding-bottom: 8px;
+        }
+        .form-group {
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            font-size: 9pt;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .form-group input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 9.5pt;
+        }
+        .btn-submit {
+            background: #00875a;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            font-size: 10pt;
+            margin-top: 10px;
+            transition: 0.2s;
+        }
+        .btn-submit:hover {
+            background: #006a46;
+        }
+        /* --- STYLING AREA CETAK (PRINT CONTAINER) --- */
+        #print-area {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            background: #ffffff;
+            padding: 20px;
+            border: 1px dashed #bbb;
+        }
+        
+        /* Ukuran Fisik Kartu 85,6mm x 54mm dikonversi ke Pixel */
+        .card { 
+            width: 323.5px; 
+            height: 204px; 
+            background: #ffffff; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            position: relative; 
+            border: 1px solid #c0c0c0; 
+            box-sizing: border-box; 
+        }
+        
+        /* --- SISI DEPAN --- */
+        .header { 
+            background: linear-gradient(135deg, #00875a, #00a86b); 
+            color: #ffffff; 
+            padding: 8px 10px; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            border-bottom: 3.5px solid #ffcc00; 
+        }
+        .logo { 
+            width: 36px; 
+            height: 36px; 
+            background: #ffffff; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 7.5pt; 
+            color: #444444; 
+            font-weight: bold; 
+            text-align: center; 
+            border: 1px solid #ccc;
+        }
+        .school-info { flex: 1; }
+        .school-info h1 { 
+            font-size: 7.5pt; 
+            margin: 0; 
+            text-transform: uppercase; 
+            font-weight: bold; 
+            letter-spacing: 0.3px;
+        }
+        .school-info h2 { 
+            font-size: 9.5pt; 
+            margin: 1px 0; 
+            font-weight: 800; 
+            color: #ffcc00; 
+        }
+        .school-info p { 
+            font-size: 5.2pt; 
+            margin: 0; 
+            opacity: 0.95; 
+            line-height: 1.2; 
+        }
+        
+        .content { 
+            padding: 10px 12px; 
+            display: flex; 
+            gap: 14px; 
+        }
+        .photo-preview { 
+            width: 68px; 
+            height: 90px; 
+            border: 1px solid #888888; 
+            background: #f0f0f0; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 7pt; 
+            color: #666666; 
+            text-align: center; 
+            border-radius: 3px; 
+            background-size: cover;
+            background-position: center;
+        }
+        .biodata { 
+            flex: 1; 
+            font-size: 7.5pt; 
+            line-height: 1.5; 
+            color: #222222; 
+        }
+        .biodata table { width: 100%; border-collapse: collapse; }
+        .biodata td { vertical-align: top; padding: 2px 0; }
+        .label { 
+            font-weight: bold; 
+            width: 82px; 
+            color: #444444;
+        }
+        /* --- SISI BELAKANG --- */
+        .back-card { 
+            background: #fafafa; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            padding: 14px; 
+        }
+        .login-box { 
+            background: #ffffff; 
+            border: 1.5px solid #00875a; 
+            border-radius: 6px; 
+            padding: 10px; 
+            margin-top: 10px; 
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .login-title { 
+            font-size: 8pt; 
+            font-weight: bold; 
+            color: #00875a; 
+            margin-bottom: 8px; 
+            text-align: center; 
+            border-bottom: 1px solid #eeeeee; 
+            padding-bottom: 4px; 
+            letter-spacing: 0.5px;
+        }
+        .login-row { display: flex; font-size: 8pt; margin: 5px 0; }
+        .footer-text { 
+            font-size: 5.5pt; 
+            color: #666666; 
+            text-align: center; 
+            line-height: 1.4; 
+            border-top: 1px solid #e5e5e5;
+            padding-top: 8px;
+        }
