@@ -612,3 +612,62 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }, 500);
 });
+
+async function loadKartuSiswa(nama, kelas) {
+
+  const res = await fetch(
+    TABUNGAN_API +
+    "?action=getKartuSiswa" +
+    "&nama=" + encodeURIComponent(nama) +
+    "&kelas=" + encodeURIComponent(kelas)
+  );
+
+  const json = await res.json();
+
+  if (!json.status) {
+    alert(json.message);
+    return;
+  }
+
+  const d = json.data;
+
+  document.getElementById("out-nama").textContent = ": " + d.nama;
+  document.getElementById("out-nik").textContent = ": " + d.nik;
+  document.getElementById("out-ttl").textContent = ": " + d.ttl;
+  document.getElementById("out-ayah").textContent = ": " + d.namaAyah;
+
+  if (d.foto) {
+    const foto = document.getElementById("card-photo");
+    foto.style.backgroundImage = `url(${d.foto})`;
+    foto.textContent = "";
+  }
+}
+
+function exportToPDF() {
+
+  const element = document.getElementById("print-area");
+
+  html2pdf()
+    .set({
+      filename: "Kartu Siswa.pdf",
+      margin: 5,
+      image: {
+        type: "jpeg",
+        quality: 1
+      },
+      html2canvas: {
+        scale: 3,
+        useCORS: true
+      },
+      jsPDF: {
+        unit: "mm",
+        format: "a4",
+        orientation: "portrait"
+      }
+    })
+    .from(element)
+    .save();
+
+}
+
+
