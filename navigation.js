@@ -65,15 +65,54 @@ function nav(id) {
     show(id);
 
     // lifecycle hooks
-    if (id === "kognitifPage") loadKognitifSiswa?.();
-    if (id === "raportPage") loadKelasRaport?.();
-    if (id === "loginQuiz") mulai?.();
-    if (id === "cabutanPage") loadKelasCabutan?.();
-    if (id === "tabunganPage") loadKelasTabungan?.();
-    if (id === "exportIdentitasPage") loadDataIdentitas?.();
-    if (id === "editIdentitasPage") loadKelasEditIdentitas?.();
+    if (
+    id === "kognitifPage" &&
+    typeof loadKognitifSiswa === "function"
+) {
+    loadKognitifSiswa();
 }
 
+if (
+    id === "raportPage" &&
+    typeof loadKelasRaport === "function"
+) {
+    loadKelasRaport();
+}
+
+if (
+    id === "loginQuiz" &&
+    typeof mulai === "function"
+) {
+    mulai();
+}
+
+if (
+    id === "cabutanPage" &&
+    typeof loadKelasCabutan === "function"
+) {
+    loadKelasCabutan();
+}
+
+if (
+    id === "tabunganPage" &&
+    typeof loadKelasTabungan === "function"
+) {
+    loadKelasTabungan();
+}
+
+if (
+    id === "exportIdentitasPage" &&
+    typeof loadDataIdentitas === "function"
+) {
+    loadDataIdentitas();
+}
+
+if (
+    id === "editIdentitasPage" &&
+    typeof loadKelasEditIdentitas === "function"
+) {
+    loadKelasEditIdentitas();
+}
 /* ===========================
    BACK BUTTON
 =========================== */
