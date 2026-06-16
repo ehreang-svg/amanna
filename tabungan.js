@@ -774,37 +774,35 @@ if (!hasil.status) {
 
 async function loadKelasEditIdentitas() {
     try {
-       const res = await fetch(TABUNGAN_API + "?action=getDataSiswa");
+        const res = await fetch(TABUNGAN_API + "?action=getDataSiswa");
+        const result = await res.json();
 
-const text = await res.text();
-console.log("RAW RESPONSE:", text);
+        const data = Array.isArray(result) ? result : result.data;
 
-const json = JSON.parse(text);
-console.log("PARSED:", json);
-
-        console.log("GET SISWA:", json);
-
-        if (!json.status || !json.data) {
-            alert("Data siswa gagal dimuat");
+        if (!data || !Array.isArray(data)) {
+            console.log("DATA INVALID:", result);
             return;
         }
 
-        dataSiswaEdit = json.data;
+        dataSiswaEdit = data;
 
         const kelasSelect = document.getElementById("editFilterKelas");
         kelasSelect.innerHTML = `<option value="">Pilih Kelas</option>`;
 
-        const kelasUnik = [...new Set(dataSiswaEdit.map(s => s.kelas).filter(Boolean))];
+        const kelasUnik = [...new Set(data.map(s => s.kelas).filter(Boolean))];
 
         kelasUnik.forEach(k => {
             kelasSelect.innerHTML += `<option value="${k}">${k}</option>`;
         });
 
+        console.log("KELAS LOADED:", kelasUnik);
+
     } catch (err) {
-        console.log(err);
+        console.error(err);
     }
 }
-function loadNamaEditIdentitas() {
+    
+    function loadNamaEditIdentitas() {
 
     const kelas = document.getElementById("editFilterKelas").value;
     const namaSelect = document.getElementById("editFilterNama");
