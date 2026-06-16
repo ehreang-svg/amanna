@@ -21,106 +21,67 @@ const pages = [
     "loginQuiz",
     "cabutanPage",
     "identitasPage",
-   "editIdentitasPage",
+    "editIdentitasPage",
     "exportIdentitasPage"
 ];
 
 /* ===========================
-   RIWAYAT NAVIGASI
+   STATE NAVIGASI
 =========================== */
 
 const pageHistory = [];
+let currentPage = "splash";
 
 /* ===========================
-   TAMPILKAN HALAMAN
+   SHOW PAGE
 =========================== */
 
 function show(id) {
-
-    // Sembunyikan semua halaman
-    pages.forEach(function (p) {
-
+    pages.forEach(p => {
         const el = document.getElementById(p);
-
-        if (el) {
-            el.classList.add("hidden");
-        }
-
+        if (el) el.classList.add("hidden");
     });
 
-    // Tampilkan halaman tujuan
     const target = document.getElementById(id);
 
-    if (target) {
-
-        target.classList.remove("hidden");
-
-    } else {
-
-        console.error("Target tidak ditemukan :", id);
-
-    }
-
-}
-
-/* ===========================
-   NAVIGASI
-=========================== */
-
-function nav(id) {
-
-    let active = null;
-
-    pages.forEach(function (p) {
-        const el = document.getElementById(p);
-        if (el && !el.classList.contains("hidden")) {
-            active = p;
-        }
-    });
-
-    if (active && active !== id) {
-        pageHistory.push(active);
-    }
-
-    show(id);
-
-    if (id === "kognitifPage" && typeof loadKognitifSiswa === "function") {
-        loadKognitifSiswa();
-    }
-
-    if (id === "raportPage" && typeof loadKelasRaport === "function") {
-        loadKelasRaport();
-    }
-
-    if (id === "loginQuiz" && typeof mulai === "function") {
-        mulai();
-    }
-
-    if (id === "cabutanPage" && typeof loadKelasCabutan === "function") {
-        loadKelasCabutan();
-    }
-
-    if (id === "exportIdentitasPage" && typeof loadDataIdentitas === "function") {
-        loadDataIdentitas();
-    }
-
-    if (id === "editIdentitasPage" && typeof loadKelasEditIdentitas === "function") {
-        loadKelasEditIdentitas();
-    }
-}
-
-/* ===========================
-   KEMBALI
-=========================== */
-
-function goBack() {
-
-    if (pageHistory.length === 0) {
+    if (!target) {
+        console.error("Page tidak ditemukan:", id);
         return;
     }
 
-    const lastPage = pageHistory.pop();
+    target.classList.remove("hidden");
+}
 
-    show(lastPage);
+/* ===========================
+   NAVIGASI AMAN
+=========================== */
 
+function nav(id) {
+    if (currentPage && currentPage !== id) {
+        pageHistory.push(currentPage);
+    }
+
+    currentPage = id;
+    show(id);
+
+    // lifecycle hooks
+    if (id === "kognitifPage") loadKognitifSiswa?.();
+    if (id === "raportPage") loadKelasRaport?.();
+    if (id === "loginQuiz") mulai?.();
+    if (id === "cabutanPage") loadKelasCabutan?.();
+    if (id === "tabunganPage") loadKelasTabungan?.();
+    if (id === "exportIdentitasPage") loadDataIdentitas?.();
+    if (id === "editIdentitasPage") loadKelasEditIdentitas?.();
+}
+
+/* ===========================
+   BACK BUTTON
+=========================== */
+
+function goBack() {
+    if (!pageHistory.length) return;
+
+    const last = pageHistory.pop();
+    currentPage = last;
+    show(last);
 }
