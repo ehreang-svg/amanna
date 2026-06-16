@@ -704,6 +704,8 @@ async function exportKartuSiswa() {
   window.open(json.pdfUrl, "_blank");
 }
 
+let dataSiswaEdit = [];
+
 async function updateIdentitasSiswa() {
     try {
 
