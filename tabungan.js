@@ -670,4 +670,29 @@ function exportToPDF() {
 
 }
 
+async function exportKartuSiswa() {
 
+  const nama = document.getElementById("filterNamaIdentitas").value;
+  const kelas = document.getElementById("filterKelasIdentitas").value;
+
+  if (!nama || !kelas) {
+    alert("Pilih kelas dan nama siswa terlebih dahulu.");
+    return;
+  }
+
+  const res = await fetch(
+    TABUNGAN_API +
+    "?action=exportKartuSiswa" +
+    "&nama=" + encodeURIComponent(nama) +
+    "&kelas=" + encodeURIComponent(kelas)
+  );
+
+  const json = await res.json();
+
+  if (!json.status) {
+    alert(json.message);
+    return;
+  }
+
+  window.open(json.pdfUrl, "_blank");
+}
