@@ -852,4 +852,10 @@ function fillEditForm(siswa) {
     }
 }
 
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadKelasEditIdentitas();
 
+    document
+        .getElementById("editFilterKelas")
+        .addEventListener("change", loadNamaEditIdentitas);
+});
