@@ -1,29 +1,54 @@
-async function loadKelasTabungan(){
-    try{
+async function loadKelasTabungan() {
+    try {
         const res = await fetch(TABUNGAN_API + "?action=getDataSiswa");
         const data = await res.json();
 
-        if(!data.status){
+        if (!data.status) {
             alert("Gagal memuat data siswa");
             return;
         }
 
         dataSiswaTabungan = data.data;
 
-        const kelasUnik = [...new Set(data.data.map(x=>x.kelas))].sort();
+        const kelasUnik = [...new Set(data.data.map(x => x.kelas))].sort();
 
         tabKelas.innerHTML = `<option value="">Pilih Kelas</option>`;
 
-        kelasUnik.forEach(k=>{
+        kelasUnik.forEach(k => {
             tabKelas.innerHTML += `<option value="${k}">${k}</option>`;
         });
 
         tabNama.innerHTML = `<option value="">Pilih Nama Siswa</option>`;
 
-    }catch(err){
+    } catch (err) {
         console.log(err);
     }
+} // ← KURUNG PENUTUP FUNGSI HILANG
 
+async function simpanTabungan() {
+    console.log(tabNama.value);
+    console.log(tabKelas.value);
+    console.log(tabNominal.value);
+
+    const payload = {
+        action: "inputTabungan",
+        nama: tabNama.value,
+        kelas: tabKelas.value,
+        nominal: tabNominal.value
+    };
+
+    console.log(payload);
+
+    const res = await fetch(TABUNGAN_API, {
+        method: "POST",
+        headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+    });
+
+    console.log(await res.text());
+}
 
 async function simpanTabungan() {
     console.log(tabNama.value);
@@ -624,33 +649,16 @@ function loadNamaIdentitas() {
 
     console.log("FILTER RESULT:", hasil);
 }
+document.addEventListener("DOMContentLoaded", async () => {
 
-document.addEventListener("DOMContentLoaded", () => {
-    loadDataIdentitas();
+    await loadDataIdentitas();
 
-    document
-        .getElementById("filterKelasIdentitas")
-        .addEventListener("change", loadNamaIdentitas);
-});
+    const el = document.getElementById("filterKelasIdentitas");
 
-document.addEventListener("DOMContentLoaded", () => {
+    if (el) {
+        el.addEventListener("change", loadNamaIdentitas);
+    }
 
-    loadDataIdentitas();
-
-    setTimeout(() => {
-        const el = document.getElementById("filterKelasIdentitas");
-
-        if (!el) {
-            console.error("filterKelasIdentitas tidak ditemukan");
-            return;
-        }
-
-        el.addEventListener("change", () => {
-            console.log("CHANGE OK");
-            loadNamaIdentitas();
-        });
-
-    }, 500);
 });
 
 async function loadKartuSiswa(nama, kelas) {
