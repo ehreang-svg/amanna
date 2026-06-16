@@ -81,15 +81,41 @@ function loadNamaTabungan() {
 /* ================= SIMPAN TABUNGAN ================= */
 
 async function simpanTabungan() {
-    const payload = {
-        nama: document.getElementById("tabNama")?.value,
-        kelas: document.getElementById("tabKelas")?.value,
-        nominal: document.getElementById("tabNominal")?.value
-    };
 
-    const result = await api("inputTabungan", payload);
+    const nama =
+        document.getElementById("tabNama")?.value;
 
-    alert(result?.message || "Sukses");
+    const kelas =
+        document.getElementById("tabKelas")?.value;
+
+    const nominal =
+        document.getElementById("tabNominal")?.value;
+
+    if (!nama) {
+        alert("Pilih siswa");
+        return;
+    }
+
+    if (!kelas) {
+        alert("Pilih kelas");
+        return;
+    }
+
+    if (!nominal || Number(nominal) <= 0) {
+        alert("Nominal tidak valid");
+        return;
+    }
+
+    const result =
+        await api("inputTabungan", {
+            nama,
+            kelas,
+            nominal
+        });
+
+    alert(result?.message || "Berhasil");
+
+    document.getElementById("tabNominal").value = "";
 }
 
 /* ================= CABUTAN ================= */
@@ -186,20 +212,131 @@ async function updateIdentitasSiswa() {
 
 /* ================= PLACEHOLDER SAFE ================= */
 
-function loadKelasEditIdentitas() {
-    console.warn("loadKelasEditIdentitas belum diimplementasi");
+async function loadKelasEditIdentitas() {
+
+    const result = await api("getDataSiswa");
+
+    if (!result?.status) return;
+
+    window.dataSiswaEdit = result.data || [];
+
+    const kelasSelect =
+        document.getElementById("editFilterKelas");
+
+    if (!kelasSelect) return;
+
+    const kelas = [
+        ...new Set(
+            window.dataSiswaEdit
+                .map(x => x.kelas)
+                .filter(Boolean)
+        )
+    ].sort();
+
+    kelasSelect.innerHTML =
+        '<option value="">Pilih Kelas</option>';
+
+    kelas.forEach(k => {
+        kelasSelect.innerHTML +=
+        `<option value="${k}">${k}</option>`;
+    });
 }
 
-/* ================= INIT ================= */
+function loadNamaEditIdentitas() {
 
-document.addEventListener("DOMContentLoaded", () => {
-    loadKelasTabungan();
-    loadKelasCabutan();
+    const kelas =
+        document.getElementById("editFilterKelas").value;
 
-    document.getElementById("tabKelas")?.addEventListener("change", loadNamaTabungan);
-    document.getElementById("cabKelas")?.addEventListener("change", loadNamaCabutan);
+    const namaSelect =
+        document.getElementById("editFilterNama");
 
-    if (typeof show === "function") {
-        show("splash");
+    const siswa =
+        window.dataSiswaEdit.filter(
+            x => x.kelas === kelas
+        );
+
+    namaSelect.innerHTML =
+        '<option value="">Pilih Nama</option>';
+
+    siswa.forEach(s => {
+
+        namaSelect.innerHTML +=
+        `<option value="${s.nama}">
+            ${s.nama}
+        </option>`;
+
+    });
+}
+
+function loadEditIdentitas() {
+
+    const nama =
+        document.getElementById("editFilterNama").value;
+
+    const siswa =
+        window.dataSiswaEdit.find(
+            x => x.nama === nama
+        );
+
+    if (!siswa) {
+        alert("Data tidak ditemukan");
+        return;
     }
-});
+
+    document.getElementById("editNamaPanggilan").value =
+        siswa.namaPanggilan || "";
+
+    document.getElementById("editNama").value =
+        siswa.nama || "";
+
+    document.getElementById("editKelas").value =
+        siswa.kelas || "";
+
+    document.getElementById("editNik").value =
+        siswa.nik || "";
+
+    document.getElementById("editNisn").value =
+        siswa.nisn || "";
+
+    document.getElementById("editGender").value =
+        siswa.jenisKelamin || "";
+
+    document.getElementById("editTTL").value =
+        siswa.ttl || "";
+
+    document.getElementById("editAgama").value =
+        siswa.agama || "";
+
+    document.getElementById("editAnakKe").value =
+        siswa.anakKe || "";
+
+    document.getElementById("editTahunMasuk").value =
+        siswa.tahunMasuk || "";
+
+    document.getElementById("editAyah").value =
+        siswa.namaAyah || "";
+
+    document.getElementById("editIbu").value =
+        siswa.namaIbu || "";
+
+    document.getElementById("editKerjaAyah").value =
+        siswa.pekerjaanAyah || "";
+
+    document.getElementById("editKerjaIbu").value =
+        siswa.pekerjaanIbu || "";
+
+    document.getElementById("editDesa").value =
+        siswa.desa || "";
+
+    document.getElementById("editKecamatan").value =
+        siswa.kecamatan || "";
+
+    document.getElementById("editKabupaten").value =
+        siswa.kabupaten || "";
+
+    document.getElementById("editProvinsi").value =
+        siswa.provinsi || "";
+
+    document.getElementById("editKodePos").value =
+        siswa.kodePos || "";
+}
