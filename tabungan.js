@@ -708,17 +708,20 @@ let dataSiswaEdit = [];
 async function updateIdentitasSiswa() {
     try {
 
+        // ================= FOTO =================
         const file = document.getElementById("editFoto").files[0];
         let foto = "";
 
         if (file) {
-            foto = await new Promise(resolve => {
+            foto = await new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = e => resolve(e.target.result);
+                reader.onerror = err => reject(err);
                 reader.readAsDataURL(file);
             });
         }
 
+        // ================= DATA FORM =================
         const data = {
             namaPanggilan: document.getElementById("editNamaPanggilan").value,
             nama: document.getElementById("editNama").value,
@@ -742,35 +745,30 @@ async function updateIdentitasSiswa() {
             foto: foto
         };
 
+        // ================= FETCH API =================
         const res = await fetch(TABUNGAN_API, {
-    method: "POST",
-    headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-    },
-    body: JSON.stringify({
-        action: "updateIdentitasSiswa",
-        data
-    })
-});
+            method: "POST",
+            body: JSON.stringify({
+                action: "updateIdentitasSiswa",
+                data: data
+            })
+        });
 
-        const text = await res.text();
-        console.log("RAW:", text);
+        const json = await res.json();
 
-        let hasil;
-        try {
-            hasil = JSON.parse(text);
-        } catch (e) {
-            throw new Error("Server tidak mengembalikan JSON valid");
+        // ================= RESPONSE =================
+        if (!json.status) {
+            alert(json.message || "Gagal update data");
+            return;
         }
 
-        if (!hasil.status) {
-            alert(hasil.message);
-        } else {
-            alert("Update berhasil");
-        }
+        alert("Update berhasil");
+
+        // ================= OPTIONAL RESET FOTO =================
+        document.getElementById("editFoto").value = "";
 
     } catch (err) {
-        console.error(err);
+        console.error("Update Error:", err);
         alert("Terjadi kesalahan: " + err.message);
     }
 }
