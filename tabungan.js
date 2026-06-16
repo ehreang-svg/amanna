@@ -777,9 +777,14 @@ async function loadKelasEditIdentitas() {
         const res = await fetch(TABUNGAN_API + "?action=getDataSiswa");
         const json = await res.json();
 
-        if (!json.status) return;
+        console.log("GET SISWA:", json);
 
-        dataSiswaEdit = json.data || [];
+        if (!json.status || !json.data) {
+            alert("Data siswa gagal dimuat");
+            return;
+        }
+
+        dataSiswaEdit = json.data;
 
         const kelasSelect = document.getElementById("editFilterKelas");
         kelasSelect.innerHTML = `<option value="">Pilih Kelas</option>`;
@@ -794,22 +799,23 @@ async function loadKelasEditIdentitas() {
         console.log(err);
     }
 }
-
 function loadNamaEditIdentitas() {
+
     const kelas = document.getElementById("editFilterKelas").value;
     const namaSelect = document.getElementById("editFilterNama");
 
     namaSelect.innerHTML = `<option value="">Pilih Nama</option>`;
 
     const filtered = dataSiswaEdit.filter(s =>
-        String(s.kelas).trim() === String(kelas).trim()
+        String(s.kelas).trim().toLowerCase() === String(kelas).trim().toLowerCase()
     );
+
+    console.log("FILTER:", filtered);
 
     filtered.forEach(s => {
         namaSelect.innerHTML += `<option value="${s.nama}">${s.nama}</option>`;
     });
 }
-
 function loadEditIdentitas() {
     const nama = document.getElementById("editFilterNama").value;
     const kelas = document.getElementById("editFilterKelas").value;
@@ -864,9 +870,17 @@ function fillEditForm(siswa) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+
     await loadKelasEditIdentitas();
 
-    document
-        .getElementById("editFilterKelas")
-        .addEventListener("change", loadNamaEditIdentitas);
+    const kelas = document.getElementById("editFilterKelas");
+
+    if (!kelas) {
+        console.error("editFilterKelas tidak ditemukan");
+        return;
+    }
+
+    kelas.addEventListener("change", () => {
+        loadNamaEditIdentitas();
+    });
 });
