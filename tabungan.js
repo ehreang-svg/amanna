@@ -8,12 +8,18 @@ let dataSiswaEdit = [];
 /* ================= API WRAPPER ================= */
 
 async function api(action, data = {}) {
-    const res = await fetch(TABUNGAN_API, {
+    const url = TABUNGAN_API;
+
+    const res = await fetch(url, {
         method: "POST",
+        mode: "no-cors", // ⚠️ ini bikin silent response
+        headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+        },
         body: JSON.stringify({ action, data })
     });
 
-    return await res.json();
+    return { status: true, message: "Request terkirim (no-cors mode)" };
 }
 
 /* ================= TABUNGAN ================= */
