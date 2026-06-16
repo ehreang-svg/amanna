@@ -13,36 +13,43 @@ API WRAPPER
 
 async function api(action, data = {}) {
 
+    try {
 
-try {
+        const res = await fetch(window.TABUNGAN_API, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                action,
+                data
+            })
+        });
 
-    const res = await fetch(window.TABUNGAN_API, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            action,
-            data
-        })
-    });
+        const text = await res.text();
 
-    return await res.json();
+        try {
+            return JSON.parse(text);
+        } catch {
 
-} catch (err) {
+            console.error("Response bukan JSON:", text);
 
-    console.error(err);
+            return {
+                status:false,
+                message:"Response bukan JSON"
+            };
+        }
 
-    return {
-        status: false,
-        message: err.message
-    };
+    } catch(err) {
 
+        console.error(err);
+
+        return {
+            status:false,
+            message:err.message
+        };
+    }
 }
-
-
-}
-
 /* =========================
 TABUNGAN
 ========================= */
