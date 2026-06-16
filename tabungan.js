@@ -816,11 +816,7 @@ async function loadEditIdentitas() {
             return;
         }
 
-        const res = await fetch(
-            TABUNGAN_API +
-            "?action=getDataSiswa"
-        );
-
+        const res = await fetch(TABUNGAN_API + "?action=getDataSiswa");
         const result = await res.json();
 
         if (!result.status) {
@@ -839,38 +835,73 @@ async function loadEditIdentitas() {
         }
 
         // =========================
-        // AUTO FILL SEMUA FIELD
+        // AMBIL DATA DENGAN FALLBACK KEY
         // =========================
-        const map = {
-            namaPanggilan: "editNamaPanggilan",
-            nama: "editNama",
-            kelas: "editKelas",
-            nik: "editNik",
-            nisn: "editNisn",
-            jenisKelamin: "editGender",
-            ttl: "editTTL",
-            agama: "editAgama",
-            anakKe: "editAnakKe",
-            tahunMasuk: "editTahunMasuk",
-            namaAyah: "editAyah",
-            namaIbu: "editIbu",
-            pekerjaanAyah: "editKerjaAyah",
-            pekerjaanIbu: "editKerjaIbu",
-            desa: "editDesa",
-            kecamatan: "editKecamatan",
-            kabupaten: "editKabupaten",
-            provinsi: "editProvinsi",
-            kodePos: "editKodePos"
+        const get = (obj, ...keys) => {
+            for (let k of keys) {
+                if (obj[k] !== undefined && obj[k] !== null) return obj[k];
+            }
+            return "";
         };
 
-        Object.keys(map).forEach(key => {
-            const el = document.getElementById(map[key]);
-            if (el) {
-                el.value = siswa[key] || "";
-            }
-        });
+        document.getElementById("editNamaPanggilan").value =
+            get(siswa, "namaPanggilan", "nama_panggilan");
 
-        console.log("DATA TERAMBIL FULL:", siswa);
+        document.getElementById("editNama").value =
+            get(siswa, "nama", "nama_lengkap");
+
+        document.getElementById("editKelas").value =
+            get(siswa, "kelas");
+
+        document.getElementById("editNik").value =
+            get(siswa, "nik");
+
+        document.getElementById("editNisn").value =
+            get(siswa, "nisn");
+
+        document.getElementById("editGender").value =
+            get(siswa, "jenisKelamin", "jenis_kelamin");
+
+        document.getElementById("editTTL").value =
+            get(siswa, "ttl", "tempat_tanggal_lahir");
+
+        document.getElementById("editAgama").value =
+            get(siswa, "agama");
+
+        document.getElementById("editAnakKe").value =
+            get(siswa, "anakKe", "anak_ke");
+
+        document.getElementById("editTahunMasuk").value =
+            get(siswa, "tahunMasuk", "tahun_masuk");
+
+        document.getElementById("editAyah").value =
+            get(siswa, "namaAyah", "nama_ayah");
+
+        document.getElementById("editIbu").value =
+            get(siswa, "namaIbu", "nama_ibu");
+
+        document.getElementById("editKerjaAyah").value =
+            get(siswa, "pekerjaanAyah", "pekerjaan_ayah");
+
+        document.getElementById("editKerjaIbu").value =
+            get(siswa, "pekerjaanIbu", "pekerjaan_ibu");
+
+        document.getElementById("editDesa").value =
+            get(siswa, "desa");
+
+        document.getElementById("editKecamatan").value =
+            get(siswa, "kecamatan");
+
+        document.getElementById("editKabupaten").value =
+            get(siswa, "kabupaten");
+
+        document.getElementById("editProvinsi").value =
+            get(siswa, "provinsi");
+
+        document.getElementById("editKodePos").value =
+            get(siswa, "kodePos");
+
+        console.log("FULL DATA:", siswa);
 
     } catch (err) {
         console.error(err);
