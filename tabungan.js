@@ -744,24 +744,33 @@ async function updateIdentitasSiswa() {
         };
 
         const res = await fetch(TABUNGAN_API, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    action: "updateIdentitasSiswa",
-    data
-  })
+    method: "POST",
+    headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify({
+        action: "updateIdentitasSiswa",
+        data
+    })
 });
 
 const text = await res.text();
-console.log(text);
-const hasil = JSON.parse(text);
-        
-    } catch (err) {
-        alert(err);
-    }
+console.log("RAW:", text);
+
+let hasil;
+try {
+    hasil = JSON.parse(text);
+} catch (e) {
+    throw new Error("Server tidak mengembalikan JSON valid");
 }
+
+if (!hasil.status) {
+    alert(hasil.message);
+} else {
+    alert("Update berhasil");
+}
+
+    }
 
 async function loadKelasEditIdentitas() {
     try {
@@ -805,9 +814,10 @@ function loadEditIdentitas() {
     const nama = document.getElementById("editFilterNama").value;
     const kelas = document.getElementById("editFilterKelas").value;
 
-    const siswa = dataSiswaEdit.find(s =>
-        s.nama === nama && s.kelas === kelas
-    );
+   const siswa = dataSiswaEdit.find(s =>
+    String(s.nama).trim().toLowerCase() === String(nama).trim().toLowerCase() &&
+    String(s.kelas).trim().toLowerCase() === String(kelas).trim().toLowerCase()
+);
 
     if (!siswa) {
         alert("Data tidak ditemukan");
