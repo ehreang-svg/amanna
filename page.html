@@ -653,33 +653,38 @@ placeholder="Masukkan NISN">
 
 </div>
 
-<div class="page hiden" id="editIdentitasPage"> <select id="filterKelasEdit" onchange="loadNamaIdentitas()">
-    <option value="">Pilih Kelas</option> </select> <select id="filterNamaEdit">
-        <option value="">Pilih Nama</option> </select> <button onclick="loadEditIdentitas()"> Ambil Data </button>
-    <hr>
-    <input id="iNamaPanggilan" placeholder="Nama Panggilan">
-    <input id="iNama" placeholder="Nama Lengkap">
-    <input id="iKelas" placeholder="Kelas">
-    <input id="iNik" placeholder="NIK">
-    <input id="iNisn" placeholder="NISN">
-    <select id="iGender">
-    <option value="">Jenis Kelamin</option>
-    <option>Laki-laki</option>
-    <option>Perempuan</option>
-    </select>
-    
-    <input id="iTTL" placeholder="Tempat, Tanggal Lahir">
-    <input id="iAgama">
-    <input id="iAnakKe">
-    <input id="iTahunMasuk">
-    <input id="iAyah" placeholder="Nama Ayah">
-    <input id="iIbu" placeholder="Nama Ibu">
-    <input id="iKerjaAyah" placeholder="Pekerjaan Ayah">
-    <input id="iKerjaIbu" placeholder="Pekerjaan Ibu">
-    <input id="iDesa">
-    <input id="iKecamatan">
-    <input id="iKabupaten">
-    <input id="iProvinsi">
-    <input id="iKodePos">
-    <input type="file" id="iFoto"> <button onclick="updateIdentitasSiswa()"> Simpan Perubahan </button>
-</div>
+
+<!-- EDIT IDENTITAS SISWA --> 
+<div class="page hidden" id="editIdentitasPage">
+<div class="back" onclick="goBack()"> ← Kembali </div>
+<div class="card"> <h2>Edit Identitas Siswa</h2>
+<select id="editFilterKelas" onchange="loadNamaEditIdentitas()">
+<option value="">Pilih Kelas</option>
+</select>
+<select id="editFilterNama">
+<option value="">Pilih Nama</option>
+</select>
+<button onclick="loadEditIdentitas()"> Ambil Data </button> <hr>
+<input id="editNamaPanggilan" placeholder="Nama Panggilan">
+<input id="editNama" placeholder="Nama Lengkap">
+<input id="editKelas" placeholder="Kelas">
+<input id="editNik" placeholder="NIK">
+<input id="editNisn" placeholder="NISN">
+<select id="editGender"> <option value="">Jenis Kelamin</option>
+<option>LAKI-LAKI</option> <option>PEREMPUAN</option> </select>
+<input id="editTTL" placeholder="Tempat, Tanggal Lahir">
+<input id="editAgama" placeholder="Agama">
+<input id="editAnakKe" placeholder="Anak Ke">
+<input id="editTahunMasuk" placeholder="Tahun Masuk">
+    <input id="editAyah" placeholder="Nama Ayah">
+    <input id="editIbu" placeholder="Nama Ibu">
+    <input id="editKerjaAyah" placeholder="Pekerjaan Ayah">
+    <input id="editKerjaIbu" placeholder="Pekerjaan Ibu">
+    <input id="editDesa" placeholder="Desa">
+    <input id="editKecamatan" placeholder="Kecamatan">
+    <input id="editKabupaten" placeholder="Kabupaten"> 
+    <input id="editProvinsi" placeholder="Provinsi">
+    <input id="editKodePos" placeholder="Kode Pos">
+    <input type="file" id="editFoto"> <br><br>
+    <button onclick="updateIdentitasSiswa()"> Simpan Perubahan </button> 
+</div> </div>
