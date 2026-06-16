@@ -11,7 +11,7 @@ async function loadKelasTabungan(){
         tabNama.innerHTML = `<option value="">Pilih Nama Siswa</option>`;
     }catch(err){ console.log(err); }
 }
-}
+
 function loadNamaTabungan(){
     const siswa = dataSiswaTabungan.filter(x => x.kelas == tabKelas.value);
     tabNama.innerHTML = `<option value="">Pilih Nama Siswa</option>`;
@@ -886,3 +886,4 @@ document.addEventListener("DOMContentLoaded", async () => {
     kelas.addEventListener("change", () => {
         loadNamaEditIdentitas();
     });
+});
