@@ -11,38 +11,19 @@ window.dataSiswaIdentitas = window.dataSiswaIdentitas || [];
 API WRAPPER
 ========================= */
 
-async function api(action, data = {}) {
+async function api(action,data={}){
 
-    try {
+    const url =
+        TABUNGAN_API +
+        "?action=" +
+        encodeURIComponent(action);
 
-        const res = await fetch(
-            TABUNGAN_API,
-            {
-                method: "POST",
-                body: JSON.stringify({
-                    action,
-                    data
-                })
-            }
-        );
+    const res =
+        await fetch(url);
 
-        const text = await res.text();
-
-        return JSON.parse(text);
-
-    } catch (err) {
-
-        console.error(err);
-
-        return {
-            status: false,
-            message: err.message
-        };
-
-    }
+    return await res.json();
 
 }
-
 /* =========================
 TABUNGAN
 ========================= */
