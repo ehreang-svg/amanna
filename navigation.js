@@ -21,6 +21,7 @@ const pages = [
     "loginQuiz",
     "cabutanPage",
     "identitasPage",
+   "editIdentitasPage",
     "exportIdentitasPage"
 ];
 
