@@ -643,33 +643,6 @@ async function loadKartuSiswa(nama, kelas) {
   }
 }
 
-function exportToPDF() {
-
-  const element = document.getElementById("print-area");
-
-  html2pdf()
-    .set({
-      filename: "Kartu Siswa.pdf",
-      margin: 5,
-      image: {
-        type: "jpeg",
-        quality: 1
-      },
-      html2canvas: {
-        scale: 3,
-        useCORS: true
-      },
-      jsPDF: {
-        unit: "mm",
-        format: "a4",
-        orientation: "portrait"
-      }
-    })
-    .from(element)
-    .save();
-
-}
-
 async function exportKartuSiswa() {
 
   const nama = document.getElementById("filterNamaIdentitas").value;
