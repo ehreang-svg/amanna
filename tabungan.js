@@ -886,4 +886,3 @@ document.addEventListener("DOMContentLoaded", async () => {
     kelas.addEventListener("change", () => {
         loadNamaEditIdentitas();
     });
-});
