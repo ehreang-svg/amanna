@@ -435,48 +435,44 @@ async function simpanIdentitasSiswa() {
     try {
 
         const fotoFile = document.getElementById("iFoto").files[0];
-
         let fotoBase64 = "";
 
         if (fotoFile) {
             fotoBase64 = await new Promise((resolve) => {
                 const reader = new FileReader();
-                reader.onload = e => resolve(e.target.result);
+                reader.onload = (e) => resolve(e.target.result);
                 reader.readAsDataURL(fotoFile);
             });
         }
 
-const data = {
-    namaPanggilan: document.getElementById("iNamaPanggilan").value,
-    nama: document.getElementById("iNama").value,
-    kelas: document.getElementById("iKelas").value,
-    nik: document.getElementById("iNik").value,
-    nisn: document.getElementById("iNisn").value,
-
-    jenisKelamin: document.getElementById("iGender").value,
-
-    ttl: document.getElementById("iTTL").value,
-    agama: document.getElementById("iAgama").value,
-    anakKe: document.getElementById("iAnakKe").value,
-    tahunMasuk: document.getElementById("iTahunMasuk").value,
-
-    namaAyah: document.getElementById("iAyah").value,
-    namaIbu: document.getElementById("iIbu").value,
-
-    pekerjaanAyah: document.getElementById("iKerjaAyah").value,
-    pekerjaanIbu: document.getElementById("iKerjaIbu").value,
-
-    desa: document.getElementById("iDesa").value,
-    kecamatan: document.getElementById("iKecamatan").value,
-    kabupaten: document.getElementById("iKabupaten").value,
-    provinsi: document.getElementById("iProvinsi").value,
-    kodePos: document.getElementById("iKodePos").value,
-
-    foto: fotoBase64
-};
+        const data = {
+            namaPanggilan: document.getElementById("iNamaPanggilan").value,
+            nama: document.getElementById("iNama").value,
+            kelas: document.getElementById("iKelas").value,
+            nik: document.getElementById("iNik").value,
+            nisn: document.getElementById("iNisn").value,
+            jenisKelamin: document.getElementById("iGender").value,
+            ttl: document.getElementById("iTTL").value,
+            agama: document.getElementById("iAgama").value,
+            anakKe: document.getElementById("iAnakKe").value,
+            tahunMasuk: document.getElementById("iTahunMasuk").value,
+            namaAyah: document.getElementById("iAyah").value,
+            namaIbu: document.getElementById("iIbu").value,
+            pekerjaanAyah: document.getElementById("iKerjaAyah").value,
+            pekerjaanIbu: document.getElementById("iKerjaIbu").value,
+            desa: document.getElementById("iDesa").value,
+            kecamatan: document.getElementById("iKecamatan").value,
+            kabupaten: document.getElementById("iKabupaten").value,
+            provinsi: document.getElementById("iProvinsi").value,
+            kodePos: document.getElementById("iKodePos").value,
+            foto: fotoBase64
+        };
 
         const res = await fetch(TABUNGAN_API, {
             method: "POST",
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+            },
             body: JSON.stringify({
                 action: "simpanIdentitasSiswa",
                 data: data
@@ -484,38 +480,49 @@ const data = {
         });
 
         const hasil = await res.text();
+        alert(hasil);
 
-alert(hasil);
+        // Reset form setelah berhasil
+        [
+            "iNamaPanggilan",
+            "iNama",
+            "iKelas",
+            "iNik",
+            "iNisn",
+            "iGender",
+            "iTTL",
+            "iAgama",
+            "iAnakKe",
+            "iTahunMasuk",
+            "iAyah",
+            "iIbu",
+            "iKerjaAyah",
+            "iKerjaIbu",
+            "iDesa",
+            "iKecamatan",
+            "iKabupaten",
+            "iProvinsi",
+            "iKodePos"
+        ].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                if (el.tagName === "SELECT") {
+                    el.selectedIndex = 0;
+                } else {
+                    el.value = "";
+                }
+            }
+        });
 
-// Reset semua field
-[
-    "iNamaPanggilan",
-    "iNama",
-    "iKelas",
-    "iNik",
-    "iNisn",
-    "iGender",
-    "iTTL",
-    "iAgama",
-    "iAnakKe",
-    "iTahunMasuk",
-    "iAyah",
-    "iIbu",
-    "iKerjaAyah",
-    "iKerjaIbu",
-    "iDesa",
-    "iKecamatan",
-    "iKabupaten",
-    "iProvinsi",
-    "iKodePos",
-    "iFoto"
-].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = "";
-});
+        // Reset input file
+        const fotoInput = document.getElementById("iFoto");
+        if (fotoInput) {
+            fotoInput.value = "";
+        }
 
     } catch (err) {
-        alert(err);
+        console.error(err);
+        alert("Terjadi kesalahan: " + err);
     }
 }
 
