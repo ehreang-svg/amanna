@@ -1,9 +1,11 @@
 /* ================= GLOBAL STATE ================= */
 
-let dataSiswaTabungan = [];
 let dataSiswaCabutan = [];
 let dataSiswaIdentitas = [];
 let dataSiswaEdit = [];
+if (!window.dataSiswaTabungan) {
+    window.dataSiswaTabungan = [];
+}
 
 /* ================= API WRAPPER ================= */
 
@@ -235,6 +237,10 @@ async function updateIdentitasSiswa() {
         console.error(err);
         alert(err.message);
     }
+}
+
+function loadKelasEditIdentitas() {
+    console.warn("loadKelasEditIdentitas belum diimplementasi");
 }
 
 /* ================= INIT ================= */
