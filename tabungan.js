@@ -774,8 +774,13 @@ if (!hasil.status) {
 
 async function loadKelasEditIdentitas() {
     try {
-        const res = await fetch(TABUNGAN_API + "?action=getDataSiswa");
-        const json = await res.json();
+       const res = await fetch(TABUNGAN_API + "?action=getDataSiswa");
+
+const text = await res.text();
+console.log("RAW RESPONSE:", text);
+
+const json = JSON.parse(text);
+console.log("PARSED:", json);
 
         console.log("GET SISWA:", json);
 
