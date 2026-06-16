@@ -485,7 +485,34 @@ const data = {
 
         const hasil = await res.text();
 
-        alert(hasil);
+alert(hasil);
+
+// Reset semua field
+[
+    "iNamaPanggilan",
+    "iNama",
+    "iKelas",
+    "iNik",
+    "iNisn",
+    "iGender",
+    "iTTL",
+    "iAgama",
+    "iAnakKe",
+    "iTahunMasuk",
+    "iAyah",
+    "iIbu",
+    "iKerjaAyah",
+    "iKerjaIbu",
+    "iDesa",
+    "iKecamatan",
+    "iKabupaten",
+    "iProvinsi",
+    "iKodePos",
+    "iFoto"
+].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+});
 
     } catch (err) {
         alert(err);
