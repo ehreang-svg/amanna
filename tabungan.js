@@ -744,9 +744,8 @@ async function updateIdentitasSiswa() {
 
         const res = await fetch(TABUNGAN_API, {
             method: "POST",
-            headers: {
-             headers: {
-    "Content-Type": "text/plain;charset=utf-8"
+ headers: {
+  "Content-Type": "text/plain;charset=utf-8"
 },
             body: JSON.stringify({
                 action: "updateIdentitasSiswa",
