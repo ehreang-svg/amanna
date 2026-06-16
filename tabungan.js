@@ -7,54 +7,70 @@ let dataSiswaEdit = [];
 
 /* ================= API WRAPPER ================= */
 
+const TABUNGAN_API = TABUNGAN_API; // tetap
+
 async function api(action, data = {}) {
-    const res = await fetch(TABUNGAN_API, {
-        method: "POST",
-        body: JSON.stringify({ action, data })
-    });
-
-    return await res.json();
-}
-
-/* ================= TABUNGAN ================= */
-
-async function loadKelasTabungan() {
     try {
-        const data = await api("getDataSiswa");
-
-        if (!data.status) {
-            alert("Gagal memuat data siswa");
-            return;
-        }
-
-        dataSiswaTabungan = data.data;
-
-        const tabKelas = document.getElementById("tabKelas");
-        const tabNama = document.getElementById("tabNama");
-
-        const kelasUnik = [...new Set(
-            data.data.map(x => String(x.kelas || "").trim()).filter(Boolean)
-        )].sort();
-
-        tabKelas.innerHTML = `<option value="">Pilih Kelas</option>`;
-        kelasUnik.forEach(k => {
-            tabKelas.innerHTML += `<option value="${k}">${k}</option>`;
+        const res = await fetch(TABUNGAN_API, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ action, data })
         });
 
-        tabNama.innerHTML = `<option value="">Pilih Nama Siswa</option>`;
+        return await res.json();
     } catch (err) {
-        console.error(err);
+        console.error("API error:", err);
+        return { status: false, message: "Network error" };
     }
 }
+/* ================= TABUNGAN ================= */
 
-function loadNamaTabungan() {
-    if (!Array.isArray(dataSiswaTabungan)) return;
+let dataSiswaTabungan = [];
+
+/* ================= LOAD KELAS ================= */
+
+async function loadKelasTabungan() {
+    const data = await api("getDataSiswa");
+
+    if (!data.status) {
+        alert("Gagal memuat data siswa");
+        return;
+    }
+
+    dataSiswaTabungan = data.data || [];
 
     const tabKelas = document.getElementById("tabKelas");
     const tabNama = document.getElementById("tabNama");
 
+    if (!tabKelas || !tabNama) return;
+
+    const kelasUnik = [...new Set(
+        dataSiswaTabungan
+            .map(x => String(x.kelas || "").trim())
+            .filter(Boolean)
+    )].sort();
+
+    tabKelas.innerHTML = `<option value="">Pilih Kelas</option>`;
+    kelasUnik.forEach(k => {
+        tabKelas.innerHTML += `<option value="${k}">${k}</option>`;
+    });
+
+    tabNama.innerHTML = `<option value="">Pilih Nama Siswa</option>`;
+}
+
+/* ================= LOAD NAMA ================= */
+
+function loadNamaTabungan() {
+    const tabKelas = document.getElementById("tabKelas");
+    const tabNama = document.getElementById("tabNama");
+
+    if (!tabKelas || !tabNama) return;
+    if (!dataSiswaTabungan.length) return;
+
     const siswa = dataSiswaTabungan.filter(x =>
-        String(x.kelas).trim() === String(tabKelas.value).trim()
+        String(x.kelas || "").trim() === String(tabKelas.value || "").trim()
     );
 
     tabNama.innerHTML = `<option value="">Pilih Nama Siswa</option>`;
@@ -62,17 +78,17 @@ function loadNamaTabungan() {
         tabNama.innerHTML += `<option value="${s.nama}">${s.nama}</option>`;
     });
 }
-
 /* ================= SIMPAN TABUNGAN ================= */
 
 async function simpanTabungan() {
     const payload = {
-        nama: document.getElementById("tabNama").value,
-        kelas: document.getElementById("tabKelas").value,
-        nominal: document.getElementById("tabNominal").value
+        nama: document.getElementById("tabNama")?.value,
+        kelas: document.getElementById("tabKelas")?.value,
+        nominal: document.getElementById("tabNominal")?.value
     };
 
     const result = await api("inputTabungan", payload);
+
     alert(result.message || "Sukses");
 }
 
@@ -119,14 +135,20 @@ async function loadRekapTabungan() {
 
 /* ================= CABUTAN ================= */
 
+let dataSiswaCabutan = [];
+
 async function loadKelasCabutan() {
     const result = await api("getDataSiswa");
     if (!result.status) return;
 
-    dataSiswaCabutan = result.data;
+    dataSiswaCabutan = result.data || [];
 
     const cabKelas = document.getElementById("cabKelas");
-    const kelasUnik = [...new Set(result.data.map(x => x.kelas))];
+    if (!cabKelas) return;
+
+    const kelasUnik = [...new Set(
+        dataSiswaCabutan.map(x => String(x.kelas || "").trim()).filter(Boolean)
+    )];
 
     cabKelas.innerHTML = `<option value="">Pilih Kelas</option>`;
     kelasUnik.forEach(k => {
@@ -138,8 +160,10 @@ function loadNamaCabutan() {
     const cabKelas = document.getElementById("cabKelas");
     const cabNama = document.getElementById("cabNama");
 
+    if (!cabKelas || !cabNama) return;
+
     const siswa = dataSiswaCabutan.filter(x =>
-        String(x.kelas).trim() === String(cabKelas.value).trim()
+        String(x.kelas || "").trim() === String(cabKelas.value || "").trim()
     );
 
     cabNama.innerHTML = `<option value="">Pilih Nama Siswa</option>`;
@@ -221,4 +245,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("tabKelas")?.addEventListener("change", loadNamaTabungan);
     document.getElementById("cabKelas")?.addEventListener("change", loadNamaCabutan);
+
+    show("splash");
 });
