@@ -742,16 +742,10 @@ async function updateIdentitasSiswa() {
             foto: foto
         };
 
-        const res = await fetch(TABUNGAN_API, {
-            method: "POST",
- headers: {
-  "Content-Type": "text/plain;charset=utf-8"
-},
-            body: JSON.stringify({
-                action: "updateIdentitasSiswa",
-                data
-            })
-        });
+        const res = await fetch(url, {
+  method: "POST",
+  body: JSON.stringify(payload)
+});
 
         const text = await res.text();
         console.log("RAW:", text);
