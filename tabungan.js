@@ -9,7 +9,7 @@ async function loadKelasTabungan(){
         tabKelas.innerHTML = `<option value="">Pilih Kelas</option>`;
         kelasUnik.forEach(k=>{ tabKelas.innerHTML += `<option value="${k}">${k}</option>`; });
         tabNama.innerHTML = `<option value="">Pilih Nama Siswa</option>`;
-    }catch(err){ console.log(err); }
+    }catch(err){ console.log(err); 
 }
 
 function loadNamaTabungan(){
