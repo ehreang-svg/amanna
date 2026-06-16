@@ -805,54 +805,75 @@ function loadNamaEditIdentitas() {
     console.log("NAMA FILTER:", hasil);
 }
 
-function loadEditIdentitas() {
-    const nama = document.getElementById("editFilterNama").value;
-    const kelas = document.getElementById("editFilterKelas").value;
+async function loadEditIdentitas() {
+    try {
 
-    if (!nama || !kelas) {
-        alert("Pilih kelas dan nama dulu");
-        return;
-    }
+        const nama = document.getElementById("editFilterNama").value;
+        const kelas = document.getElementById("editFilterKelas").value;
 
-    const siswa = dataSiswaIdentitas.find(s =>
-        String(s.nama).trim() === String(nama).trim() &&
-        String(s.kelas).trim() === String(kelas).trim()
-    );
-
-    if (!siswa) {
-        alert("Data tidak ditemukan");
-        return;
-    }
-
-    // 🔥 INI TEMPAT MAP DIPAKAI
-    const map = {
-        namaPanggilan: "editNamaPanggilan",
-        nama: "editNama",
-        kelas: "editKelas",
-        nik: "editNik",
-        nisn: "editNisn",
-        jenisKelamin: "editGender",
-        ttl: "editTTL",
-        agama: "editAgama",
-        anakKe: "editAnakKe",
-        tahunMasuk: "editTahunMasuk",
-        namaAyah: "editAyah",
-        namaIbu: "editIbu",
-        pekerjaanAyah: "editKerjaAyah",
-        pekerjaanIbu: "editKerjaIbu",
-        desa: "editDesa",
-        kecamatan: "editKecamatan",
-        kabupaten: "editKabupaten",
-        provinsi: "editProvinsi",
-        kodePos: "editKodePos"
-    };
-
-    Object.keys(map).forEach(key => {
-        const el = document.getElementById(map[key]);
-        if (el) {
-            el.value = siswa[key] || "";
+        if (!nama || !kelas) {
+            alert("Pilih kelas dan nama dulu");
+            return;
         }
-    });
 
-    console.log("DATA LOADED:", siswa);
+        const res = await fetch(
+            TABUNGAN_API +
+            "?action=getDataSiswa"
+        );
+
+        const result = await res.json();
+
+        if (!result.status) {
+            alert("Gagal ambil data");
+            return;
+        }
+
+        const siswa = result.data.find(s =>
+            String(s.nama).trim() === String(nama).trim() &&
+            String(s.kelas).trim() === String(kelas).trim()
+        );
+
+        if (!siswa) {
+            alert("Data tidak ditemukan");
+            return;
+        }
+
+        // =========================
+        // AUTO FILL SEMUA FIELD
+        // =========================
+        const map = {
+            namaPanggilan: "editNamaPanggilan",
+            nama: "editNama",
+            kelas: "editKelas",
+            nik: "editNik",
+            nisn: "editNisn",
+            jenisKelamin: "editGender",
+            ttl: "editTTL",
+            agama: "editAgama",
+            anakKe: "editAnakKe",
+            tahunMasuk: "editTahunMasuk",
+            namaAyah: "editAyah",
+            namaIbu: "editIbu",
+            pekerjaanAyah: "editKerjaAyah",
+            pekerjaanIbu: "editKerjaIbu",
+            desa: "editDesa",
+            kecamatan: "editKecamatan",
+            kabupaten: "editKabupaten",
+            provinsi: "editProvinsi",
+            kodePos: "editKodePos"
+        };
+
+        Object.keys(map).forEach(key => {
+            const el = document.getElementById(map[key]);
+            if (el) {
+                el.value = siswa[key] || "";
+            }
+        });
+
+        console.log("DATA TERAMBIL FULL:", siswa);
+
+    } catch (err) {
+        console.error(err);
+        alert("Error load data");
+    }
 }
