@@ -737,18 +737,7 @@ async function updateIdentitasSiswa() {
 
         if (file) {
 
-            foto = await new Promise((resolve, reject) => {
-
-                const reader = new FileReader();
-
-                reader.onload = e =>
-                    resolve(e.target.result);
-
-                reader.onerror = reject;
-
-                reader.readAsDataURL(file);
-
-            });
+            foto = await compressImage(file);
 
         }
 
@@ -1057,3 +1046,66 @@ document.addEventListener("DOMContentLoaded", async () => {
         loadNamaEditIdentitas();
     });
 });
+
+async function compressImage(file) {
+
+    return new Promise((resolve) => {
+
+        const reader = new FileReader();
+
+        reader.onload = function(event) {
+
+            const img = new Image();
+
+            img.onload = function() {
+
+                const canvas =
+                    document.createElement("canvas");
+
+                const MAX_WIDTH = 500;
+
+                let width = img.width;
+                let height = img.height;
+
+                if (width > MAX_WIDTH) {
+
+                    height =
+                        height *
+                        (MAX_WIDTH / width);
+
+                    width = MAX_WIDTH;
+
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+
+                const ctx =
+                    canvas.getContext("2d");
+
+                ctx.drawImage(
+                    img,
+                    0,
+                    0,
+                    width,
+                    height
+                );
+
+                resolve(
+                    canvas.toDataURL(
+                        "image/jpeg",
+                        0.6
+                    )
+                );
+
+            };
+
+            img.src = event.target.result;
+
+        };
+
+        reader.readAsDataURL(file);
+
+    });
+
+}
