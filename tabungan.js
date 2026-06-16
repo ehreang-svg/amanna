@@ -704,3 +704,76 @@ async function exportKartuSiswa() {
   window.open(json.pdfUrl, "_blank");
 }
 
+async function updateIdentitasSiswa() {
+
+  try {
+
+    let foto = "";
+
+    const file = document.getElementById("iFoto").files[0];
+
+    if (file) {
+
+      foto = await new Promise(resolve => {
+
+        const reader = new FileReader();
+
+        reader.onload = e => resolve(e.target.result);
+
+        reader.readAsDataURL(file);
+
+      });
+
+    }
+
+    const data = {
+
+      namaPanggilan: document.getElementById("iNamaPanggilan").value,
+      nama: document.getElementById("iNama").value,
+      kelas: document.getElementById("iKelas").value,
+      nik: document.getElementById("iNik").value,
+      nisn: document.getElementById("iNisn").value,
+      jenisKelamin: document.getElementById("iGender").value,
+      ttl: document.getElementById("iTTL").value,
+      agama: document.getElementById("iAgama").value,
+      anakKe: document.getElementById("iAnakKe").value,
+      tahunMasuk: document.getElementById("iTahunMasuk").value,
+      namaAyah: document.getElementById("iAyah").value,
+      namaIbu: document.getElementById("iIbu").value,
+      pekerjaanAyah: document.getElementById("iKerjaAyah").value,
+      pekerjaanIbu: document.getElementById("iKerjaIbu").value,
+      desa: document.getElementById("iDesa").value,
+      kecamatan: document.getElementById("iKecamatan").value,
+      kabupaten: document.getElementById("iKabupaten").value,
+      provinsi: document.getElementById("iProvinsi").value,
+      kodePos: document.getElementById("iKodePos").value,
+      foto: foto
+
+    };
+
+    const res = await fetch(TABUNGAN_API, {
+
+      method: "POST",
+
+      body: JSON.stringify({
+
+        action: "updateIdentitasSiswa",
+
+        data: data
+
+      })
+
+    });
+
+    const hasil = await res.json();
+
+    alert(hasil.message);
+
+  } catch (err) {
+
+    alert(err);
+
+  }
+
+}
+
