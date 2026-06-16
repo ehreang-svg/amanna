@@ -705,7 +705,6 @@ async function exportKartuSiswa() {
 }
 
 let dataSiswaEdit = [];
-
 async function updateIdentitasSiswa() {
     try {
 
@@ -744,34 +743,37 @@ async function updateIdentitasSiswa() {
         };
 
         const res = await fetch(TABUNGAN_API, {
-    method: "POST",
-    headers: {
-    "Content-Type": "application/json"
-},
-    body: JSON.stringify({
-        action: "updateIdentitasSiswa",
-        data
-    })
-});
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                action: "updateIdentitasSiswa",
+                data
+            })
+        });
 
-const text = await res.text();
-console.log("RAW:", text);
+        const text = await res.text();
+        console.log("RAW:", text);
 
-let hasil;
-try {
-    hasil = JSON.parse(text);
-} catch (e) {
-    throw new Error("Server tidak mengembalikan JSON valid");
-}
+        let hasil;
+        try {
+            hasil = JSON.parse(text);
+        } catch (e) {
+            throw new Error("Server tidak mengembalikan JSON valid");
+        }
 
-if (!hasil.status) {
-    alert(hasil.message);
-} else {
-    alert("Update berhasil");
-}
+        if (!hasil.status) {
+            alert(hasil.message);
+        } else {
+            alert("Update berhasil");
+        }
 
+    } catch (err) {
+        console.error(err);
+        alert("Terjadi kesalahan: " + err.message);
     }
-
+}
 async function loadKelasEditIdentitas() {
     try {
         const res = await fetch(TABUNGAN_API + "?action=getDataSiswa");
