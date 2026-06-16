@@ -1,19 +1,21 @@
-/* ================= GLOBAL STATE ================= */
+/* ================= GLOBAL STATE (SAFE) ================= */
 
-let dataSiswaCabutan = [];
-let dataSiswaIdentitas = [];
-let dataSiswaEdit = [];
-if (!window.dataSiswaTabungan) {
-    window.dataSiswaTabungan = [];
-}
+window.dataSiswaCabutan = window.dataSiswaCabutan || [];
+window.dataSiswaIdentitas = window.dataSiswaIdentitas || [];
+window.dataSiswaEdit = window.dataSiswaEdit || [];
+window.dataSiswaTabungan = window.dataSiswaTabungan || [];
+
+/* ================= API CONFIG ================= */
+
+// FIX BUG: jangan self-assign
+// pastikan TABUNGAN_API sudah ada dari config.js
+const API_URL = window.TABUNGAN_API;
 
 /* ================= API WRAPPER ================= */
 
-const TABUNGAN_API = TABUNGAN_API; // tetap
-
 async function api(action, data = {}) {
     try {
-        const res = await fetch(TABUNGAN_API, {
+        const res = await fetch(API_URL, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -27,21 +29,18 @@ async function api(action, data = {}) {
         return { status: false, message: "Network error" };
     }
 }
+
 /* ================= TABUNGAN ================= */
-
-let dataSiswaTabungan = [];
-
-/* ================= LOAD KELAS ================= */
 
 async function loadKelasTabungan() {
     const data = await api("getDataSiswa");
 
-    if (!data.status) {
+    if (!data?.status) {
         alert("Gagal memuat data siswa");
         return;
     }
 
-    dataSiswaTabungan = data.data || [];
+    window.dataSiswaTabungan = data.data || [];
 
     const tabKelas = document.getElementById("tabKelas");
     const tabNama = document.getElementById("tabNama");
@@ -49,7 +48,7 @@ async function loadKelasTabungan() {
     if (!tabKelas || !tabNama) return;
 
     const kelasUnik = [...new Set(
-        dataSiswaTabungan
+        window.dataSiswaTabungan
             .map(x => String(x.kelas || "").trim())
             .filter(Boolean)
     )].sort();
@@ -62,16 +61,14 @@ async function loadKelasTabungan() {
     tabNama.innerHTML = `<option value="">Pilih Nama Siswa</option>`;
 }
 
-/* ================= LOAD NAMA ================= */
-
 function loadNamaTabungan() {
     const tabKelas = document.getElementById("tabKelas");
     const tabNama = document.getElementById("tabNama");
 
     if (!tabKelas || !tabNama) return;
-    if (!dataSiswaTabungan.length) return;
+    if (!window.dataSiswaTabungan?.length) return;
 
-    const siswa = dataSiswaTabungan.filter(x =>
+    const siswa = window.dataSiswaTabungan.filter(x =>
         String(x.kelas || "").trim() === String(tabKelas.value || "").trim()
     );
 
@@ -80,6 +77,7 @@ function loadNamaTabungan() {
         tabNama.innerHTML += `<option value="${s.nama}">${s.nama}</option>`;
     });
 }
+
 /* ================= SIMPAN TABUNGAN ================= */
 
 async function simpanTabungan() {
@@ -91,65 +89,24 @@ async function simpanTabungan() {
 
     const result = await api("inputTabungan", payload);
 
-    alert(result.message || "Sukses");
-}
-
-/* ================= REKAP ================= */
-
-async function loadRekapTabungan() {
-    try {
-        const nama = document.getElementById("filterNamaTabungan").value;
-        const kelas = document.getElementById("filterKelasTabungan").value;
-        const bulan = document.getElementById("filterBulanTabungan").value;
-        const tanggal = document.getElementById("filterTanggalTabungan").value;
-
-        const res = await fetch(
-            `${TABUNGAN_API}?action=getRekapTabungan&nama=${encodeURIComponent(nama)}&kelas=${encodeURIComponent(kelas)}&bulan=${encodeURIComponent(bulan)}&tanggal=${encodeURIComponent(tanggal)}`
-        );
-
-        const data = await res.json();
-
-        if (!data.status) {
-            alert(data.message);
-            return;
-        }
-
-        let total = 0;
-        let html = `<table><tr><th>Tanggal</th><th>Nama</th><th>Kelas</th><th>Nominal</th></tr>`;
-
-        data.data.forEach(r => {
-            total += Number(r.nominal || 0);
-            html += `<tr>
-                <td>${r.tanggal}</td>
-                <td>${r.nama}</td>
-                <td>${r.kelas}</td>
-                <td>Rp ${Number(r.nominal).toLocaleString("id-ID")}</td>
-            </tr>`;
-        });
-
-        html += `<tr><th colspan="3">TOTAL</th><th>Rp ${total.toLocaleString("id-ID")}</th></tr></table>`;
-        document.getElementById("rekapTabunganBox").innerHTML = html;
-
-    } catch (err) {
-        console.error(err);
-    }
+    alert(result?.message || "Sukses");
 }
 
 /* ================= CABUTAN ================= */
 
-let dataSiswaCabutan = [];
-
 async function loadKelasCabutan() {
     const result = await api("getDataSiswa");
-    if (!result.status) return;
+    if (!result?.status) return;
 
-    dataSiswaCabutan = result.data || [];
+    window.dataSiswaCabutan = result.data || [];
 
     const cabKelas = document.getElementById("cabKelas");
     if (!cabKelas) return;
 
     const kelasUnik = [...new Set(
-        dataSiswaCabutan.map(x => String(x.kelas || "").trim()).filter(Boolean)
+        window.dataSiswaCabutan
+            .map(x => String(x.kelas || "").trim())
+            .filter(Boolean)
     )];
 
     cabKelas.innerHTML = `<option value="">Pilih Kelas</option>`;
@@ -164,7 +121,7 @@ function loadNamaCabutan() {
 
     if (!cabKelas || !cabNama) return;
 
-    const siswa = dataSiswaCabutan.filter(x =>
+    const siswa = window.dataSiswaCabutan.filter(x =>
         String(x.kelas || "").trim() === String(cabKelas.value || "").trim()
     );
 
@@ -174,23 +131,11 @@ function loadNamaCabutan() {
     });
 }
 
-async function simpanCabutan() {
-    const data = {
-        nama: document.getElementById("cabNama").value,
-        kelas: document.getElementById("cabKelas").value,
-        jenis: document.getElementById("cabJenis").value,
-        nominal: Number(document.getElementById("cabNominal").value || 0)
-    };
-
-    const res = await api("inputCabutan", data);
-    alert(res.message || "Sukses");
-}
-
-/* ================= IDENTITAS UPDATE ================= */
+/* ================= UPDATE IDENTITAS ================= */
 
 async function updateIdentitasSiswa() {
     try {
-        const file = document.getElementById("editFoto").files[0];
+        const file = document.getElementById("editFoto")?.files?.[0];
         let foto = "";
 
         if (file) {
@@ -202,32 +147,32 @@ async function updateIdentitasSiswa() {
         }
 
         const data = {
-            namaPanggilan: document.getElementById("editNamaPanggilan").value,
-            nama: document.getElementById("editNama").value,
-            kelas: document.getElementById("editKelas").value,
-            nik: document.getElementById("editNik").value,
-            nisn: document.getElementById("editNisn").value,
-            jenisKelamin: document.getElementById("editGender").value,
-            ttl: document.getElementById("editTTL").value,
-            agama: document.getElementById("editAgama").value,
-            anakKe: document.getElementById("editAnakKe").value,
-            tahunMasuk: document.getElementById("editTahunMasuk").value,
-            namaAyah: document.getElementById("editAyah").value,
-            namaIbu: document.getElementById("editIbu").value,
-            pekerjaanAyah: document.getElementById("editKerjaAyah").value,
-            pekerjaanIbu: document.getElementById("editKerjaIbu").value,
-            desa: document.getElementById("editDesa").value,
-            kecamatan: document.getElementById("editKecamatan").value,
-            kabupaten: document.getElementById("editKabupaten").value,
-            provinsi: document.getElementById("editProvinsi").value,
-            kodePos: document.getElementById("editKodePos").value,
+            namaPanggilan: document.getElementById("editNamaPanggilan")?.value,
+            nama: document.getElementById("editNama")?.value,
+            kelas: document.getElementById("editKelas")?.value,
+            nik: document.getElementById("editNik")?.value,
+            nisn: document.getElementById("editNisn")?.value,
+            jenisKelamin: document.getElementById("editGender")?.value,
+            ttl: document.getElementById("editTTL")?.value,
+            agama: document.getElementById("editAgama")?.value,
+            anakKe: document.getElementById("editAnakKe")?.value,
+            tahunMasuk: document.getElementById("editTahunMasuk")?.value,
+            namaAyah: document.getElementById("editAyah")?.value,
+            namaIbu: document.getElementById("editIbu")?.value,
+            pekerjaanAyah: document.getElementById("editKerjaAyah")?.value,
+            pekerjaanIbu: document.getElementById("editKerjaIbu")?.value,
+            desa: document.getElementById("editDesa")?.value,
+            kecamatan: document.getElementById("editKecamatan")?.value,
+            kabupaten: document.getElementById("editKabupaten")?.value,
+            provinsi: document.getElementById("editProvinsi")?.value,
+            kodePos: document.getElementById("editKodePos")?.value,
             foto
         };
 
         const result = await api("updateIdentitasSiswa", data);
 
-        if (!result.status) {
-            alert(result.message || "Gagal update");
+        if (!result?.status) {
+            alert(result?.message || "Gagal update");
             return;
         }
 
@@ -238,6 +183,8 @@ async function updateIdentitasSiswa() {
         alert(err.message);
     }
 }
+
+/* ================= PLACEHOLDER SAFE ================= */
 
 function loadKelasEditIdentitas() {
     console.warn("loadKelasEditIdentitas belum diimplementasi");
@@ -252,5 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("tabKelas")?.addEventListener("change", loadNamaTabungan);
     document.getElementById("cabKelas")?.addEventListener("change", loadNamaCabutan);
 
-    show("splash");
+    if (typeof show === "function") {
+        show("splash");
+    }
 });
