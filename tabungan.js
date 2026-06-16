@@ -718,25 +718,37 @@ async function updateIdentitasSiswa() {
             });
         }
 
-        const data = {};
-
-        // 🔥 ambil semua input edit otomatis
-        document.querySelectorAll("#editIdentitasPage input, #editIdentitasPage select").forEach(el => {
-            if (!el.id) return;
-            if (el.type === "file") return;
-
-            const key = el.id.replace("edit", "");
-            data[key.charAt(0).toLowerCase() + key.slice(1)] = el.value;
-        });
-
-        data.foto = foto;
+        const data = {
+            namaPanggilan: document.getElementById("editNamaPanggilan").value,
+            nama: document.getElementById("editNama").value,
+            kelas: document.getElementById("editKelas").value,
+            nik: document.getElementById("editNik").value,
+            nisn: document.getElementById("editNisn").value,
+            jenisKelamin: document.getElementById("editGender").value,
+            ttl: document.getElementById("editTTL").value,
+            agama: document.getElementById("editAgama").value,
+            anakKe: document.getElementById("editAnakKe").value,
+            tahunMasuk: document.getElementById("editTahunMasuk").value,
+            namaAyah: document.getElementById("editAyah").value,
+            namaIbu: document.getElementById("editIbu").value,
+            pekerjaanAyah: document.getElementById("editKerjaAyah").value,
+            pekerjaanIbu: document.getElementById("editKerjaIbu").value,
+            desa: document.getElementById("editDesa").value,
+            kecamatan: document.getElementById("editKecamatan").value,
+            kabupaten: document.getElementById("editKabupaten").value,
+            provinsi: document.getElementById("editProvinsi").value,
+            kodePos: document.getElementById("editKodePos").value,
+            foto: foto
+        };
 
         const res = await fetch(TABUNGAN_API, {
             method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+            },
             body: JSON.stringify({
                 action: "updateIdentitasSiswa",
-                data: data
+                data
             })
         });
 
@@ -744,42 +756,30 @@ async function updateIdentitasSiswa() {
         alert(hasil.message);
 
     } catch (err) {
-        console.error(err);
-        alert("Gagal update");
+        alert(err);
     }
 }
 
 async function loadKelasEditIdentitas() {
     try {
         const res = await fetch(TABUNGAN_API + "?action=getDataSiswa");
-        const result = await res.json();
+        const json = await res.json();
 
-        if (!result.status) {
-            alert("Gagal memuat data siswa");
-            return;
-        }
+        if (!json.status) return;
 
-        dataSiswaIdentitas = result.data || [];
+        dataSiswaEdit = json.data || [];
 
         const kelasSelect = document.getElementById("editFilterKelas");
-        const namaSelect = document.getElementById("editFilterNama");
-
         kelasSelect.innerHTML = `<option value="">Pilih Kelas</option>`;
-        namaSelect.innerHTML = `<option value="">Pilih Nama</option>`;
 
-        const kelasUnik = [...new Set(
-            dataSiswaIdentitas
-                .map(x => x.kelas)
-                .filter(Boolean)
-        )].sort();
+        const kelasUnik = [...new Set(dataSiswaEdit.map(s => s.kelas).filter(Boolean))];
 
         kelasUnik.forEach(k => {
             kelasSelect.innerHTML += `<option value="${k}">${k}</option>`;
         });
 
     } catch (err) {
-        console.error(err);
-        alert("Error load kelas identitas");
+        console.log(err);
     }
 }
 
@@ -789,122 +789,65 @@ function loadNamaEditIdentitas() {
 
     namaSelect.innerHTML = `<option value="">Pilih Nama</option>`;
 
-    if (!kelas) return;
-
-    const hasil = dataSiswaIdentitas.filter(s =>
+    const filtered = dataSiswaEdit.filter(s =>
         String(s.kelas).trim() === String(kelas).trim()
     );
 
-    hasil.forEach(s => {
-        namaSelect.innerHTML += `
-            <option value="${s.nama}">
-                ${s.nama}
-            </option>`;
+    filtered.forEach(s => {
+        namaSelect.innerHTML += `<option value="${s.nama}">${s.nama}</option>`;
+    });
+}
+
+function loadEditIdentitas() {
+    const nama = document.getElementById("editFilterNama").value;
+    const kelas = document.getElementById("editFilterKelas").value;
+
+    const siswa = dataSiswaEdit.find(s =>
+        s.nama === nama && s.kelas === kelas
+    );
+
+    if (!siswa) {
+        alert("Data tidak ditemukan");
+        return;
+    }
+
+    fillEditForm(siswa);
+}
+
+function fillEditForm(siswa) {
+
+    const map = {
+        namaPanggilan: "editNamaPanggilan",
+        nama: "editNama",
+        kelas: "editKelas",
+        nik: "editNik",
+        nisn: "editNisn",
+        jenisKelamin: "editGender",
+        ttl: "editTTL",
+        agama: "editAgama",
+        anakKe: "editAnakKe",
+        tahunMasuk: "editTahunMasuk",
+        namaAyah: "editAyah",
+        namaIbu: "editIbu",
+        pekerjaanAyah: "editKerjaAyah",
+        pekerjaanIbu: "editKerjaIbu",
+        desa: "editDesa",
+        kecamatan: "editKecamatan",
+        kabupaten: "editKabupaten",
+        provinsi: "editProvinsi",
+        kodePos: "editKodePos"
+    };
+
+    Object.keys(map).forEach(key => {
+        const el = document.getElementById(map[key]);
+        if (el) el.value = siswa[key] || "";
     });
 
-    console.log("NAMA FILTER:", hasil);
-}
-
-async function loadEditIdentitas() {
-    try {
-
-        const nama = document.getElementById("editFilterNama").value;
-        const kelas = document.getElementById("editFilterKelas").value;
-
-        if (!nama || !kelas) {
-            alert("Pilih kelas dan nama dulu");
-            return;
-        }
-
-        const res = await fetch(TABUNGAN_API + "?action=getDataSiswa");
-        const result = await res.json();
-
-        if (!result.status) {
-            alert("Gagal ambil data");
-            return;
-        }
-
-        const siswa = result.data.find(s =>
-            String(s.nama).trim() === String(nama).trim() &&
-            String(s.kelas).trim() === String(kelas).trim()
-        );
-
-        if (!siswa) {
-            alert("Data tidak ditemukan");
-            return;
-        }
-
-        // =========================
-        // AMBIL DATA DENGAN FALLBACK KEY
-        // =========================
-        const get = (obj, ...keys) => {
-            for (let k of keys) {
-                if (obj[k] !== undefined && obj[k] !== null) return obj[k];
-            }
-            return "";
-        };
-
-        document.getElementById("editNamaPanggilan").value =
-            get(siswa, "namaPanggilan", "nama_panggilan");
-
-        document.getElementById("editNama").value =
-            get(siswa, "nama", "nama_lengkap");
-
-        document.getElementById("editKelas").value =
-            get(siswa, "kelas");
-
-        document.getElementById("editNik").value =
-            get(siswa, "nik");
-
-        document.getElementById("editNisn").value =
-            get(siswa, "nisn");
-
-        document.getElementById("editGender").value =
-            get(siswa, "jenisKelamin", "jenis_kelamin");
-
-        document.getElementById("editTTL").value =
-            get(siswa, "ttl", "tempat_tanggal_lahir");
-
-        document.getElementById("editAgama").value =
-            get(siswa, "agama");
-
-        document.getElementById("editAnakKe").value =
-            get(siswa, "anakKe", "anak_ke");
-
-        document.getElementById("editTahunMasuk").value =
-            get(siswa, "tahunMasuk", "tahun_masuk");
-
-        document.getElementById("editAyah").value =
-            get(siswa, "namaAyah", "nama_ayah");
-
-        document.getElementById("editIbu").value =
-            get(siswa, "namaIbu", "nama_ibu");
-
-        document.getElementById("editKerjaAyah").value =
-            get(siswa, "pekerjaanAyah", "pekerjaan_ayah");
-
-        document.getElementById("editKerjaIbu").value =
-            get(siswa, "pekerjaanIbu", "pekerjaan_ibu");
-
-        document.getElementById("editDesa").value =
-            get(siswa, "desa");
-
-        document.getElementById("editKecamatan").value =
-            get(siswa, "kecamatan");
-
-        document.getElementById("editKabupaten").value =
-            get(siswa, "kabupaten");
-
-        document.getElementById("editProvinsi").value =
-            get(siswa, "provinsi");
-
-        document.getElementById("editKodePos").value =
-            get(siswa, "kodePos");
-
-        console.log("FULL DATA:", siswa);
-
-    } catch (err) {
-        console.error(err);
-        alert("Error load data");
+    // FOTO preview (kalau ada)
+    if (siswa.foto) {
+        const img = document.getElementById("previewFotoEdit");
+        if (img) img.src = siswa.foto;
     }
 }
+
+
