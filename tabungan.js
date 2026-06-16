@@ -1,22 +1,28 @@
-/* ================= TABUNGAN SISWA ================= */
-
 async function loadKelasTabungan(){
     try{
-        const res = await fetch(TABUNGAN_API + "?action=getDataSiswa"); const data = await res.json();
-        if(!data.status){ alert("Gagal memuat data siswa"); return; }
+        const res = await fetch(TABUNGAN_API + "?action=getDataSiswa");
+        const data = await res.json();
+
+        if(!data.status){
+            alert("Gagal memuat data siswa");
+            return;
+        }
+
         dataSiswaTabungan = data.data;
+
         const kelasUnik = [...new Set(data.data.map(x=>x.kelas))].sort();
+
         tabKelas.innerHTML = `<option value="">Pilih Kelas</option>`;
-        kelasUnik.forEach(k=>{ tabKelas.innerHTML += `<option value="${k}">${k}</option>`; });
+
+        kelasUnik.forEach(k=>{
+            tabKelas.innerHTML += `<option value="${k}">${k}</option>`;
+        });
+
         tabNama.innerHTML = `<option value="">Pilih Nama Siswa</option>`;
-    }catch(err){ console.log(err); }
 
-
-function loadNamaTabungan(){
-    const siswa = dataSiswaTabungan.filter(x => x.kelas == tabKelas.value);
-    tabNama.innerHTML = `<option value="">Pilih Nama Siswa</option>`;
-    siswa.forEach(s=>{ tabNama.innerHTML += `<option value="${s.nama}">${s.nama}</option>`; });
-}
+    }catch(err){
+        console.log(err);
+    }
 
 
 async function simpanTabungan() {
