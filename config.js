@@ -1,4 +1,4 @@
-window.API_URL = "https://script.google.com/macros/s/AKfycbwwF3BwaV3xSqAbXpu1RByl8HLcoodjeA1vlNdne7ZF4lQayg_wyjfADUJ4WTs7s1TW/exec";
+window.API_URL = "https://script.google.com/macros/s/AKfycbwsEsW5k5bGZT4aUd95d7SaRl8G6HyKWl2OhDy_SSLMHHgN0IAIRJ5jzVL8UaBqf4do/exec";
 window.ABSEN_API = "https://script.google.com/macros/s/AKfycbx52605R4M-KV3z0Ckv1PeXiTQ-ZAGCKMsCprx4y3vfIrU-vsLoxmKB12zCg_7B4Cz1gQ/exec";
 window.TABUNGAN_API = "https://script.google.com/macros/s/AKfycbz0eLjFRei6AjsfdIkTGjJ5_TYx2qhokCfD9FnPL3wwTB3bN8Cn4_fLapwSohsbZdhu/exec";
 window.JADWAL_API = "https://script.google.com/macros/s/AKfycbzE8W8Rd6coOfao7YLVZgW9-CWVPe6Nl3TQ0qy6X0r04oLbK1_brfl8yCq7HYysOSILMA/exec";
