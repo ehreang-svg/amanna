@@ -69,15 +69,17 @@ function openEditAkun(){
 
     document.getElementById("editPassword").value = "";
 
-    const foto = document.getElementById("previewFoto");
-
-    foto.src = currentUser.foto ||
+    document.getElementById("previewFoto").src =
+        currentUser.foto ||
         "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 }
+
 /*===============SIMPAN AKUN=======*/
 async function simpanAkun(){
 
     const btn = event.target;
+    const text = btn.innerText;
+
     btn.disabled = true;
     btn.innerText = "Menyimpan...";
 
@@ -86,13 +88,12 @@ async function simpanAkun(){
         const nama = document.getElementById("editNama").value;
         const username = document.getElementById("editUsername").value;
         const password = document.getElementById("editPassword").value;
+        const file = document.getElementById("fotoFile").files[0];
 
         let fotoUrl = currentUser.foto || "";
 
-        const file = document.getElementById("fotoFile").files[0];
-
         // =========================
-        // UPLOAD FOTO (JSON)
+        // UPLOAD FOTO (FIX CORS)
         // =========================
         if(file){
 
@@ -101,7 +102,7 @@ async function simpanAkun(){
             const uploadRes = await fetch(API_URL, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "text/plain;charset=utf-8"
                 },
                 body: JSON.stringify({
                     action: "uploadFoto",
@@ -111,6 +112,7 @@ async function simpanAkun(){
             });
 
             const uploadData = await uploadRes.json();
+
             console.log("UPLOAD:", uploadData);
 
             if(!uploadData.status){
@@ -121,12 +123,12 @@ async function simpanAkun(){
         }
 
         // =========================
-        // UPDATE AKUN
+        // UPDATE AKUN (FIX CORS)
         // =========================
         const res = await fetch(API_URL, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "text/plain;charset=utf-8"
             },
             body: JSON.stringify({
                 action: "updateAkun",
@@ -139,6 +141,7 @@ async function simpanAkun(){
         });
 
         const hasil = await res.json();
+
         console.log("UPDATE:", hasil);
 
         if(!hasil.status){
@@ -146,7 +149,7 @@ async function simpanAkun(){
         }
 
         // =========================
-        // UPDATE LOCAL STORAGE
+        // UPDATE LOCAL DATA
         // =========================
         currentUser.nama = nama;
         currentUser.username = username;
@@ -154,7 +157,7 @@ async function simpanAkun(){
 
         localStorage.setItem("user", JSON.stringify(currentUser));
 
-        // update UI dashboard
+        // update UI
         const fotoEl = document.getElementById("foto");
         if(fotoEl) fotoEl.src = fotoUrl;
 
@@ -170,10 +173,9 @@ async function simpanAkun(){
         alert("Error: " + err.message);
     } finally {
         btn.disabled = false;
-        btn.innerText = "Simpan Perubahan";
+        btn.innerText = text;
     }
 }
-
 function uploadFotoProfil(){
     alert("Cukup masukkan file foto Anda, lalu klik langsung tombol 'Simpan Perubahan' di bawah.");
 }
