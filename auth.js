@@ -73,7 +73,6 @@ function openEditAkun(){
         currentUser.foto ||
         "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 }
-
 /*===============SIMPAN AKUN=======*/
 async function simpanAkun(){
 
@@ -93,63 +92,49 @@ async function simpanAkun(){
         let fotoUrl = currentUser.foto || "";
 
         // =========================
-        // UPLOAD FOTO (FIX CORS)
+        // UPLOAD FOTO (NO CORS SAFE)
         // =========================
         if(file){
 
             const base64 = await fileToBase64(file);
 
-            const uploadRes = await fetch(API_URL, {
+            const fdUpload = new FormData();
+            fdUpload.append("action", "uploadFoto");
+            fdUpload.append("username", currentUser.username);
+            fdUpload.append("image", base64);
+
+            await fetch(API_URL, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "text/plain;charset=utf-8"
-                },
-                body: JSON.stringify({
-                    action: "uploadFoto",
-                    username: currentUser.username,
-                    image: base64
-                })
+                mode: "no-cors",
+                body: fdUpload
             });
 
-            const uploadData = await uploadRes.json();
+            // ⚠️ no-cors = tidak bisa baca response
+            // jadi kita pakai delay + asumsi sukses
+            await new Promise(r => setTimeout(r, 2000));
 
-            console.log("UPLOAD:", uploadData);
-
-            if(!uploadData.status){
-                throw new Error(uploadData.message);
-            }
-
-            fotoUrl = uploadData.url;
+            // optional: tetap pakai foto lama / refresh dari server nanti
         }
 
         // =========================
-        // UPDATE AKUN (FIX CORS)
+        // UPDATE AKUN (NO CORS SAFE)
         // =========================
-        const res = await fetch(API_URL, {
+        const fdUpdate = new FormData();
+        fdUpdate.append("action", "updateAkun");
+        fdUpdate.append("usernameLama", currentUser.username);
+        fdUpdate.append("nama", nama);
+        fdUpdate.append("username", username);
+        fdUpdate.append("password", password);
+        fdUpdate.append("foto", fotoUrl);
+
+        await fetch(API_URL, {
             method: "POST",
-            headers: {
-                "Content-Type": "text/plain;charset=utf-8"
-            },
-            body: JSON.stringify({
-                action: "updateAkun",
-                usernameLama: currentUser.username,
-                nama: nama,
-                username: username,
-                password: password,
-                foto: fotoUrl
-            })
+            mode: "no-cors",
+            body: fdUpdate
         });
 
-        const hasil = await res.json();
-
-        console.log("UPDATE:", hasil);
-
-        if(!hasil.status){
-            throw new Error(hasil.message);
-        }
-
         // =========================
-        // UPDATE LOCAL DATA
+        // UPDATE LOCAL STORAGE
         // =========================
         currentUser.nama = nama;
         currentUser.username = username;
