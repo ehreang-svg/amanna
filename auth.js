@@ -69,157 +69,120 @@ function openEditAkun(){
 
     document.getElementById("editPassword").value = "";
 
-    const foto =
-        document.getElementById("previewFoto");
+    const foto = document.getElementById("previewFoto");
 
-    if(currentUser.foto){
-        foto.src = currentUser.foto;
-    }else{
-        foto.src =
+    foto.src = currentUser.foto ||
         "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-    }
-
-    document.getElementById("fotoFile").onchange = function(e){
-
-        const file = e.target.files[0];
-
-        if(!file) return;
-
-        const reader = new FileReader();
-
-        reader.onload = function(ev){
-            foto.src = ev.target.result;
-        };
-
-        reader.readAsDataURL(file);
-    };
 }
-
 /*===============SIMPAN AKUN=======*/
 async function simpanAkun(){
 
-    const btn =
-        document.getElementById("btnSimpanAkun");
-
+    const btn = event.target;
     btn.disabled = true;
     btn.innerText = "Menyimpan...";
 
-    try{
+    try {
 
-        const nama =
-            document.getElementById("editNama").value.trim();
-
-        const username =
-            document.getElementById("editUsername").value.trim();
-
-        const password =
-            document.getElementById("editPassword").value.trim();
+        const nama = document.getElementById("editNama").value;
+        const username = document.getElementById("editUsername").value;
+        const password = document.getElementById("editPassword").value;
 
         let fotoUrl = currentUser.foto || "";
 
-        const file =
-            document.getElementById("fotoFile").files[0];
+        const file = document.getElementById("fotoFile").files[0];
 
-        // Upload foto jika ada file baru
+        // =========================
+        // UPLOAD FOTO (JSON)
+        // =========================
         if(file){
 
-            const base64 =
-                await new Promise((resolve,reject)=>{
+            const base64 = await fileToBase64(file);
 
-                    const reader = new FileReader();
-
-                    reader.onload = () =>
-                        resolve(reader.result);
-
-                    reader.onerror = reject;
-
-                    reader.readAsDataURL(file);
-                });
-
-            const fd = new FormData();
-
-            fd.append("action","uploadFoto");
-            fd.append("username",currentUser.username);
-            fd.append("image",base64);
-
-            const up = await fetch(API_URL,{
-                method:"POST",
-                body:fd
+            const uploadRes = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    action: "uploadFoto",
+                    username: currentUser.username,
+                    image: base64
+                })
             });
 
-            const hasil = await up.json();
+            const uploadData = await uploadRes.json();
+            console.log("UPLOAD:", uploadData);
 
-            if(!hasil.status){
-                throw new Error(
-                    hasil.message || "Upload foto gagal"
-                );
+            if(!uploadData.status){
+                throw new Error(uploadData.message);
             }
 
-            fotoUrl = hasil.url;
+            fotoUrl = uploadData.url;
         }
 
-        const fd2 = new FormData();
-
-        fd2.append("action","updateAkun");
-        fd2.append("usernameLama",currentUser.username);
-        fd2.append("nama",nama);
-        fd2.append("username",username);
-        fd2.append("password",password);
-        fd2.append("foto",fotoUrl);
-
+        // =========================
+        // UPDATE AKUN
+        // =========================
         const res = await fetch(API_URL, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify(data)
-});
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                action: "updateAkun",
+                usernameLama: currentUser.username,
+                nama: nama,
+                username: username,
+                password: password,
+                foto: fotoUrl
+            })
+        });
 
-        const hasilUpdate = await res.json();
+        const hasil = await res.json();
+        console.log("UPDATE:", hasil);
 
-        if(!hasilUpdate.status){
-            throw new Error(
-                hasilUpdate.message || "Gagal update akun"
-            );
+        if(!hasil.status){
+            throw new Error(hasil.message);
         }
 
+        // =========================
+        // UPDATE LOCAL STORAGE
+        // =========================
         currentUser.nama = nama;
         currentUser.username = username;
         currentUser.foto = fotoUrl;
 
-        localStorage.setItem(
-            "user",
-            JSON.stringify(currentUser)
-        );
+        localStorage.setItem("user", JSON.stringify(currentUser));
 
-        document.getElementById("nama").innerText = nama;
+        // update UI dashboard
+        const fotoEl = document.getElementById("foto");
+        if(fotoEl) fotoEl.src = fotoUrl;
 
-        const fotoDashboard =
-            document.getElementById("foto");
+        const namaEl = document.getElementById("nama");
+        if(namaEl) namaEl.innerText = nama;
 
-        if(fotoDashboard){
-            fotoDashboard.src = fotoUrl ||
-            "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-        }
-
-        alert("Akun berhasil diperbarui");
+        alert("Akun berhasil diperbarui!");
 
         nav("dashboard");
 
-    }catch(err){
-
+    } catch(err) {
         console.error(err);
-
-        alert(err.message);
-
-    }finally{
-
+        alert("Error: " + err.message);
+    } finally {
         btn.disabled = false;
         btn.innerText = "Simpan Perubahan";
-
     }
 }
 
 function uploadFotoProfil(){
     alert("Cukup masukkan file foto Anda, lalu klik langsung tombol 'Simpan Perubahan' di bawah.");
+}
+
+function fileToBase64(file){
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
 }
