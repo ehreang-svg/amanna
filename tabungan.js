@@ -559,30 +559,101 @@ async function simpanIdentitasSiswa() {
     }
 }
 
-async function exportIdentitasSiswa(nama, kelas) {
-    try {
-        const res = await fetch(
-            TABUNGAN_API +
-            "?action=exportIdentitasSiswa" +
-            "&nama=" + encodeURIComponent(nama) +
-            "&kelas=" + encodeURIComponent(kelas)
+async function exportIdentitasSiswa(
+nama,
+kelas
+) {
+
+try {
+
+    const res = await fetch(
+        TABUNGAN_API +
+        "?action=exportIdentitasSiswa" +
+        "&nama=" +
+        encodeURIComponent(nama) +
+        "&kelas=" +
+        encodeURIComponent(kelas)
+    );
+
+    const data =
+        await res.json();
+
+    if (!data.status) {
+
+        alert(
+            data.message
         );
 
-        const data = await res.json();
-
-        if (!data.status) {
-            alert(data.message);
-            return;
-        }
-
-        // Hanya buka/cetak PDF
-        window.location.href = data.pdfUrl;
-
-    } catch (err) {
-        alert(err);
+        return;
     }
+
+    const bytes =
+        atob(
+            data.pdfBase64
+        );
+
+    const buffer =
+        new Uint8Array(
+            bytes.length
+        );
+
+    for (
+        let i = 0;
+        i < bytes.length;
+        i++
+    ) {
+
+        buffer[i] =
+            bytes.charCodeAt(i);
+
+    }
+
+    const blob =
+        new Blob(
+            [buffer],
+            {
+                type:
+                    "application/pdf"
+            }
+        );
+
+    const url =
+        URL.createObjectURL(
+            blob
+        );
+
+    const a =
+        document.createElement(
+            "a"
+        );
+
+    a.href = url;
+
+    a.download =
+        data.fileName;
+
+    document.body.appendChild(
+        a
+    );
+
+    a.click();
+
+    document.body.removeChild(
+        a
+    );
+
+    URL.revokeObjectURL(
+        url
+    );
+
+} catch (err) {
+
+    alert(err);
+
 }
 
+
+}
 async function exportIdentitasDipilih() {
     const nama = document.getElementById("filterNamaIdentitas").value;
     const kelas = document.getElementById("filterKelasIdentitas").value;
