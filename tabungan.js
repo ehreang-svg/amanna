@@ -793,6 +793,49 @@ async function exportKartuSiswa() {
   window.open(json.pdfUrl, "_blank");
 }
 
+async function exportKartuKelas() {
+
+  const kelas =
+    document.getElementById("filterKelasIdentitas").value;
+
+  if (!kelas) {
+    alert("Pilih kelas terlebih dahulu.");
+    return;
+  }
+
+  if (
+    !confirm(
+      "Cetak seluruh kartu siswa kelas " +
+      kelas +
+      " ?"
+    )
+  ) return;
+
+  const res = await fetch(
+    TABUNGAN_API +
+    "?action=exportKartuKelas" +
+    "&kelas=" + encodeURIComponent(kelas)
+  );
+
+  const json = await res.json();
+
+  if (!json.status) {
+    alert(json.message);
+    return;
+  }
+
+  alert(
+    "Berhasil membuat " +
+    json.jumlahSiswa +
+    " kartu siswa."
+  );
+
+  window.open(
+    json.pdfUrl,
+    "_blank"
+  );
+
+}
 
 async function updateIdentitasSiswa() {
 
