@@ -69,13 +69,35 @@
     </div>
 
     <div class="card">
-        <input type="text" id="editNama" placeholder="Nama">
-        <input type="text" id="editUsername" placeholder="Username">
-        <input type="password" id="editPassword" placeholder="Password Baru">
-        
+
+        <center>
+            <img id="previewFoto"
+                 src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                 style="width:120px;height:120px;border-radius:50%;object-fit:cover;margin-bottom:10px;">
+        </center>
+
+        <input type="file"
+               id="fotoFile"
+               accept="image/*">
+
+        <input type="text"
+               id="editNama"
+               placeholder="Nama">
+
+        <input type="text"
+               id="editUsername"
+               placeholder="Username">
+
+        <input type="password"
+               id="editPassword"
+               placeholder="Password Baru (kosongkan jika tidak diubah)">
+
         <br>
 
-        <button onclick="simpanAkun()">Simpan Perubahan</button>
+        <button id="btnSimpanAkun" onclick="simpanAkun()">
+            Simpan Perubahan
+        </button>
+
     </div>
 </div>
     
