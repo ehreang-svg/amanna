@@ -167,10 +167,13 @@ async function simpanAkun(){
         fd2.append("password",password);
         fd2.append("foto",fotoUrl);
 
-        const res = await fetch(API_URL,{
-            method:"POST",
-            body:fd2
-        });
+        const res = await fetch(API_URL, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(data)
+});
 
         const hasilUpdate = await res.json();
 
