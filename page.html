@@ -63,6 +63,7 @@
     
 <!--EDIT AKUN-->
 <div class="page hidden" id="editAkun">
+
     <div class="topbar">
         <div class="title">Edit Akun</div>
         <div class="logout" onclick="nav('dashboard')">Kembali</div>
@@ -76,31 +77,20 @@
                  style="width:120px;height:120px;border-radius:50%;object-fit:cover;margin-bottom:10px;">
         </center>
 
-        <input type="file"
-               id="fotoFile"
-               accept="image/*">
+        <input type="file" id="fotoFile" accept="image/*">
 
-        <input type="text"
-               id="editNama"
-               placeholder="Nama">
+        <input type="text" id="editNama" placeholder="Nama">
 
-        <input type="text"
-               id="editUsername"
-               placeholder="Username">
+        <input type="text" id="editUsername" placeholder="Username">
 
-        <input type="password"
-               id="editPassword"
-               placeholder="Password Baru (kosongkan jika tidak diubah)">
+        <input type="password" id="editPassword" placeholder="Password Baru">
 
-        <br>
+        <br><br>
 
-        <button id="btnSimpanAkun" onclick="simpanAkun()">
-            Simpan Perubahan
-        </button>
+        <button onclick="simpanAkun()">Simpan Perubahan</button>
 
     </div>
-</div>
-    
+</div>    
 <!-- SUBMENU -->
 <div class="page hidden" id="submenuPage">
 <div class="back" onclick="goBack()">← Kembali</div>
