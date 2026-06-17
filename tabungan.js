@@ -681,10 +681,12 @@ async function loadKartuSiswa(nama, kelas) {
 
   const d = json.data;
 
+  document.getElementById("out-nama").textContent = ": " + d.namaPanggilan;
   document.getElementById("out-nama").textContent = ": " + d.nama;
   document.getElementById("out-nik").textContent = ": " + d.nik;
   document.getElementById("out-ttl").textContent = ": " + d.ttl;
   document.getElementById("out-ayah").textContent = ": " + d.namaAyah;
+ document.getElementById("out-nama").textContent = ": " + d.tahunAjaran;
 
   if (d.foto) {
     const foto = document.getElementById("card-photo");
