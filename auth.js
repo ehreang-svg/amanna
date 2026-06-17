@@ -58,120 +58,162 @@ function canShowMenu(menuName, status){
 
 /*=========EDIT AKUN=============*/
 function openEditAkun(){
+
     nav("editAkun");
+
+    document.getElementById("editNama").value =
+        currentUser.nama || "";
+
+    document.getElementById("editUsername").value =
+        currentUser.username || "";
+
+    document.getElementById("editPassword").value = "";
+
+    const foto =
+        document.getElementById("previewFoto");
+
+    if(currentUser.foto){
+        foto.src = currentUser.foto;
+    }else{
+        foto.src =
+        "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+    }
+
     document.getElementById("fotoFile").onchange = function(e){
+
         const file = e.target.files[0];
+
         if(!file) return;
+
         const reader = new FileReader();
+
         reader.onload = function(ev){
-            document.getElementById("previewFoto").src = ev.target.result;
+            foto.src = ev.target.result;
         };
+
         reader.readAsDataURL(file);
     };
-
-    document.getElementById("editNama").value = currentUser.nama || "";
-    document.getElementById("editUsername").value = currentUser.username || "";
-    
-    if(currentUser.foto){
-        let fotoPreviewUrl = currentUser.foto;
-        if (fotoPreviewUrl.includes("drive.google.com/file/d/")) {
-            fotoPreviewUrl = fotoPreviewUrl.replace("/view?usp=sharing", "")
-                                           .replace("/view", "")
-                                           .replace("file/d/", "uc?export=view&id=");
-        }
-        document.getElementById("previewFoto").src = fotoPreviewUrl;
-    } else {
-        document.getElementById("previewFoto").src = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-    }
 }
 
 /*===============SIMPAN AKUN=======*/
 async function simpanAkun(){
-    const tombolSimpan = event.target;
-    const teksAwal = tombolSimpan.innerText;
-    tombolSimpan.innerText = "Menyimpan...";
-    tombolSimpan.disabled = true;
 
-    try {
-        const file = document.getElementById("fotoFile").files[0];
+    const btn =
+        document.getElementById("btnSimpanAkun");
+
+    btn.disabled = true;
+    btn.innerText = "Menyimpan...";
+
+    try{
+
+        const nama =
+            document.getElementById("editNama").value.trim();
+
+        const username =
+            document.getElementById("editUsername").value.trim();
+
+        const password =
+            document.getElementById("editPassword").value.trim();
+
         let fotoUrl = currentUser.foto || "";
 
+        const file =
+            document.getElementById("fotoFile").files[0];
+
+        // Upload foto jika ada file baru
         if(file){
-            try {
-                const base64Clean = await new Promise(resolve => {
+
+            const base64 =
+                await new Promise((resolve,reject)=>{
+
                     const reader = new FileReader();
-                    reader.onload = () => {
-                        resolve(reader.result.split(",")[1]);
-                    };
+
+                    reader.onload = () =>
+                        resolve(reader.result);
+
+                    reader.onerror = reject;
+
                     reader.readAsDataURL(file);
                 });
 
-                let fd = new FormData();
-                fd.append("action", "uploadFoto");
-                fd.append("username", currentUser.username);
-                fd.append("image", "data:image/jpeg;base64," + base64Clean);
+            const fd = new FormData();
 
-                let up = await fetch(API_URL, {
-                    method: "POST",
-                    body: fd
-                });
+            fd.append("action","uploadFoto");
+            fd.append("username",currentUser.username);
+            fd.append("image",base64);
 
-                let hasilUpload = await up.json();
-                if(hasilUpload && hasilUpload.status && hasilUpload.url){
-                    fotoUrl = hasilUpload.url;
-                }
-            } catch (errFoto) {
-                console.error("Gagal upload file foto:", errFoto);
+            const up = await fetch(API_URL,{
+                method:"POST",
+                body:fd
+            });
+
+            const hasil = await up.json();
+
+            if(!hasil.status){
+                throw new Error(
+                    hasil.message || "Upload foto gagal"
+                );
             }
+
+            fotoUrl = hasil.url;
         }
 
-        const namaBaru = document.getElementById("editNama").value;
-        const usernameBaru = document.getElementById("editUsername").value;
+        const fd2 = new FormData();
 
-        let formData = new FormData();
-        formData.append("action", "updateAkun");
-        formData.append("usernameLama", currentUser.username);
-        formData.append("nama", namaBaru);
-        formData.append("username", usernameBaru);
-        formData.append("foto", fotoUrl);
+        fd2.append("action","updateAkun");
+        fd2.append("usernameLama",currentUser.username);
+        fd2.append("nama",nama);
+        fd2.append("username",username);
+        fd2.append("password",password);
+        fd2.append("foto",fotoUrl);
 
-        await fetch(API_URL, {
-            method: "POST",
-            body: formData
+        const res = await fetch(API_URL,{
+            method:"POST",
+            body:fd2
         });
 
-        // Update data objek lokal aplikasi
-        currentUser.nama = namaBaru;
-        currentUser.username = usernameBaru;
+        const hasilUpdate = await res.json();
+
+        if(!hasilUpdate.status){
+            throw new Error(
+                hasilUpdate.message || "Gagal update akun"
+            );
+        }
+
+        currentUser.nama = nama;
+        currentUser.username = username;
         currentUser.foto = fotoUrl;
 
-        localStorage.setItem("user", JSON.stringify(currentUser));
+        localStorage.setItem(
+            "user",
+            JSON.stringify(currentUser)
+        );
 
-        // Bersihkan URL jika server sempat mengembalikan format /view
-        let fotoDashboardUrl = fotoUrl;
-        if (fotoDashboardUrl.includes("drive.google.com/file/d/")) {
-            fotoDashboardUrl = fotoDashboardUrl.replace("/view?usp=sharing", "")
-                                               .replace("/view", "")
-                                               .replace("file/d/", "uc?export=view&id=");
+        document.getElementById("nama").innerText = nama;
+
+        const fotoDashboard =
+            document.getElementById("foto");
+
+        if(fotoDashboard){
+            fotoDashboard.src = fotoUrl ||
+            "https://cdn-icons-png.flaticon.com/512/149/149071.png";
         }
 
-        // Terapkan ke target elemen foto dashboard huruf kecil sesuai baris 266 HTML Anda
-        const elemenFoto = document.getElementById("foto");
-        if(elemenFoto) {
-            elemenFoto.src = fotoDashboardUrl || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-        }
+        alert("Akun berhasil diperbarui");
 
-        if(window.nama) nama.innerText = namaBaru;
+        nav("dashboard");
 
-        alert("Akun dan Foto Profil berhasil diperbarui!");
-        nav('dashboard');
+    }catch(err){
 
-    } catch (err) {
         console.error(err);
-        alert("Gagal menyimpan data: " + err.message);
-    } finally {
-        tombolSimpan.innerText = teksAwal;
-        tombolSimpan.disabled = false;
+
+        alert(err.message);
+
+    }finally{
+
+        btn.disabled = false;
+        btn.innerText = "Simpan Perubahan";
+
     }
 }
 
