@@ -80,6 +80,8 @@ async function simpanAkun() {
 
 try {
 
+    // ================= FOTO =================
+
     const fotoInput =
         document.getElementById("fotoFile");
 
@@ -94,27 +96,42 @@ try {
 
     }
 
+    // ================= VALIDASI =================
+
+    const nama =
+        document.getElementById("editNama").value.trim();
+
+    const username =
+        document.getElementById("editUsername").value.trim();
+
+    if (!nama) {
+        alert("Nama wajib diisi");
+        return;
+    }
+
+    if (!username) {
+        alert("Username wajib diisi");
+        return;
+    }
+
+    // ================= DATA =================
+
     const data = {
 
-        nama:
-            document.getElementById("editNama")
-                .value.trim(),
+        nama: nama,
 
-        username:
-            document.getElementById("editUsername")
-                .value.trim(),
+        username: username,
 
-        usernameLama:
-            usernameLama,
+        usernameLama: usernameLama,
 
         password:
-            document.getElementById("editPassword")
-                .value.trim(),
+            document.getElementById("editPassword").value.trim(),
 
-        foto:
-            ""
+        foto: foto
 
     };
+
+    // ================= KIRIM =================
 
     const bodyData = JSON.stringify({
 
@@ -179,6 +196,8 @@ try {
         fotoInput.value = "";
     }
 
+    loadDashboard(currentUser);
+
 } catch (err) {
 
     console.error(
@@ -192,6 +211,7 @@ try {
     );
 
 }
+
 
 }
 
