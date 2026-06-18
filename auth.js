@@ -77,145 +77,69 @@ function openEditAkun(){
 }
 /*===============SIMPAN AKUN=======*/
 async function simpanAkun() {
-
 try {
 
-    // ================= FOTO =================
-
-    const fotoInput =
-        document.getElementById("fotoFile");
-
-    const file =
-        fotoInput ? fotoInput.files[0] : null;
+    const fotoInput = document.getElementById("fotoFile");
+    const file = fotoInput ? fotoInput.files[0] : null;
 
     let foto = "";
-
     if (file) {
-
         foto = await compressImage(file);
-
     }
 
-    // ================= VALIDASI =================
+    const nama = document.getElementById("editNama").value.trim();
+    const username = document.getElementById("editUsername").value.trim();
 
-    const nama =
-        document.getElementById("editNama").value.trim();
-
-    const username =
-        document.getElementById("editUsername").value.trim();
-
-    if (!nama) {
-        alert("Nama wajib diisi");
-        return;
-    }
-
-    if (!username) {
-        alert("Username wajib diisi");
-        return;
-    }
-
-    // ================= DATA =================
+    if (!nama) return alert("Nama wajib diisi");
+    if (!username) return alert("Username wajib diisi");
 
     const data = {
-
-        nama: nama,
-
-        username: username,
-
-        usernameLama: usernameLama,
-
-        password:
-            document.getElementById("editPassword").value.trim(),
-
-        foto: ""
-
+        nama,
+        username,
+        usernameLama,
+        password: document.getElementById("editPassword").value.trim(),
+        foto
     };
 
-    // ================= KIRIM =================
-
-const bodyData = new URLSearchParams({
-    action: "updateAkun",
-    data: JSON.stringify(data)
-});
-
+    const bodyData = new URLSearchParams({
+        action: "updateAkun",
+        data: JSON.stringify(data)
     });
 
-    console.log(
-        "Payload Size:",
-        (bodyData.length / 1024).toFixed(2),
-        "KB"
-    );
+    console.log("Payload Size:", (bodyData.toString().length / 1024).toFixed(2), "KB");
 
     const res = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: bodyData.toString()
+    });
 
-    method: "POST",
+    const text = await res.text();
+    console.log("RESPONSE:", text);
 
-    headers: {
-    "Content-Type": "application/json"
-},
+    const json = JSON.parse(text);
 
-    body: bodyData
-
-});
-
-console.log("STATUS:", res.status);
-console.log("OK:", res.ok);
-console.log("TYPE:", res.type);
-console.log("URL:", res.url);
-
-const text = await res.text();
-console.log(text);
-
-return;
-console.log(json);
-    
     if (!json.status) {
-
-        alert(
-            json.message ||
-            "Gagal memperbarui akun"
-        );
-
-        return;
+        return alert(json.message || "Gagal memperbarui akun");
     }
 
     alert("Akun berhasil diperbarui");
 
-    currentUser.nama =
-        data.nama;
+    currentUser.nama = data.nama;
+    currentUser.username = data.username;
 
-    currentUser.username =
-        data.username;
+    if (json.foto) currentUser.foto = json.foto;
 
-    if (json.foto) {
-        currentUser.foto =
-            json.foto;
-    }
+    localStorage.setItem("user", JSON.stringify(currentUser));
 
-    localStorage.setItem(
-        "user",
-        JSON.stringify(currentUser)
-    );
-
-    if (fotoInput) {
-        fotoInput.value = "";
-    }
+    if (fotoInput) fotoInput.value = "";
 
     loadDashboard(currentUser);
 
 } catch (err) {
-
-    console.error(
-        "Update Akun Error:",
-        err
-    );
-
-    alert(
-        "Terjadi kesalahan : " +
-        err.message
-    );
-
+    console.error("Update Akun Error:", err);
+    alert("Terjadi kesalahan : " + err.message);
 }
-
-
 }
