@@ -11,10 +11,15 @@ async function loadDashboard(user){
     
     // Konversi darurat jika link di database localstorage masih tersisa format /view lama
     if (fotoUrl.includes("drive.google.com/file/d/")) {
-        fotoUrl = fotoUrl.replace("/view?usp=sharing", "")
-                         .replace("/view", "")
-                         .replace("file/d/", "uc?export=view&id=");
+
+    const fileId = fotoUrl.match(/\/d\/([^\/]+)/);
+
+    if (fileId && fileId[1]) {
+        fotoUrl =
+            "https://drive.google.com/uc?export=view&id=" +
+            fileId[1];
     }
+}
     
     // Render gambar ke tag <img id="foto"> dashboard Anda
     const targetFoto = document.getElementById("foto");
