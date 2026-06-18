@@ -101,20 +101,18 @@ try {
         foto
     };
 
-    const bodyData = new URLSearchParams({
-        action: "updateAkun",
-        data: JSON.stringify(data)
-    });
+    const bodyData = JSON.stringify({
+    action: "updateAkun",
+    data: data
+});
 
-    console.log("Payload Size:", (bodyData.toString().length / 1024).toFixed(2), "KB");
-
-    const res = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: bodyData.toString()
-    });
+const res = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: bodyData
+});
 
     const text = await res.text();
     console.log("RESPONSE:", text);
