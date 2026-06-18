@@ -78,132 +78,123 @@ function openEditAkun(){
 /*===============SIMPAN AKUN=======*/
 async function simpanAkun() {
 
-    const namaEl = document.getElementById("editNama");
-    const usernameEl = document.getElementById("editUsername");
-    const passwordEl = document.getElementById("editPassword");
-    const fotoEl = document.getElementById("fotoFile");
+try {
 
-    if (!namaEl) {
-        alert("Input editNama tidak ditemukan");
-        return;
+    const fotoInput =
+        document.getElementById("fotoFile");
+
+    const file =
+        fotoInput ? fotoInput.files[0] : null;
+
+    let foto = "";
+
+    if (file) {
+
+        foto = await compressImage(file);
+
     }
 
-    if (!usernameEl) {
-        alert("Input editUsername tidak ditemukan");
-        return;
-    }
+    const data = {
 
-    if (!passwordEl) {
-        alert("Input editPassword tidak ditemukan");
-        return;
-    }
+        nama:
+            document.getElementById("editNama")
+                .value.trim(),
 
-    if (!fotoEl) {
-        alert("Input fotoFile tidak ditemukan");
-        return;
-    }
+        username:
+            document.getElementById("editUsername")
+                .value.trim(),
 
-    try {
+        usernameLama:
+            usernameLama,
 
-        const fotoFile = fotoEl.files[0];
+        password:
+            document.getElementById("editPassword")
+                .value.trim(),
 
-        let fotoBase64 = "";
+        foto:
+            foto
 
-        if (fotoFile) {
+    };
 
-            fotoBase64 = await new Promise((resolve) => {
+    const bodyData = JSON.stringify({
 
-                const reader = new FileReader();
+        action: "updateAkun",
 
-                reader.onload = e =>
-                    resolve(e.target.result);
+        data: data
 
-                reader.readAsDataURL(fotoFile);
+    });
 
-            });
+    console.log(
+        "Payload Size:",
+        (bodyData.length / 1024).toFixed(2),
+        "KB"
+    );
 
-        }
+    const res = await fetch(API_URL, {
 
-        const data = {
+        method: "POST",
 
-            nama:
-                document.getElementById("editNama").value.trim(),
+        headers: {
+            "Content-Type":
+                "text/plain;charset=utf-8"
+        },
 
-            username:
-                document.getElementById("editUsername").value.trim(),
+        body: bodyData
 
-            usernameLama:
-                usernameLama,
+    });
 
-            password:
-                document.getElementById("editPassword").value.trim(),
+    const json = await res.json();
 
-            foto:
-                fotoBase64
+    console.log(json);
 
-        };
-
-        console.log("PANJANG BASE64:", fotoBase64.length);
-
-const payload = {
-action: "updateAkun",
-data: data
-};
-
-console.log(payload);
-
-
-        const res = await fetch(API_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type":
-                    "text/plain;charset=utf-8"
-            },
-            body: JSON.stringify({
-                action: "updateAkun",
-                data: data
-            })
-        });
-
-        const hasil = await res.json();
-
-        if (hasil.status) {
-
-            alert("Akun berhasil diperbarui");
-
-            if (hasil.foto) {
-                currentUser.foto = hasil.foto;
-            }
-
-            currentUser.nama = data.nama;
-            currentUser.username = data.username;
-
-            localStorage.setItem(
-                "user",
-                JSON.stringify(currentUser)
-            );
-
-        } else {
-
-            alert(
-                hasil.message ||
-                "Gagal memperbarui akun"
-            );
-
-        }
-
-    } catch (err) {
-
-        console.error(err);
+    if (!json.status) {
 
         alert(
-            "Terjadi kesalahan : " +
-            err.message
+            json.message ||
+            "Gagal memperbarui akun"
         );
 
+        return;
     }
 
+    alert("Akun berhasil diperbarui");
+
+    currentUser.nama =
+        data.nama;
+
+    currentUser.username =
+        data.username;
+
+    if (json.foto) {
+        currentUser.foto =
+            json.foto;
+    }
+
+    localStorage.setItem(
+        "user",
+        JSON.stringify(currentUser)
+    );
+
+    if (fotoInput) {
+        fotoInput.value = "";
+    }
+
+} catch (err) {
+
+    console.error(
+        "Update Akun Error:",
+        err
+    );
+
+    alert(
+        "Terjadi kesalahan : " +
+        err.message
+    );
+
 }
+
+}
+
 
 const fotoInput = document.getElementById("fotoFile");
 
