@@ -55,11 +55,9 @@ function canShowMenu(menuName, status){
 
 
 
-
+let usernameLama = "";
 /*=========EDIT AKUN=============*/
 function openEditAkun(){
-
-    nav("editAkun");
 
     document.getElementById("editNama").value =
         currentUser.nama || "";
@@ -72,47 +70,120 @@ function openEditAkun(){
     document.getElementById("previewFoto").src =
         currentUser.foto ||
         "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
+    usernameLama = currentUser.username || "";
+
+    nav("editAkun");
 }
 /*===============SIMPAN AKUN=======*/
-async function simpanAkun(){
+async function simpanAkun() {
 
-  try {
+    try {
 
-    const fotoFile = document.getElementById("editFoto").files[0];
-    let fotoBase64 = "";
+        const fotoFile =
+            document.getElementById("fotoFile").files[0];
 
-    if (fotoFile) {
-      fotoBase64 = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = e => resolve(e.target.result);
-        reader.readAsDataURL(fotoFile);
-      });
+        let fotoBase64 = "";
+
+        if (fotoFile) {
+
+            fotoBase64 = await new Promise((resolve) => {
+
+                const reader = new FileReader();
+
+                reader.onload = e =>
+                    resolve(e.target.result);
+
+                reader.readAsDataURL(fotoFile);
+
+            });
+
+        }
+
+        const data = {
+
+            nama:
+                document.getElementById("editNama").value.trim(),
+
+            username:
+                document.getElementById("editUsername").value.trim(),
+
+            usernameLama:
+                usernameLama,
+
+            password:
+                document.getElementById("editPassword").value.trim(),
+
+            foto:
+                fotoBase64
+
+        };
+
+        const res = await fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type":
+                    "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify({
+                action: "updateAkun",
+                data: data
+            })
+        });
+
+        const hasil = await res.json();
+
+        if (hasil.status) {
+
+            alert("Akun berhasil diperbarui");
+
+            if (hasil.foto) {
+                currentUser.foto = hasil.foto;
+            }
+
+            currentUser.nama = data.nama;
+            currentUser.username = data.username;
+
+            localStorage.setItem(
+                "user",
+                JSON.stringify(currentUser)
+            );
+
+        } else {
+
+            alert(
+                hasil.message ||
+                "Gagal memperbarui akun"
+            );
+
+        }
+
+    } catch (err) {
+
+        console.error(err);
+
+        alert(
+            "Terjadi kesalahan : " +
+            err.message
+        );
+
     }
 
-    const res = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-      },
-      body: JSON.stringify({
-        action: "updateAkun",
-        data: {
-          nama: document.getElementById("editNama").value,
-          username: document.getElementById("editUsername").value,
-          usernameLama: document.getElementById("editUsernameLama").value,
-          password: document.getElementById("editPassword").value,
-          foto: fotoBase64
-        }
-      })
-    });
-
-    const hasil = await res.json();
-
-    alert(hasil.message);
-
-  } catch(err) {
-    console.error(err);
-    alert(err);
-  }
-
 }
+
+document.getElementById("fotoFile").addEventListener("change", function () {
+
+    const file = this.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+        document.getElementById("previewFoto").src =
+            e.target.result;
+    };
+
+    reader.readAsDataURL(file);
+
+});
