@@ -115,9 +115,14 @@ try {
     });
 
     const text = await res.text();
-    console.log("RESPONSE:", text);
+console.log("RAW RESPONSE:", text);
 
-    const json = JSON.parse(text);
+let json;
+try {
+    json = JSON.parse(text);
+} catch (e) {
+    throw new Error("Response bukan JSON: " + text);
+}
 
     if (!json.status) {
         return alert(json.message || "Gagal memperbarui akun");
