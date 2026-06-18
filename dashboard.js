@@ -19,7 +19,14 @@ async function loadDashboard(user){
     // Render gambar ke tag <img id="foto"> dashboard Anda
     const targetFoto = document.getElementById("foto");
     if (targetFoto) {
-        targetFoto.src = fotoUrl;
+        console.log("FOTO DATABASE:", user.foto);
+console.log("FOTO RENDER:", fotoUrl);
+
+targetFoto.src = fotoUrl;
+
+targetFoto.onerror = function(){
+    console.log("GAGAL LOAD FOTO:", fotoUrl);
+};
     }
 
     let res = await fetch(API_URL + "?action=getMenus");
