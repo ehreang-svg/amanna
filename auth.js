@@ -78,10 +78,34 @@ function openEditAkun(){
 /*===============SIMPAN AKUN=======*/
 async function simpanAkun() {
 
+    const namaEl = document.getElementById("editNama");
+    const usernameEl = document.getElementById("editUsername");
+    const passwordEl = document.getElementById("editPassword");
+    const fotoEl = document.getElementById("fotoFile");
+
+    if (!namaEl) {
+        alert("Input editNama tidak ditemukan");
+        return;
+    }
+
+    if (!usernameEl) {
+        alert("Input editUsername tidak ditemukan");
+        return;
+    }
+
+    if (!passwordEl) {
+        alert("Input editPassword tidak ditemukan");
+        return;
+    }
+
+    if (!fotoEl) {
+        alert("Input fotoFile tidak ditemukan");
+        return;
+    }
+
     try {
 
-        const fotoFile =
-            document.getElementById("fotoFile").files[0];
+        const fotoFile = fotoEl.files[0];
 
         let fotoBase64 = "";
 
