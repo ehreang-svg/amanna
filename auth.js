@@ -112,7 +112,7 @@ try {
                 .value.trim(),
 
         foto:
-            foto
+            ""
 
     };
 
