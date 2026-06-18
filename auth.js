@@ -133,11 +133,10 @@ try {
 
     // ================= KIRIM =================
 
-    const bodyData = JSON.stringify({
-
-        action: "updateAkun",
-
-        data: data
+const bodyData = new URLSearchParams({
+    action: "updateAkun",
+    data: JSON.stringify(data)
+});
 
     });
 
@@ -152,9 +151,8 @@ try {
     method: "POST",
 
     headers: {
-        "Content-Type":
-            "text/plain;charset=utf-8"
-    },
+    "Content-Type": "application/json"
+},
 
     body: bodyData
 
@@ -166,13 +164,11 @@ console.log("TYPE:", res.type);
 console.log("URL:", res.url);
 
 const text = await res.text();
-
-console.log("RESPONSE:");
 console.log(text);
 
 return;
-    console.log(json);
-
+console.log(json);
+    
     if (!json.status) {
 
         alert(
