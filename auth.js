@@ -195,19 +195,31 @@ async function simpanAkun() {
 
 }
 
-document.getElementById("fotoFile").addEventListener("change", function () {
+const fotoInput = document.getElementById("fotoFile");
 
-    const file = this.files[0];
+if (fotoInput) {
 
-    if (!file) return;
+    fotoInput.addEventListener("change", function () {
 
-    const reader = new FileReader();
+        const file = this.files[0];
 
-    reader.onload = function (e) {
-        document.getElementById("previewFoto").src =
-            e.target.result;
-    };
+        if (!file) return;
 
-    reader.readAsDataURL(file);
+        const reader = new FileReader();
 
-});
+        reader.onload = function (e) {
+
+            const preview =
+                document.getElementById("previewFoto");
+
+            if (preview) {
+                preview.src = e.target.result;
+            }
+
+        };
+
+        reader.readAsDataURL(file);
+
+    });
+
+}
