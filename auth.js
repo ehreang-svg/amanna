@@ -143,6 +143,16 @@ async function simpanAkun() {
 
         };
 
+        console.log("PANJANG BASE64:", fotoBase64.length);
+
+const payload = {
+action: "updateAkun",
+data: data
+};
+
+console.log(payload);
+
+
         const res = await fetch(API_URL, {
             method: "POST",
             headers: {
