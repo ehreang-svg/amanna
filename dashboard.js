@@ -1,59 +1,67 @@
 async function loadDashboard(user){
-    currentUser = user;
-    nav("dashboard");
-    
-    if(window.nama) nama.innerText = user.nama;
-    if(window.kelas) kelas.innerText = user.kelas || "";
-    const statusEl = document.getElementById("status");
-    if(statusEl) statusEl.textContent = user.status || "-";
-    
-    let fotoUrl = user.foto || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-    
-    // Konversi darurat jika link di database localstorage masih tersisa format /view lama
-    if (fotoUrl.includes("drive.google.com/file/d/")) {
 
-    const fileId = fotoUrl.match(/\/d\/([^\/]+)/);
+currentUser = user;
 
-    if (fileId && fileId[1]) {
-        fotoUrl =
-            "https://drive.google.com/uc?export=view&id=" +
-            fileId[1];
-    }
+nav("dashboard");
+
+if(window.nama)
+    nama.innerText = user.nama;
+
+if(window.kelas)
+    kelas.innerText = user.kelas || "";
+
+const statusEl =
+    document.getElementById("status");
+
+if(statusEl)
+    statusEl.textContent =
+        user.status || "-";
+
+const targetFoto =
+    document.getElementById("foto");
+
+if(targetFoto){
+
+    targetFoto.src =
+        user.foto ||
+        "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
+    targetFoto.onerror = function(){
+
+        this.src =
+            "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
+    };
 }
-    
-    // Render gambar ke tag <img id="foto"> dashboard Anda
-    const targetFoto = document.getElementById("foto");
-    if (targetFoto) {
-        console.log("FOTO DATABASE:", user.foto);
-console.log("FOTO RENDER:", fotoUrl);
 
-let fotoUrl = user.foto || "";
+let res =
+    await fetch(API_URL + "?action=getMenus");
 
-if (fotoUrl.includes("uc?export=view&id=")) {
+let data =
+    await res.json();
 
-    const fileId =
-        fotoUrl.split("id=")[1];
+menuBox.innerHTML = "";
 
-    fotoUrl =
-        "https://lh3.googleusercontent.com/d/" +
-        fileId;
-}
-targetFoto.src = fotoUrl;
+data.menus
+    .filter(m =>
+        canShowMenu(
+            m.name,
+            (user.status || "")
+        )
+    )
+    .forEach(m => {
 
-targetFoto.onerror = function(){
-    console.log("GAGAL LOAD FOTO:", fotoUrl);
-};
-    }
-
-    let res = await fetch(API_URL + "?action=getMenus");
-    let data = await res.json();
-    menuBox.innerHTML = "";
-    data.menus.filter(m => canShowMenu(m.name, (user.status || ""))).forEach(m => {
-        menuBox.innerHTML += `<div class="menu-card" onclick="openMenu('${m.id}','${m.name}')"><img src="${m.icon}"><div>${m.name}</div></div>`;
+        menuBox.innerHTML += `
+        <div class="menu-card"
+             onclick="openMenu('${m.id}','${m.name}')">
+            <img src="${m.icon}">
+            <div>${m.name}</div>
+        </div>`;
     });
-    loadJadwalSekarang();
-}
 
+loadJadwalSekarang();
+
+}
 async function loadJadwalSekarang(){
     try{
         const res = await fetch(JADWAL_API + "?action=jadwalSekarang");
