@@ -127,7 +127,7 @@ try {
         password:
             document.getElementById("editPassword").value.trim(),
 
-        foto: foto
+        foto: ""
 
     };
 
