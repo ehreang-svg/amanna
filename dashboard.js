@@ -27,6 +27,17 @@ async function loadDashboard(user){
         console.log("FOTO DATABASE:", user.foto);
 console.log("FOTO RENDER:", fotoUrl);
 
+let fotoUrl = user.foto || "";
+
+if (fotoUrl.includes("uc?export=view&id=")) {
+
+    const fileId =
+        fotoUrl.split("id=")[1];
+
+    fotoUrl =
+        "https://lh3.googleusercontent.com/d/" +
+        fileId;
+}
 targetFoto.src = fotoUrl;
 
 targetFoto.onerror = function(){
