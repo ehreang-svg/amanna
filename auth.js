@@ -223,31 +223,3 @@ return;
 
 
 }
-
-window.addEventListener("DOMContentLoaded", ()=>{
-
-    const fotoFile =
-        document.getElementById("fotoFile");
-
-    if(!fotoFile) return;
-
-    fotoFile.addEventListener("change", function(){
-
-        const file = this.files[0];
-
-        if(!file) return;
-
-        const reader = new FileReader();
-
-        reader.onload = e => {
-
-            document.getElementById("previewFoto").src =
-                e.target.result;
-
-        };
-
-        reader.readAsDataURL(file);
-
-    });
-
-});
