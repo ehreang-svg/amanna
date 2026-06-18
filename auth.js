@@ -147,7 +147,7 @@ try {
         "KB"
     );
 
-    const res = await fetch(TABUNGAN_API, {
+    const res = await fetch(API_URL, {
 
         method: "POST",
 
@@ -212,35 +212,5 @@ try {
 
 }
 
-
-}
-
-
-const fotoInput = document.getElementById("fotoFile");
-
-if (fotoInput) {
-
-    fotoInput.addEventListener("change", function () {
-
-        const file = this.files[0];
-
-        if (!file) return;
-
-        const reader = new FileReader();
-
-        reader.onload = function (e) {
-
-            const preview =
-                document.getElementById("previewFoto");
-
-            if (preview) {
-                preview.src = e.target.result;
-            }
-
-        };
-
-        reader.readAsDataURL(file);
-
-    });
 
 }
