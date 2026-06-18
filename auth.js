@@ -149,19 +149,28 @@ try {
 
     const res = await fetch(API_URL, {
 
-        method: "POST",
+    method: "POST",
 
-        headers: {
-            "Content-Type":
-                "text/plain;charset=utf-8"
-        },
+    headers: {
+        "Content-Type":
+            "text/plain;charset=utf-8"
+    },
 
-        body: bodyData
+    body: bodyData
 
-    });
+});
 
-    const json = await res.json();
+console.log("STATUS:", res.status);
+console.log("OK:", res.ok);
+console.log("TYPE:", res.type);
+console.log("URL:", res.url);
 
+const text = await res.text();
+
+console.log("RESPONSE:");
+console.log(text);
+
+return;
     console.log(json);
 
     if (!json.status) {
