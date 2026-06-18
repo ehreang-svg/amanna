@@ -101,18 +101,18 @@ try {
         foto
     };
 
-    const bodyData = JSON.stringify({
-    action: "updateAkun",
-    data: data
-});
+    const payload = {
+        action: "updateAkun",
+        data: data
+    };
 
-const res = await fetch(API_URL, {
-    method: "POST",
-    headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-    },
-    body: bodyData
-});
+    const res = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+    });
 
     const text = await res.text();
     console.log("RESPONSE:", text);
