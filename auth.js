@@ -147,7 +147,7 @@ try {
         "KB"
     );
 
-    const res = await fetch(API_URL, {
+    const res = await fetch(TABUNGAN_API, {
 
         method: "POST",
 
