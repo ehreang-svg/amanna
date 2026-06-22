@@ -1286,3 +1286,11 @@ function tampilkanDataKelas() {
     });
 
 }
+
+async function bukaDataSiswa() {
+
+    nav("identitasPage");
+
+    await loadDataIdentitas();
+
+}
