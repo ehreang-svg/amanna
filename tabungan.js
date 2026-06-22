@@ -1236,48 +1236,53 @@ async function compressImage(file) {
 
 }
 
-async function tampilkanIdentitasSiswa() {
-
-    const nama =
-        document.getElementById("filterNamaIdentitas").value;
+function tampilkanDataKelas() {
 
     const kelas =
         document.getElementById("filterKelasIdentitas").value;
 
-    if (!nama || !kelas) return;
+    const tbody =
+        document.getElementById("bodyDataSiswa");
 
-    const siswa =
-        dataSiswaIdentitas.find(s =>
-            String(s.nama).trim() === String(nama).trim() &&
-            String(s.kelas).trim() === String(kelas).trim()
-        );
+    tbody.innerHTML = "";
 
-    if (!siswa) {
-        alert("Data tidak ditemukan");
-        return;
-    }
+    const data = dataSiswaIdentitas.filter(
+        s => String(s.kelas).trim() === String(kelas).trim()
+    );
 
-    document.getElementById("outNama").textContent =
-        siswa.nama;
+    data.forEach((s, i) => {
 
-    document.getElementById("outKelas").textContent =
-        siswa.kelas;
-
-    document.getElementById("outNik").textContent =
-        siswa.nik;
-
-    document.getElementById("outNisn").textContent =
-        siswa.nisn;
-
-    document.getElementById("outAyah").textContent =
-        siswa.namaAyah;
-
-    document.getElementById("outIbu").textContent =
-        siswa.namaIbu;
-
-    if (siswa.foto) {
-        document.getElementById("previewFoto")
-            .src = siswa.foto;
-    }
+        tbody.innerHTML += `
+        <tr>
+            <td>${i + 1}</td>
+            <td>${s.namaPanggilan || ""}</td>
+            <td>${s.nama || ""}</td>
+            <td>${s.kelas || ""}</td>
+            <td>${s.nik || ""}</td>
+            <td>${s.nisn || ""}</td>
+            <td>${s.jenisKelamin || ""}</td>
+            <td>${s.ttl || ""}</td>
+            <td>${s.agama || ""}</td>
+            <td>${s.anakKe || ""}</td>
+            <td>${s.tahunMasuk || ""}</td>
+            <td>${s.namaAyah || ""}</td>
+            <td>${s.namaIbu || ""}</td>
+            <td>${s.pekerjaanAyah || ""}</td>
+            <td>${s.pekerjaanIbu || ""}</td>
+            <td>${s.desa || ""}</td>
+            <td>${s.kecamatan || ""}</td>
+            <td>${s.kabupaten || ""}</td>
+            <td>${s.provinsi || ""}</td>
+            <td>${s.kodePos || ""}</td>
+            <td>
+                ${
+                    s.foto
+                    ? `<img src="${s.foto}" loading="lazy">`
+                    : "-"
+                }
+            </td>
+        </tr>
+        `;
+    });
 
 }
