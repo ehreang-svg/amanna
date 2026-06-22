@@ -107,7 +107,6 @@ async function openMenu(id,name){
 }
 
 function handleSubmenu(type,value,title){
-    if(type==="page"){
         if(value === "identitasPage"){
             openDataSiswaLangsung();
             return;
