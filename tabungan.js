@@ -1224,11 +1224,11 @@ function tampilkanDataKelas() {
     const tbody = document.getElementById("bodyDataSiswa");
     tbody.innerHTML = "";
 
-    if (!kelas) return;
-
-    const data = dataSiswaIdentitas.filter(
-        s => String(s.kelas).trim() === String(kelas).trim()
-    );
+    const data = !kelas
+        ? dataSiswaIdentitas
+        : dataSiswaIdentitas.filter(
+            s => String(s.kelas).trim() === String(kelas).trim()
+        );
 
     data.forEach((s, i) => {
         tbody.innerHTML += `
@@ -1258,6 +1258,7 @@ function tampilkanDataKelas() {
         `;
     });
 }
+
 async function bukaDataSiswa() {
 
     openIdentitasPage()
@@ -1273,18 +1274,21 @@ async function openIdentitasPage() {
 
     const kelasEl = document.getElementById("filterKelasDataSiswa");
 
-    // ambil kelas terakhir atau default pertama
-    let kelas =
-        localStorage.getItem("kelasAktif") ||
-        kelasEl.value;
+    if (!kelasEl || kelasEl.options.length <= 1) return;
 
-    if (!kelas && kelasEl.options.length > 1) {
+    // ambil kelas terakhir
+    let kelas = localStorage.getItem("kelasAktif");
+
+    // fallback ke kelas pertama
+    if (!kelas) {
         kelas = kelasEl.options[1].value;
     }
 
-    if (kelas) {
-        kelasEl.value = kelas;
-        loadNamaIdentitas();
-        tampilkanDataKelas();
-    }
+    kelasEl.value = kelas;
+
+    // simpan lagi
+    localStorage.setItem("kelasAktif", kelas);
+
+    loadNamaIdentitas();
+    tampilkanDataKelas();
 }
