@@ -107,10 +107,6 @@ async function openMenu(id,name){
 }
 
 function handleSubmenu(type,value,title){
-        if(value === "identitasPage"){
-            openDataSiswaLangsung();
-            return;
-        }
         nav(value);
         const user = JSON.parse(localStorage.getItem("user"));
         if(value==="absenGuruPage") absenNama.value = user.nama || "";
