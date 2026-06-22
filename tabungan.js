@@ -655,7 +655,6 @@ try {
 
 }
 async function exportIdentitasDipilih() {
-
     const nama = document.getElementById("filterNamaIdentitas").value;
     const kelas = document.getElementById("filterKelasIdentitas").value;
 
@@ -667,6 +666,26 @@ async function exportIdentitasDipilih() {
     await exportIdentitasSiswa(nama, kelas);
 }
 
+
+async function exportIdentitasDipilih() {
+
+    const nama =
+        document.getElementById("filterNamaIdentitas").value;
+
+    const kelas =
+        document.getElementById("filterKelasIdentitas").value;
+
+    if (!nama || !kelas) {
+
+        alert("Pilih kelas dan nama siswa terlebih dahulu.");
+
+        return;
+
+    }
+
+    await exportIdentitasSiswa(nama, kelas);
+
+}
 
 async function loadDataIdentitas() {
     const res = await fetch(TABUNGAN_API + "?action=getDataSiswa");
@@ -684,12 +703,6 @@ async function loadDataIdentitas() {
 
     kelasUnik.forEach(k => {
         kelasSelect.innerHTML += `<option value="${k}">${k}</option>`;
-    });
-    
-    document.getElementById("filterKelasIdentitas")
-    .addEventListener("change", function () {
-        loadNamaIdentitas();
-        tampilkanDataKelas();
     });
 }
 
@@ -941,16 +954,24 @@ console.log(
 );
         
         const res = await fetch(TABUNGAN_API, {
-    method: "POST",
-    headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-    },
-    body: JSON.stringify({
-        action: "updateIdentitasSiswa",
-        data: data
-    })
-});
-        
+
+            method: "POST",
+
+            headers: {
+                "Content-Type":
+                    "text/plain;charset=utf-8"
+            },
+
+            body: JSON.stringify({
+
+                action: "updateIdentitasSiswa",
+
+                data: data
+
+            })
+
+        });
+
         const json = await res.json();
 
         console.log(json);
@@ -1052,7 +1073,6 @@ async function loadKelasEditIdentitas() {
         `<option value="">Pilih Nama</option>`;
 
     if (!kelas) return;
-    if (!Array.isArray(dataSiswaEdit)) return;
 
     if (!Array.isArray(dataSiswaEdit)) {
         console.error("dataSiswaEdit tidak valid");
@@ -1214,81 +1234,4 @@ async function compressImage(file) {
 
     });
 
-}
-
-function tampilkanDataKelas() {
-
-    const kelasEl = document.getElementById("filterKelasDataSiswa");
-    const kelas = kelasEl ? kelasEl.value : "";
-
-    const tbody = document.getElementById("bodyDataSiswa");
-    tbody.innerHTML = "";
-
-    const data = !kelas
-        ? dataSiswaIdentitas
-        : dataSiswaIdentitas.filter(
-            s => String(s.kelas).trim() === String(kelas).trim()
-        );
-
-    data.forEach((s, i) => {
-        tbody.innerHTML += `
-        <tr>
-            <td>${i + 1}</td>
-            <td>${s.namaPanggilan || ""}</td>
-            <td>${s.nama || ""}</td>
-            <td>${s.kelas || ""}</td>
-            <td>${s.nik || ""}</td>
-            <td>${s.nisn || ""}</td>
-            <td>${s.jenisKelamin || ""}</td>
-            <td>${s.ttl || ""}</td>
-            <td>${s.agama || ""}</td>
-            <td>${s.anakKe || ""}</td>
-            <td>${s.tahunMasuk || ""}</td>
-            <td>${s.namaAyah || ""}</td>
-            <td>${s.namaIbu || ""}</td>
-            <td>${s.pekerjaanAyah || ""}</td>
-            <td>${s.pekerjaanIbu || ""}</td>
-            <td>${s.desa || ""}</td>
-            <td>${s.kecamatan || ""}</td>
-            <td>${s.kabupaten || ""}</td>
-            <td>${s.provinsi || ""}</td>
-            <td>${s.kodePos || ""}</td>
-            <td>${s.foto ? `<img src="${s.foto}" loading="lazy">` : "-"}</td>
-        </tr>
-        `;
-    });
-}
-
-async function bukaDataSiswa() {
-
-    openIdentitasPage()
-
-    await loadDataIdentitas();
-
-}
-
-async function openIdentitasPage() {
-    nav("identitasPage");
-
-    await loadDataIdentitas();
-
-    const kelasEl = document.getElementById("filterKelasDataSiswa");
-
-    if (!kelasEl || kelasEl.options.length <= 1) return;
-
-    // ambil kelas terakhir
-    let kelas = localStorage.getItem("kelasAktif");
-
-    // fallback ke kelas pertama
-    if (!kelas) {
-        kelas = kelasEl.options[1].value;
-    }
-
-    kelasEl.value = kelas;
-
-    // simpan lagi
-    localStorage.setItem("kelasAktif", kelas);
-
-    loadNamaIdentitas();
-    tampilkanDataKelas();
 }
