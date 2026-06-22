@@ -1235,3 +1235,49 @@ async function compressImage(file) {
     });
 
 }
+
+async function tampilkanIdentitasSiswa() {
+
+    const nama =
+        document.getElementById("filterNamaIdentitas").value;
+
+    const kelas =
+        document.getElementById("filterKelasIdentitas").value;
+
+    if (!nama || !kelas) return;
+
+    const siswa =
+        dataSiswaIdentitas.find(s =>
+            String(s.nama).trim() === String(nama).trim() &&
+            String(s.kelas).trim() === String(kelas).trim()
+        );
+
+    if (!siswa) {
+        alert("Data tidak ditemukan");
+        return;
+    }
+
+    document.getElementById("outNama").textContent =
+        siswa.nama;
+
+    document.getElementById("outKelas").textContent =
+        siswa.kelas;
+
+    document.getElementById("outNik").textContent =
+        siswa.nik;
+
+    document.getElementById("outNisn").textContent =
+        siswa.nisn;
+
+    document.getElementById("outAyah").textContent =
+        siswa.namaAyah;
+
+    document.getElementById("outIbu").textContent =
+        siswa.namaIbu;
+
+    if (siswa.foto) {
+        document.getElementById("previewFoto")
+            .src = siswa.foto;
+    }
+
+}
