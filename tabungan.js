@@ -1238,8 +1238,7 @@ async function compressImage(file) {
 
 function tampilkanDataKelas() {
 
-    const kelas =
-        document.getElementById("filterKelasIdentitas").value;
+    const kelas =document.getElementById("filterKelasDataSiswa");
 
     const tbody =
         document.getElementById("bodyDataSiswa");
