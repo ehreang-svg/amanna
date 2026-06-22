@@ -814,3 +814,38 @@ table{
     }
 
 }
+
+.table-action{
+    display:flex;
+    gap:8px;
+    margin:10px 0;
+}
+
+.table-action button{
+    width:42px;
+    height:42px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:18px;
+}
+
+.table-siswa{
+    width:100%;
+    border-collapse:collapse;
+    font-size:12px;
+}
+
+.table-siswa th,
+.table-siswa td{
+    border:1px solid #ddd;
+    padding:6px;
+}
+
+.table-siswa thead th{
+    position:sticky;
+    top:0;
+    background:#16a34a;
+    color:white;
+    z-index:5;
+}
