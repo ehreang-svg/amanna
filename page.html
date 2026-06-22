@@ -570,6 +570,48 @@ placeholder="Masukkan NISN">
 <div id="hasil" Style="text-align:left"></div>
 </div>
 
+<h2>Data Siswa</h2>
+
+
+<div class="page hidden" id="identitasPage">
+    <div class="back" onclick="goBack()">← Kembali</div>
+<select id="filterKelasIdentitas" onchange="tampilkanDataKelas()">
+    <option value="">Pilih Kelas</option>
+</select>
+
+<div style="overflow-x:auto;">
+    <table id="tblDataSiswa" class="table-siswa">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Nama Panggilan</th>
+                <th>Nama</th>
+                <th>Kelas</th>
+                <th>NIK</th>
+                <th>NISN</th>
+                <th>Jenis Kelamin</th>
+                <th>TTL</th>
+                <th>Agama</th>
+                <th>Anak Ke</th>
+                <th>Tahun Masuk</th>
+                <th>Nama Ayah</th>
+                <th>Nama Ibu</th>
+                <th>Pekerjaan Ayah</th>
+                <th>Pekerjaan Ibu</th>
+                <th>Desa</th>
+                <th>Kecamatan</th>
+                <th>Kabupaten</th>
+                <th>Provinsi</th>
+                <th>Kode Pos</th>
+                <th>Foto</th>
+            </tr>
+        </thead>
+        <tbody id="bodyDataSiswa">
+        </tbody>
+    </table>
+</div>
+</div>
+
 <!-- INPUT IDENTITAS SISWA -->
 <div class="page hidden" id="identitasPage">
     <div class="back" onclick="goBack()">← Kembali</div>
