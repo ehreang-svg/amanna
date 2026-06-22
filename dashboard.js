@@ -106,30 +106,49 @@ async function openMenu(id,name){
     });
 }
 
-function handleSubmenu(type,value,title){
-        nav(value);
-        const user = JSON.parse(localStorage.getItem("user"));
-        if(value==="absenGuruPage") absenNama.value = user.nama || "";
-        if(value==="absenSiswaPage") loadDataSiswa();
-        if(value==="rekapPage") loadRekap();
-        if(value==="loginQuiz") mulai();
-        if(value==="rekapSiswaPage"){loadKelasRekap().then(()=>{
+async function handleSubmenu(type, value, title) {
+    nav(value);
 
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (value === "absenGuruPage")
+        absenNama.value = user.nama || "";
+
+    if (value === "absenSiswaPage")
+        loadDataSiswa();
+
+    if (value === "rekapPage")
+        loadRekap();
+
+    if (value === "loginQuiz")
+        mulai();
+
+    if (value === "rekapSiswaPage") {
+        await loadKelasRekap();
         loadFilterNamaSiswa();
-
         loadRekapSiswa();
+    }
 
-    });
+    if (value === "tabunganPage")
+        loadKelasTabungan();
 
-}
-        if(value==="tabunganPage") loadKelasTabungan();
-        if(value==="rekapTabunganPage") { loadFilterKelasTabungan(); loadRekapTabungan(); }
+    if (value === "rekapTabunganPage") {
+        loadFilterKelasTabungan();
+        loadRekapTabungan();
+    }
+
+    if (type === "link") {
+        window.open(value, "_blank");
         return;
     }
-    if(type==="link"){ window.open(value, "_blank"); return; }
-    if(type==="content"){ nav("contentPage"); contentTitle.innerText = title; contentBody.innerHTML = value; return; }
-}
 
+    if (type === "content") {
+        nav("contentPage");
+        contentTitle.innerText = title;
+        contentBody.innerHTML = value;
+        return;
+    }
+}
 
 
 function canShowMenu(menuName, status){
