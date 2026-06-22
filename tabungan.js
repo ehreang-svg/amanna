@@ -1260,8 +1260,20 @@ function tampilkanDataKelas() {
 }
 async function bukaDataSiswa() {
 
+    openIdentitasPage()
+
+    await loadDataIdentitas();
+
+}
+
+async function openIdentitasPage() {
     nav("identitasPage");
 
     await loadDataIdentitas();
 
+    const kelasEl = document.getElementById("filterKelasDataSiswa");
+
+    if (kelasEl.value) {
+        tampilkanDataKelas();
+    }
 }
