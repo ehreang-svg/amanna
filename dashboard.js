@@ -129,8 +129,9 @@ async function handleSubmenu(type, value, title) {
         loadRekapSiswa();
     }
 
-    if (value === "tabunganPage")
+    if (value === "tabunganPage"){
         loadKelasTabungan();
+    }
 
     if (value === "rekapTabunganPage") {
         loadFilterKelasTabungan();
