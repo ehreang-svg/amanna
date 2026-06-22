@@ -1273,7 +1273,18 @@ async function openIdentitasPage() {
 
     const kelasEl = document.getElementById("filterKelasDataSiswa");
 
-    if (kelasEl.value) {
+    // ambil kelas terakhir atau default pertama
+    let kelas =
+        localStorage.getItem("kelasAktif") ||
+        kelasEl.value;
+
+    if (!kelas && kelasEl.options.length > 1) {
+        kelas = kelasEl.options[1].value;
+    }
+
+    if (kelas) {
+        kelasEl.value = kelas;
+        loadNamaIdentitas();
         tampilkanDataKelas();
     }
 }
