@@ -100,11 +100,11 @@ if (
     loadKelasTabungan();
 }
 
-if (
-    id === "exportIdentitasPage" &&
-    typeof loadDataIdentitas === "function"
+   if (
+    id === "identitasPage" &&
+    typeof openIdentitasPage === "function"
 ) {
-    loadDataIdentitas();
+    openIdentitasPage();
 }
 
 if (
