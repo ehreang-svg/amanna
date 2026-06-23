@@ -1374,25 +1374,33 @@ async function loadDataSiswaPage(){
 let selectedNama = "";
 let selectedKelas = "";
 
-function pilihSiswa(nama, kelas){
+function pilihSiswa(nama,kelas){
 
     selectedNama = decodeURIComponent(nama);
     selectedKelas = decodeURIComponent(kelas);
 
-    document.getElementById("namaSiswaModal").innerText =
-        selectedNama;
+    document
+      .getElementById("namaSiswaModal")
+      .innerText = selectedNama;
 
-    document.getElementById("kelasSiswaModal").innerText =
-        selectedKelas;
+    document
+      .getElementById("kelasSiswaModal")
+      .innerText = selectedKelas;
 
-    document.getElementById("modalSiswa").style.display =
-        "flex";
+    const modal =
+      document.getElementById("modalSiswa");
+
+    modal.classList.remove("hidden");
+    modal.style.display = "flex";
 }
 
 function tutupModalSiswa(){
 
-    document.getElementById("modalSiswa").style.display =
-        "none";
+    const modal =
+      document.getElementById("modalSiswa");
+
+    modal.style.display = "none";
+    modal.classList.add("hidden");
 }
 
 function inputSiswa(){
