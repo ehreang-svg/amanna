@@ -743,26 +743,22 @@ placeholder="Masukkan NISN">
 
 <div id="dataSiswaPage" class="hidden">
 
+    <!-- HEADER -->
     <div class="page-header">
-
-        <!-- TOOLBAR KIRI -->
-        <div class="toolbar-left">
-
-            <button onclick="goBack()">⬅</button>
-            <button onclick="id=identitasPage">➕</button>
-            <button onclick="id=editIdentitasPage">✏️</button>
-            <button onclick="id=exportIdentitasPage">🖨</button>
-
-        </div>
-
-        <!-- TITLE -->
+        <button onclick="goBack()">⬅</button>
         <h3 class="title">DATA SISWA</h3>
-
     </div>
 
+    <!-- TOOLBAR DI BAWAH HEADER -->
+    <div class="toolbar-left data-toolbar">
+        <button onclick="show('identitasPage')">➕ Input</button>
+        <button onclick="show('editIdentitasPage')">✏️ Edit</button>
+        <button onclick="show('exportIdentitasPage')">🖨 Print</button>
+    </div>
+
+    <!-- DATA -->
     <div id="dataSiswaContainer">
         Memuat data...
     </div>
 
 </div>
-
