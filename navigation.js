@@ -114,6 +114,9 @@ if (
 ) {
     loadKelasEditIdentitas();
 }
+   if (id === "dataSiswaPage" && typeof loadDataSiswaPage === "function") {
+        loadDataSiswaPage();
+    }
 }
 /* ===========================
    BACK BUTTON
