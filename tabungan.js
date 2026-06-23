@@ -1407,15 +1407,3 @@ function printSiswa(){
 
     tutupModalSiswa();
 }
-
-function renderDataSiswa(dataSiswa)
-{ const tbody = document.getElementById("tbodySiswa");
- tbody.innerHTML = dataSiswa.map((siswa, index) => ` <tr> <td>${index + 1}</td>
- <td> <img src="${siswa.foto || 'img/default-user.png'}" class="foto-siswa" alt="${siswa.nama}"></td> 
- <td>${siswa.namaPanggilan || "-"}</td> <td>${siswa.nama || "-"}</td> <td>${siswa.kelas || "-"}</td> 
- <td>${siswa.nik || "-"}</td> <td>${siswa.nisn || "-"}</td> <td>${siswa.jenisKelamin || "-"}</td> 
- <td>${siswa.ttl || "-"}</td> <td>${siswa.agama || "-"}</td> <td>${siswa.anakKe || "-"}</td> 
- <td>${siswa.tahunMasuk || "-"}</td> <td>${siswa.namaAyah || "-"}</td> 
- <td>${siswa.namaIbu || "-"}</td> <td>${siswa.pekerjaanAyah || "-"}</td> <td>${siswa.pekerjaanIbu || "-"}</td> 
- <td>${siswa.desa || "-"}</td> <td>${siswa.kecamatan || "-"}</td> <td>${siswa.kabupaten || "-"}</td> 
- <td>${siswa.provinsi || "-"}</td> <td>${siswa.kodePos || "-"}</td> </tr> `).join(""); }
