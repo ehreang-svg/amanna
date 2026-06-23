@@ -742,25 +742,25 @@ placeholder="Masukkan NISN">
     <button onclick="updateIdentitasSiswa()"> Simpan Perubahan </button> 
 </div> </div>
 
-<!-- ================= DATA SISWA ================= --> 
-<div id="dataSiswaPage" class="hidden page"> 
-<!-- HEADER -->
-<div class="data-header"> 
-<div class="header-left">
-<button class="btn-back" onclick="goBack()">⬅</button>
-<h2>📚 DATA SISWA</h2>
+<div id="dataSiswaPage" class="hidden page">
+
+    <!-- HEADER -->
+    <div class="data-header">
+        <div class="header-left">
+            <button class="btn-back" onclick="goBack()">⬅</button>
+            <h2>📚 DATA SISWA</h2>
+        </div>
+
+        <div class="header-right">
+            <button class="btn-add" onclick="show('identitasPage')">➕ Tambah</button>
+            <button class="btn-edit" onclick="show('editIdentitasPage')">✏️ Edit</button>
+            <button class="btn-print" onclick="show('exportIdentitasPage')">🖨 Cetak</button>
+        </div>
+    </div>
+
+    <!-- Tempat tabel akan dibuat oleh JavaScript -->
+    <div id="dataSiswaContainer">
+        Memuat data...
+    </div>
+
 </div>
-<div class="header-right">
-<button class="btn-add" onclick="show('identitasPage')"> ➕ Tambah </button>
-    <button class="btn-edit" onclick="show('editIdentitasPage')"> ✏️ Edit </button>
-    <button class="btn-print" onclick="show('exportIdentitasPage')"> 🖨 Cetak </button>
-</div> </div>
-<table class="table-siswa"><thead>
-<tr> <th style="width:50px;">No</th>
-<th style="width:70px;">Foto</th>
-<th>Nama Panggilan</th>
-<th>Nama Lengkap</th>
-<th>Kelas</th>
-<th>NIK</th>
-<th>NISN</th>
-<th>Jenis Kelamin</th> <th>TTL</th> <th>Agama</th> <th>Anak Ke</th> <th>Tahun Masuk</th> <th>Nama Ayah</th> <th>Nama Ibu</th> <th>Pekerjaan Ayah</th> <th>Pekerjaan Ibu</th> <th>Desa</th> <th>Kecamatan</th> <th>Kabupaten</th> <th>Provinsi</th> <th>Kode Pos</th> </tr> </thead> <tbody id="tbodySiswa"> <!-- Data diisi melalui JavaScript --> </tbody> </table>
