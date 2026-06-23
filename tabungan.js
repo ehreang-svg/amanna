@@ -1271,7 +1271,6 @@ async function loadDataSiswaPage() {
 
         const container = document.getElementById("dataSiswaContainer");
 
-        // 🔥 CEK DOM dulu (INI FIX ERROR UTAMA)
         if (!container) {
             console.warn("❌ dataSiswaContainer tidak ditemukan di DOM");
             return;
@@ -1285,6 +1284,14 @@ async function loadDataSiswaPage() {
             return;
         }
 
+        const siswa = data.data || [];
+
+        // simpan global
+        window._dataSiswa = siswa;
+
+        // =========================
+        // RENDER TABLE
+        // =========================
         let html = `
         <div class="table-card" style="overflow-x:auto;">
             <table class="table-siswa">
@@ -1316,30 +1323,21 @@ async function loadDataSiswaPage() {
                 <tbody>
         `;
 
-        data.data.forEach((s, i) => {
+        siswa.forEach((s, i) => {
 
             const foto = s.foto || s.FOTO || "";
 
             html += `
                 <tr onclick="pilihSiswa(${i})" style="cursor:pointer">
-
                     <td>${i + 1}</td>
-
                     <td>
-                        ${
-                            foto
-                                ? `<img src="${foto}"
-                                        style="width:50px;height:50px;
-                                               object-fit:cover;
-                                               border-radius:50%;
-                                               border:2px solid #ddd;">`
-                                : "📷"
-                        }
+                        ${foto
+                            ? `<img src="${foto}" style="width:50px;height:50px;object-fit:cover;border-radius:50%;border:2px solid #ddd;">`
+                            : "📷"}
                     </td>
-
                     <td>${s.namaPanggilan || ""}</td>
                     <td>${s.nama || ""}</td>
-                    <td>${s.kelas || ""}</td>
+                    <td>${s.kelas || s.Kelas || ""}</td>
                     <td>${s.nik || ""}</td>
                     <td>${s.nisn || ""}</td>
                     <td>${s.jenisKelamin || ""}</td>
@@ -1356,41 +1354,41 @@ async function loadDataSiswaPage() {
                     <td>${s.kabupaten || ""}</td>
                     <td>${s.provinsi || ""}</td>
                     <td>${s.kodePos || ""}</td>
-
                 </tr>
             `;
         });
 
-        html += `
-                </tbody>
-            </table>
-        </div>
-        `;
-
+        html += `</tbody></table></div>`;
         container.innerHTML = html;
 
-        // simpan global data
-        window._dataSiswa = data.data;
+        // =========================
+        // DROPDOWN KELAS (FIX UTAMA)
+        // =========================
+        const select = document.getElementById("filterKelas");
 
-// isi dropdown kelas unik
-const kelasSet = [...new Set(data.data.map(s => s.kelas).filter(Boolean))];
+        if (select) {
 
-const select = document.getElementById("filterKelas");
-if (select) {
-    select.innerHTML = `<option value="">📚 Semua Kelas</option>`;
-    kelasSet.forEach(k => {
-        select.innerHTML += `<option value="${k}">${k}</option>`;
-    });
-}
+            const kelasSet = [...new Set(
+                siswa
+                    .map(s => s.kelas || s.Kelas || s.CLASS)
+                    .filter(Boolean)
+            )].sort();
+
+            select.innerHTML = `<option value="">📚 Semua Kelas</option>`;
+
+            kelasSet.forEach(k => {
+                select.innerHTML += `<option value="${k}">${k}</option>`;
+            });
+        }
 
     } catch (err) {
-        const container = document.getElementById("dataSiswaContainer");
 
+        console.error(err);
+
+        const container = document.getElementById("dataSiswaContainer");
         if (container) {
             container.innerHTML = "❌ Error: " + err;
         }
-
-        console.error(err);
     }
 }
 
