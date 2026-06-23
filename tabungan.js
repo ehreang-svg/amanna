@@ -1255,7 +1255,7 @@ async function loadDataSiswaPage() {
         renderDataSiswa(dataSiswaGlobal);
 
         // Isi filter kelas
-        const filter = document.getElementById("filterKelas");
+        const filter = document.getElementById("filterKelasData");
         filter.innerHTML = `<option value="">📚 Semua Kelas</option>`;
 
         const daftarKelas = [
@@ -1346,7 +1346,7 @@ function renderDataSiswa(data) {
 
 function filterSiswa() {
 
-    const kelas = document.getElementById("filterKelas").value;
+    const kelas = document.getElementById("filterKelasData").value;
 
     if (!kelas) {
         renderDataSiswa(dataSiswaGlobal);
