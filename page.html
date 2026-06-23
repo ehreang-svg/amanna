@@ -746,19 +746,21 @@ placeholder="Masukkan NISN">
 
     <!-- HEADER -->
     <div class="data-header">
-        <div class="header-left">
-            <h2>📚 DATA SISWA</h2>
-        </div></div>
 
-        <div class="toolbar-left data-toolbar">
-            <button class="btn-back" onclick="goBack()">⬅</button>
-            <button class="btn-add" onclick="show('identitasPage')">➕ Tambah</button>
-            <button class="btn-edit" onclick="show('editIdentitasPage')">✏️ Edit</button>
-            <button class="btn-print" onclick="show('exportIdentitasPage')">🖨 Cetak</button>
+        <!-- Judul Tengah -->
+        <h2 class="data-title">📚 DATA SISWA</h2>
+
+        <!-- Toolbar kiri bawah judul -->
+        <div class="data-toolbar">
+            <button class="btn-small btn-back" onclick="goBack()">⬅</button>
+            <button class="btn-small btn-add" onclick="show('identitasPage')">➕ Tambah</button>
+            <button class="btn-small btn-edit" onclick="show('editIdentitasPage')">✏️ Edit</button>
+            <button class="btn-small btn-print" onclick="show('exportIdentitasPage')">🖨 Cetak</button>
         </div>
-    
 
-    <!-- Tempat tabel akan dibuat oleh JavaScript -->
+    </div>
+
+    <!-- TABLE -->
     <div id="dataSiswaContainer">
         Memuat data...
     </div>
