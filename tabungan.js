@@ -1271,7 +1271,7 @@ async function loadDataSiswaPage(){
     try{
 
         const res = await fetch(
-            GS_URL + "?action=getDataSiswa"
+            TABUNGAN_API + "?action=getDataSiswa"
         );
 
         const result = await res.json();
