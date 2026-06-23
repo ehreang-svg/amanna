@@ -1275,9 +1275,9 @@ let selectedKelas = "";
    LOAD DATA SISWA
 =========================== */
 
-async function loadDataSiswaPage(){
+async function loadDataSiswaPage() {
 
-    try{
+    try {
 
         const res = await fetch(
             TABUNGAN_API + "?action=getDataSiswa"
@@ -1285,11 +1285,9 @@ async function loadDataSiswaPage(){
 
         const json = await res.json();
 
-        if(!json.status){
-
+        if (!json.status) {
             alert(json.message);
             return;
-
         }
 
         dataSiswaGlobal = json.data || [];
@@ -1297,10 +1295,9 @@ async function loadDataSiswaPage(){
         renderDataSiswa(dataSiswaGlobal);
         isiFilterKelas(dataSiswaGlobal);
 
-    }catch(err){
+    } catch (err) {
 
         console.error(err);
-        alert(err);
 
     }
 
