@@ -1324,7 +1324,6 @@ html += `
 '${encodeURIComponent(s.kelas)}'
 )"
 style="cursor:pointer">
-`;
                 <td>${i + 1}</td>
                 <td>${s.namaPanggilan || ""}</td>
                 <td>${s.nama || ""}</td>
