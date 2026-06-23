@@ -572,7 +572,7 @@ placeholder="Masukkan NISN">
 
 <!-- INPUT IDENTITAS SISWA -->
 <div class="page hidden" id="identitasPage">
-    <div class="back" onclick="show('dataSiswaPage')">← Kembali</div>
+<div class="back" onclick="goBack()">← Kembali</div>
 
     <div class="card">
         <h2>Input Identitas Siswa</h2>
@@ -673,9 +673,7 @@ placeholder="Masukkan NISN">
 <!-- PAGE EXPORT IDENTITAS SISWA -->
 <div class="page hidden" id="exportIdentitasPage" >
 
-    <div class="back" onclick="show('dataSiswaPage')">
-        ← Kembali
-    </div>
+    <div class="back" onclick="goBack()">← Kembali</div>
 
     <div class="card">
 
@@ -708,7 +706,7 @@ placeholder="Masukkan NISN">
 
 <!-- EDIT IDENTITAS SISWA --> 
 <div class="page hidden" id="editIdentitasPage">
-<div class="back" onclick="show('dataSiswaPage')"> ← Kembali </div>
+<div class="back" onclick="goBack()">← Kembali</div>
 <div class="card"> <h2>Edit Identitas Siswa</h2>
 <select id="editFilterKelas" onchange="loadNamaEditIdentitas()">
 <option value="">Pilih Kelas</option>
