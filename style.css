@@ -932,7 +932,7 @@ table{
 }
 
 /* WARNA BUTTON */
-.btn-back { background: #e0e0e0; }
+.btn-back { background: #dc3545; color: white; }
 .btn-add { background: #4CAF50; color: white; }
 .btn-edit { background: #ff9800; color: white; }
 .btn-print { background: #2196F3; color: white; }
