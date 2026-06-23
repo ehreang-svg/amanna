@@ -138,6 +138,16 @@ async function handleSubmenu(type, value, title) {
         loadRekapTabungan();
     }
 
+    if (
+    title.toUpperCase() === "DATA SISWA") {
+
+    nav("dataSiswaPage");
+
+    loadDataSiswaPage();
+
+    return;
+    }
+
     if (type === "link") {
         window.open(value, "_blank");
         return;
