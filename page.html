@@ -749,18 +749,17 @@ placeholder="Masukkan NISN">
 
         <!-- Judul Tengah -->
         <h2 class="data-title">📚 DATA SISWA</h2>
-        <br><br>
+
+        <!-- FILTER -->
         <div class="table-action">
-            <select id="filterKelasIdentitas">
-            <option value="">Pilih Kelas</option>
-        </select>
-        <option value="">📚 Semua Kelas</option>
-    </select>
 
-</div>
-        <br>
+            <select id="filterKelas" onchange="filterSiswa()">
+                <option value="">📚 Semua Kelas</option>
+            </select>
 
-        <!-- Toolbar kiri bawah judul -->
+        </div>
+
+        <!-- TOOLBAR -->
         <div class="data-toolbar">
             <button class="btn-small btn-back" onclick="goBack()">⬅</button>
             <button class="btn-small btn-add" onclick="show('identitasPage')">➕ Tambah</button>
