@@ -1372,6 +1372,17 @@ async function loadDataSiswaPage() {
         // simpan global data
         window._dataSiswa = data.data;
 
+// isi dropdown kelas unik
+const kelasSet = [...new Set(data.data.map(s => s.kelas).filter(Boolean))];
+
+const select = document.getElementById("filterKelas");
+if (select) {
+    select.innerHTML = `<option value="">📚 Semua Kelas</option>`;
+    kelasSet.forEach(k => {
+        select.innerHTML += `<option value="${k}">${k}</option>`;
+    });
+}
+
     } catch (err) {
         const container = document.getElementById("dataSiswaContainer");
 
@@ -1442,4 +1453,29 @@ function printSiswa(){
     );
 
     tutupModalSiswa();
+}
+
+function filterSiswa() {
+
+    const keyword = (document.getElementById("searchSiswa")?.value || "").toLowerCase();
+    const kelas = document.getElementById("filterKelas")?.value;
+
+    const data = window._dataSiswa || [];
+
+    const filtered = data.filter(s => {
+
+        const nama = (s.nama || "").toLowerCase();
+        const panggilan = (s.namaPanggilan || "").toLowerCase();
+
+        const matchNama =
+            nama.includes(keyword) ||
+            panggilan.includes(keyword);
+
+        const matchKelas =
+            !kelas || s.kelas === kelas;
+
+        return matchNama && matchKelas;
+    });
+
+    renderTableSiswa(filtered);
 }
