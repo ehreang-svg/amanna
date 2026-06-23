@@ -23,6 +23,7 @@ const pages = [
     "cabutanPage",
     "identitasPage",
     "editIdentitasPage",
+    "dataSiswaPage",
     "exportIdentitasPage"
 ];
 /* ===========================
