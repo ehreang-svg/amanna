@@ -1328,3 +1328,57 @@ async function detailSiswa(nama,kelas){
     );
 
 }
+
+async function loadDataSiswaPage(){
+
+    try{
+
+        const res = await fetch(
+            GS_URL + "?action=getDataSiswa"
+        );
+
+        const result = await res.json();
+
+        if(!result.status){
+
+            dataSiswaContainer.innerHTML =
+                result.message;
+
+            return;
+        }
+
+        let html = `
+        <table class="table">
+            <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Kelas</th>
+                <th>JK</th>
+            </tr>
+        `;
+
+        result.data.forEach((s,i)=>{
+
+            html += `
+            <tr>
+                <td>${i+1}</td>
+                <td>${s.nama}</td>
+                <td>${s.kelas}</td>
+                <td>${s.jenisKelamin}</td>
+            </tr>
+            `;
+
+        });
+
+        html += "</table>";
+
+        dataSiswaContainer.innerHTML = html;
+
+    }catch(err){
+
+        dataSiswaContainer.innerHTML =
+            err.toString();
+
+    }
+
+}
