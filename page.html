@@ -745,6 +745,12 @@ placeholder="Masukkan NISN">
 
     <div class="page-header">
         <button onclick="goBack()">⬅ Kembali</button>
+         <div style="display:flex; gap:8px; flex-wrap:wrap">
+
+            <button onclick="inputSiswa()">➕ Input</button>
+            <button onclick="editSiswa()">✏️ Edit</button>
+            <button onclick="printSiswa()">🗑 Delete</button>
+            <button onclick="printKartu()">🖨 Print</button>
         <h3>DATA SISWA</h3>
     </div>
 
@@ -754,32 +760,3 @@ placeholder="Masukkan NISN">
 
 </div>
 
-<div id="modalSiswa" class="hidden modal">
-
-    <div class="modal-content">
-
-        <h3 id="modalNamaSiswa"></h3>
-
-        <button onclick="inputSiswa()">
-            ✏️ Edit Data
-        </button>
-
-        <button onclick="editSiswa()">
-            ✏️ Edit Data
-        </button>
-
-        <button onclick="printSiswa()">
-            🖨️ Print Identitas
-        </button>
-
-        <button onclick="printKartu()">
-            🪪 Print Kartu
-        </button>
-
-        <button onclick="tutupModalSiswa()">
-            ❌ Tutup
-        </button>
-
-    </div>
-
-</div>
