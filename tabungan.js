@@ -1395,25 +1395,34 @@ async function loadDataSiswaPage() {
 let selectedNama = "";
 let selectedKelas = "";
 
-function pilihSiswa(nama, kelas) {
+function pilihSiswa(nama,kelas){
 
     selectedNama = decodeURIComponent(nama);
     selectedKelas = decodeURIComponent(kelas);
 
-    document.getElementById("namaSiswaModal").innerText = selectedNama;
-    document.getElementById("kelasSiswaModal").innerText = selectedKelas;
+    document
+      .getElementById("namaSiswaModal")
+      .innerText = selectedNama;
 
-    const modal = document.getElementById("modalSiswa");
+    document
+      .getElementById("kelasSiswaModal")
+      .innerText = selectedKelas;
+
+    const modal =
+      document.getElementById("modalSiswa");
+
     modal.classList.remove("hidden");
     modal.style.display = "flex";
 }
 
-function tutupModalSiswa() {
-    const modal = document.getElementById("modalSiswa");
+function tutupModalSiswa(){
+
+    const modal =
+      document.getElementById("modalSiswa");
+
     modal.style.display = "none";
     modal.classList.add("hidden");
 }
-
 
 function inputSiswa(){
 
@@ -1444,10 +1453,10 @@ function printSiswa(){
     tutupModalSiswa();
 }
 
-function filterSiswaFast() {
+function filterSiswa() {
 
-    const keyword = (document.getElementById("searchSiswa").value || "").toLowerCase();
-    const kelas = document.getElementById("filterKelas").value;
+    const keyword = (document.getElementById("searchSiswa")?.value || "").toLowerCase();
+    const kelas = document.getElementById("filterKelas")?.value;
 
     const data = window._dataSiswa || [];
 
@@ -1466,55 +1475,5 @@ function filterSiswaFast() {
         return matchNama && matchKelas;
     });
 
-    renderTableFast(filtered);
+    renderTableSiswa(filtered);
 }
-
-function renderTableFast(data) {
-
-    const tbody = document.getElementById("tbodySiswa");
-
-    let html = "";
-
-    for (let i = 0; i < data.length; i++) {
-
-        const s = data[i];
-
-        const foto = s.foto || "";
-
-        html += `
-        <tr>
-            <td>${i + 1}</td>
-            <td>${foto ? `<img src="${foto}" style="width:40px;height:40px;border-radius:50%">` : "📷"}</td>
-            <td>${s.namaPanggilan || ""}</td>
-            <td>${s.nama || ""}</td>
-            <td>${s.kelas || ""}</td>
-            <td>${s.nik || ""}</td>
-            <td>${s.nisn || ""}</td>
-            <td>${s.jenisKelamin || ""}</td>
-            <td>${s.ttl || ""}</td>
-            <td>${s.agama || ""}</td>
-            <td>${s.anakKe || ""}</td>
-            <td>${s.tahunMasuk || ""}</td>
-            <td>${s.namaAyah || ""}</td>
-            <td>${s.namaIbu || ""}</td>
-            <td>${s.pekerjaanAyah || ""}</td>
-            <td>${s.pekerjaanIbu || ""}</td>
-            <td>${s.desa || ""}</td>
-            <td>${s.kecamatan || ""}</td>
-            <td>${s.kabupaten || ""}</td>
-            <td>${s.provinsi || ""}</td>
-            <td>${s.kodePos || ""}</td>
-        </tr>`;
-    }
-
-    tbody.innerHTML = html;
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    const search = document.getElementById("searchSiswa");
-    const kelas = document.getElementById("filterKelas");
-
-    if (search) search.addEventListener("input", filterSiswa);
-    if (kelas) kelas.addEventListener("change", filterSiswa);
-});
