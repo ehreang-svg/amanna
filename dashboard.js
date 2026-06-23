@@ -90,6 +90,14 @@ async function loadJadwalHariIni(){
 
 /* ================= MENU CONTROL ================= */
 async function openMenu(id,name){
+    if(name.toUpperCase() === "DATA SISWA"){
+
+        nav("dataSiswaPage");
+
+        loadDataSiswaPage();
+
+        return;
+    }
     currentMenuName = name;
     nav("submenuPage");
     menuTitle.innerText = name;
