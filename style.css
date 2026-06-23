@@ -869,3 +869,28 @@ table{
     border-radius:10px;
     min-width:300px;
 }
+
+.page-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.page-header .title {
+    margin: 0;
+}
+
+.data-toolbar {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+    margin-bottom: 16px;
+}
+
+.data-toolbar button {
+    width: auto;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+}
