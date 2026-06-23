@@ -1266,66 +1266,34 @@ async function detailSiswa(nama,kelas){
 
 }
 
-async function loadDataSiswaPage() {
+async function loadDataSiswaFast() {
     try {
 
-        const container = document.getElementById("dataSiswaContainer");
-
-        if (!container) {
-            console.warn("dataSiswaContainer tidak ditemukan");
-            return;
-        }
-
         const res = await fetch(TABUNGAN_API + "?action=getDataSiswa");
-        const data = await res.json();
+        const json = await res.json();
 
-        if (!data.status) {
-            container.innerHTML = `<p>${data.message}</p>`;
-            return;
-        }
+        if (!json.status) return alert("Gagal load data");
 
-        // ================= NORMALISASI DATA =================
-        const siswa = (data.data || []).map(s => ({
-            ...s,
-            kelas: (s.kelas || s.Kelas || s.CLASS || "").trim()
-        }));
+        window._dataSiswa = json.data || [];
 
-        window._dataSiswa = siswa;
+        // isi dropdown kelas
+        const kelasSet = [...new Set(window._dataSiswa.map(s => s.kelas).filter(Boolean))];
 
-        // ================= RENDER TABLE =================
-        renderTableSiswa(siswa);
-
-        // ================= DROPDOWN KELAS =================
         const select = document.getElementById("filterKelas");
+        select.innerHTML = `<option value="">📚 Semua Kelas</option>`;
 
-        if (select) {
+        kelasSet.forEach(k => {
+            select.innerHTML += `<option value="${k}">${k}</option>`;
+        });
 
-            const kelasSet = [...new Set(
-                siswa.map(s => s.kelas).filter(Boolean)
-            )].sort((a, b) => a.localeCompare(b));
-
-            select.innerHTML = `<option value="">📚 Semua Kelas</option>`;
-
-            kelasSet.forEach(k => {
-                select.innerHTML += `<option value="${k}">${k}</option>`;
-            });
-        }
-
-        // reset filter
-        const search = document.getElementById("searchSiswa");
-        if (search) search.value = "";
-
-        if (select) select.value = "";
+        // render pertama
+        renderTableFast(window._dataSiswa);
 
     } catch (err) {
         console.error(err);
-
-        const container = document.getElementById("dataSiswaContainer");
-        if (container) {
-            container.innerHTML = "❌ Error: " + err;
-        }
     }
 }
+
 let selectedNama = "";
 let selectedKelas = "";
 
@@ -1378,10 +1346,10 @@ function printSiswa(){
     tutupModalSiswa();
 }
 
-function filterSiswa() {
+function filterSiswaFast() {
 
-    const keyword = (document.getElementById("searchSiswa")?.value || "").toLowerCase();
-    const kelas = document.getElementById("filterKelas")?.value;
+    const keyword = (document.getElementById("searchSiswa").value || "").toLowerCase();
+    const kelas = document.getElementById("filterKelas").value;
 
     const data = window._dataSiswa || [];
 
@@ -1400,52 +1368,25 @@ function filterSiswa() {
         return matchNama && matchKelas;
     });
 
-    renderTableSiswa(filtered);
+    renderTableFast(filtered);
 }
 
-function renderTableSiswa(data) {
+function renderTableFast(data) {
 
-    const container = document.getElementById("dataSiswaContainer");
+    const tbody = document.getElementById("tbodySiswa");
 
-    let html = `
-    <div class="table-card" style="overflow-x:auto;">
-        <table class="table-siswa">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Foto</th>
-                    <th>Nama Panggilan</th>
-                    <th>Nama Lengkap</th>
-                    <th>Kelas</th>
-                    <th>NIK</th>
-                    <th>NISN</th>
-                    <th>JK</th>
-                    <th>TTL</th>
-                    <th>Agama</th>
-                    <th>Anak Ke</th>
-                    <th>Tahun Masuk</th>
-                    <th>Ayah</th>
-                    <th>Ibu</th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
+    let html = "";
 
-    data.forEach((s, i) => {
+    for (let i = 0; i < data.length; i++) {
+
+        const s = data[i];
 
         const foto = s.foto || "";
 
         html += `
-        <tr onclick="pilihSiswa('${encodeURIComponent(s.nama)}','${encodeURIComponent(s.kelas)}')">
-
+        <tr>
             <td>${i + 1}</td>
-
-            <td>
-                ${foto
-                    ? `<img src="${foto}" class="foto-siswa">`
-                    : "📷"}
-            </td>
-
+            <td>${foto ? `<img src="${foto}" style="width:40px;height:40px;border-radius:50%">` : "📷"}</td>
             <td>${s.namaPanggilan || ""}</td>
             <td>${s.nama || ""}</td>
             <td>${s.kelas || ""}</td>
@@ -1458,14 +1399,17 @@ function renderTableSiswa(data) {
             <td>${s.tahunMasuk || ""}</td>
             <td>${s.namaAyah || ""}</td>
             <td>${s.namaIbu || ""}</td>
+            <td>${s.pekerjaanAyah || ""}</td>
+            <td>${s.pekerjaanIbu || ""}</td>
+            <td>${s.desa || ""}</td>
+            <td>${s.kecamatan || ""}</td>
+            <td>${s.kabupaten || ""}</td>
+            <td>${s.provinsi || ""}</td>
+            <td>${s.kodePos || ""}</td>
+        </tr>`;
+    }
 
-        </tr>
-        `;
-    });
-
-    html += `</tbody></table></div>`;
-
-    container.innerHTML = html;
+    tbody.innerHTML = html;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
