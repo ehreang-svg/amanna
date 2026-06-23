@@ -1318,8 +1318,13 @@ async function loadDataSiswaPage(){
 
         result.data.forEach((s,i)=>{
 
-            html += `
-            <tr>
+html += `
+<tr onclick="pilihSiswa(
+'${encodeURIComponent(s.nama)}',
+'${encodeURIComponent(s.kelas)}'
+)"
+style="cursor:pointer">
+`;
                 <td>${i + 1}</td>
                 <td>${s.namaPanggilan || ""}</td>
                 <td>${s.nama || ""}</td>
