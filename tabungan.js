@@ -1236,74 +1236,11 @@ async function compressImage(file) {
 
 }
 
-async function loadDataSiswaPage(){
-
-    try{
-
-        const res = await fetch(
-            GS_URL + "?action=getDataSiswa"
-        );
-
-        const result = await res.json();
-
-        if(!result.status){
-
-            dataSiswaContainer.innerHTML =
-                result.message || "Gagal memuat data";
-
-            return;
-        }
-
-        let html = `
-        <table border="1" width="100%">
-            <tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>Kelas</th>
-                <th>JK</th>
-                <th>NISN</th>
-                <th>Ayah</th>
-                <th>Ibu</th>
-            </tr>
-        `;
-
-        result.data.forEach((s,i)=>{
-
-            html += `
-            <tr>
-                <td>${i+1}</td>
-                <td>${s.nama}</td>
-                <td>${s.kelas}</td>
-                <td>${s.jenisKelamin}</td>
-                <td>${s.nisn}</td>
-                <td>${s.namaAyah}</td>
-                <td>${s.namaIbu}</td>
-            </tr>
-            `;
-
-        });
-
-        html += "</table>";
-
-        document.getElementById(
-            "dataSiswaContainer"
-        ).innerHTML = html;
-
-    }catch(err){
-
-        document.getElementById(
-            "dataSiswaContainer"
-        ).innerHTML =
-        "Error : " + err;
-
-    }
-
-}
 
 async function detailSiswa(nama,kelas){
 
     const res = await fetch(
-        GS_URL +
+        TABUNGAN_API +
         "?action=getIdentitasSiswa" +
         "&nama=" + encodeURIComponent(nama) +
         "&kelas=" + encodeURIComponent(kelas)
