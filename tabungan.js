@@ -1269,7 +1269,6 @@ async function detailSiswa(nama,kelas){
 async function loadDataSiswaPage() {
     try {
         const res = await fetch(TABUNGAN_API + "?action=getDataSiswa");
-
         const data = await res.json();
 
         if (!data.status) {
@@ -1278,39 +1277,57 @@ async function loadDataSiswaPage() {
         }
 
         let html = `
-        <div style="overflow:auto">
-        <table border="1" width="100%" cellspacing="0" cellpadding="5">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>NAMA PANGGILAN</th>
-                    <th>NAMA</th>
-                    <th>KELAS</th>
-                    <th>NIK</th>
-                    <th>NISN</th>
-                    <th>JENIS KELAMIN</th>
-                    <th>TTL</th>
-                    <th>AGAMA</th>
-                    <th>ANAK KE</th>
-                    <th>TAHUN MASUK</th>
-                    <th>NAMA AYAH</th>
-                    <th>NAMA IBU</th>
-                    <th>PEKERJAAN AYAH</th>
-                    <th>PEKERJAAN IBU</th>
-                    <th>DESA</th>
-                    <th>KECAMATAN</th>
-                    <th>KABUPATEN</th>
-                    <th>PROVINSI</th>
-                    <th>KODE POS</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div class="table-card" style="overflow-x:auto;">
+            <table class="table-siswa">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Foto</th>
+                        <th>Nama Panggilan</th>
+                        <th>Nama Lengkap</th>
+                        <th>Kelas</th>
+                        <th>NIK</th>
+                        <th>NISN</th>
+                        <th>Jenis Kelamin</th>
+                        <th>TTL</th>
+                        <th>Agama</th>
+                        <th>Anak Ke</th>
+                        <th>Tahun Masuk</th>
+                        <th>Nama Ayah</th>
+                        <th>Nama Ibu</th>
+                        <th>Pekerjaan Ayah</th>
+                        <th>Pekerjaan Ibu</th>
+                        <th>Desa</th>
+                        <th>Kecamatan</th>
+                        <th>Kabupaten</th>
+                        <th>Provinsi</th>
+                        <th>Kode Pos</th>
+                    </tr>
+                </thead>
+                <tbody>
         `;
 
         data.data.forEach((s, i) => {
+
+            const foto = s.foto || s.FOTO || "";
+
             html += `
                 <tr onclick="pilihSiswa(${i})" style="cursor:pointer">
+
                     <td>${i + 1}</td>
+
+                    <td>
+                        ${
+                            foto
+                                ? `<img src="${foto}"
+                                        style="width:50px;height:50px;
+                                               object-fit:cover;
+                                               border-radius:50%;
+                                               border:2px solid #ddd;">`
+                                : "📷"
+                        }
+                    </td>
+
                     <td>${s.namaPanggilan || ""}</td>
                     <td>${s.nama || ""}</td>
                     <td>${s.kelas || ""}</td>
@@ -1330,15 +1347,20 @@ async function loadDataSiswaPage() {
                     <td>${s.kabupaten || ""}</td>
                     <td>${s.provinsi || ""}</td>
                     <td>${s.kodePos || ""}</td>
+
                 </tr>
             `;
         });
 
-        html += `</tbody></table></div>`;
+        html += `
+                </tbody>
+            </table>
+        </div>
+        `;
 
         document.getElementById("dataSiswaContainer").innerHTML = html;
 
-        // simpan data global untuk modal
+        // Simpan data global
         window._dataSiswa = data.data;
 
     } catch (err) {
@@ -1407,15 +1429,3 @@ function printSiswa(){
 
     tutupModalSiswa();
 }
-
-function renderDataSiswa(dataSiswa)
-{ const tbody = document.getElementById("tbodySiswa");
- tbody.innerHTML = dataSiswa.map((siswa, index) => ` <tr> <td>${index + 1}</td>
- <td> <img src="${siswa.foto || 'img/default-user.png'}" class="foto-siswa" alt="${siswa.nama}"></td> 
- <td>${siswa.namaPanggilan || "-"}</td> <td>${siswa.nama || "-"}</td> <td>${siswa.kelas || "-"}</td> 
- <td>${siswa.nik || "-"}</td> <td>${siswa.nisn || "-"}</td> <td>${siswa.jenisKelamin || "-"}</td> 
- <td>${siswa.ttl || "-"}</td> <td>${siswa.agama || "-"}</td> <td>${siswa.anakKe || "-"}</td> 
- <td>${siswa.tahunMasuk || "-"}</td> <td>${siswa.namaAyah || "-"}</td> 
- <td>${siswa.namaIbu || "-"}</td> <td>${siswa.pekerjaanAyah || "-"}</td> <td>${siswa.pekerjaanIbu || "-"}</td> 
- <td>${siswa.desa || "-"}</td> <td>${siswa.kecamatan || "-"}</td> <td>${siswa.kabupaten || "-"}</td> 
- <td>${siswa.provinsi || "-"}</td> <td>${siswa.kodePos || "-"}</td> </tr> `).join(""); }
