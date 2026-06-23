@@ -1366,21 +1366,18 @@ async function loadDataSiswaPage() {
         // =========================
         const select = document.getElementById("filterKelas");
 
-        if (select) {
+if (select) {
 
-            const kelasSet = [...new Set(
-                siswa
-                    .map(s => s.kelas || s.Kelas || s.CLASS)
-                    .filter(Boolean)
-            )].sort();
+    const kelasSet = [...new Set(
+        siswa.map(s => s.kelas).filter(Boolean)
+    )].sort();
 
-            select.innerHTML = `<option value="">📚 Semua Kelas</option>`;
+    select.innerHTML = `<option value="">📚 Semua Kelas</option>`;
 
-            kelasSet.forEach(k => {
-                select.innerHTML += `<option value="${k}">${k}</option>`;
-            });
-        }
-
+    kelasSet.forEach(k => {
+        select.innerHTML += `<option value="${k}">${k}</option>`;
+    });
+}
     } catch (err) {
 
         console.error(err);
@@ -1476,4 +1473,47 @@ function filterSiswa() {
     });
 
     renderTableSiswa(filtered);
+}
+
+function renderTableSiswa(data) {
+
+    const container = document.getElementById("dataSiswaContainer");
+
+    let html = `
+    <div class="table-card" style="overflow-x:auto;">
+        <table class="table-siswa">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Foto</th>
+                    <th>Nama Panggilan</th>
+                    <th>Nama Lengkap</th>
+                    <th>Kelas</th>
+                    <th>NIK</th>
+                    <th>NISN</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    data.forEach((s, i) => {
+
+        const foto = s.foto || "";
+
+        html += `
+        <tr>
+            <td>${i + 1}</td>
+            <td>${foto ? `<img src="${foto}" class="foto-siswa">` : "📷"}</td>
+            <td>${s.namaPanggilan || ""}</td>
+            <td>${s.nama || ""}</td>
+            <td>${s.kelas || ""}</td>
+            <td>${s.nik || ""}</td>
+            <td>${s.nisn || ""}</td>
+        </tr>
+        `;
+    });
+
+    html += `</tbody></table></div>`;
+
+    container.innerHTML = html;
 }
