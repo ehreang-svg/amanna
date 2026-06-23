@@ -742,24 +742,22 @@ placeholder="Masukkan NISN">
     <button onclick="updateIdentitasSiswa()"> Simpan Perubahan </button> 
 </div> </div>
 
+<!-- ===========================
+     HALAMAN DATA SISWA
+=========================== -->
 <div id="dataSiswaPage" class="hidden page">
 
     <!-- HEADER -->
     <div class="data-header">
 
-        <!-- Judul Tengah -->
         <h2 class="data-title">📚 DATA SISWA</h2>
 
-        <!-- FILTER -->
         <div class="table-action">
-
             <select id="filterKelas" onchange="filterSiswa()">
-    <option value="">📚 Semua Kelas</option>
-</select>
-
+                <option value="">📚 Semua Kelas</option>
+            </select>
         </div>
 
-        <!-- TOOLBAR -->
         <div class="data-toolbar">
             <button class="btn-small btn-back" onclick="goBack()">⬅</button>
             <button class="btn-small btn-add" onclick="show('identitasPage')">➕ Tambah</button>
@@ -769,33 +767,41 @@ placeholder="Masukkan NISN">
 
     </div>
 
-    <div class="table-card" style="overflow:auto; max-height:70vh;">
-    <table class="table-siswa">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Foto</th>
-                <th>Nama Panggilan</th>
-                <th>Nama Lengkap</th>
-                <th>Kelas</th>
-                <th>NIK</th>
-                <th>NISN</th>
-                <th>Jenis Kelamin</th>
-                <th>TTL</th>
-                <th>Agama</th>
-                <th>Anak Ke</th>
-                <th>Tahun Masuk</th>
-                <th>Nama Ayah</th>
-                <th>Nama Ibu</th>
-                <th>Pekerjaan Ayah</th>
-                <th>Pekerjaan Ibu</th>
-                <th>Desa</th>
-                <th>Kecamatan</th>
-                <th>Kabupaten</th>
-                <th>Provinsi</th>
-                <th>Kode Pos</th>
-            </tr>
-        </thead>
-        <tbody id="tbodySiswa"></tbody>
-    </table>
+    <div class="table-card" style="overflow:auto;max-height:70vh;">
+
+        <table class="table-siswa">
+
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Foto</th>
+                    <th>Nama Panggilan</th>
+                    <th>Nama Lengkap</th>
+                    <th>Kelas</th>
+                    <th>NIK</th>
+                    <th>NISN</th>
+                    <th>Jenis Kelamin</th>
+                    <th>TTL</th>
+                    <th>Agama</th>
+                    <th>Anak Ke</th>
+                    <th>Tahun Masuk</th>
+                    <th>Nama Ayah</th>
+                    <th>Nama Ibu</th>
+                    <th>Pekerjaan Ayah</th>
+                    <th>Pekerjaan Ibu</th>
+                    <th>Desa</th>
+                    <th>Kecamatan</th>
+                    <th>Kabupaten</th>
+                    <th>Provinsi</th>
+                    <th>Kode Pos</th>
+                </tr>
+            </thead>
+
+            <tbody id="tbodySiswa">
+            </tbody>
+
+        </table>
+
+    </div>
+
 </div>
