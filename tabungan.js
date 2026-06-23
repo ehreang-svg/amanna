@@ -1370,3 +1370,35 @@ style="cursor:pointer">
     }
 
 }
+
+async function pilihSiswa(nama,kelas){
+
+    selectedNama =
+        decodeURIComponent(nama);
+
+    selectedKelas =
+        decodeURIComponent(kelas);
+
+    document.getElementById(
+        "modalNamaSiswa"
+    ).innerHTML =
+        selectedNama +
+        " (" +
+        selectedKelas +
+        ")";
+
+    document
+        .getElementById("modalSiswa")
+        .classList
+        .remove("hidden");
+
+}
+
+function tutupModalSiswa(){
+
+    document
+        .getElementById("modalSiswa")
+        .classList
+        .add("hidden");
+
+}
