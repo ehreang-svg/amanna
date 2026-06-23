@@ -1272,7 +1272,7 @@ async function loadDataSiswaPage() {
         const container = document.getElementById("dataSiswaContainer");
 
         if (!container) {
-            console.warn("❌ dataSiswaContainer tidak ditemukan di DOM");
+            console.warn("dataSiswaContainer tidak ditemukan");
             return;
         }
 
@@ -1284,102 +1284,40 @@ async function loadDataSiswaPage() {
             return;
         }
 
-        const siswa = data.data || [];
+        // ================= NORMALISASI DATA =================
+        const siswa = (data.data || []).map(s => ({
+            ...s,
+            kelas: (s.kelas || s.Kelas || s.CLASS || "").trim()
+        }));
 
-        // simpan global
         window._dataSiswa = siswa;
 
-        // =========================
-        // RENDER TABLE
-        // =========================
-        let html = `
-        <div class="table-card" style="overflow-x:auto;">
-            <table class="table-siswa">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Foto</th>
-                        <th>Nama Panggilan</th>
-                        <th>Nama Lengkap</th>
-                        <th>Kelas</th>
-                        <th>NIK</th>
-                        <th>NISN</th>
-                        <th>Jenis Kelamin</th>
-                        <th>TTL</th>
-                        <th>Agama</th>
-                        <th>Anak Ke</th>
-                        <th>Tahun Masuk</th>
-                        <th>Nama Ayah</th>
-                        <th>Nama Ibu</th>
-                        <th>Pekerjaan Ayah</th>
-                        <th>Pekerjaan Ibu</th>
-                        <th>Desa</th>
-                        <th>Kecamatan</th>
-                        <th>Kabupaten</th>
-                        <th>Provinsi</th>
-                        <th>Kode Pos</th>
-                    </tr>
-                </thead>
-                <tbody>
-        `;
+        // ================= RENDER TABLE =================
+        renderTableSiswa(siswa);
 
-        siswa.forEach((s, i) => {
-
-            const foto = s.foto || s.FOTO || "";
-
-            html += `
-                <tr onclick="pilihSiswa(${i})" style="cursor:pointer">
-                    <td>${i + 1}</td>
-                    <td>
-                        ${foto
-                            ? `<img src="${foto}" style="width:50px;height:50px;object-fit:cover;border-radius:50%;border:2px solid #ddd;">`
-                            : "📷"}
-                    </td>
-                    <td>${s.namaPanggilan || ""}</td>
-                    <td>${s.nama || ""}</td>
-                    <td>${s.kelas || s.Kelas || ""}</td>
-                    <td>${s.nik || ""}</td>
-                    <td>${s.nisn || ""}</td>
-                    <td>${s.jenisKelamin || ""}</td>
-                    <td>${s.ttl || ""}</td>
-                    <td>${s.agama || ""}</td>
-                    <td>${s.anakKe || ""}</td>
-                    <td>${s.tahunMasuk || ""}</td>
-                    <td>${s.namaAyah || ""}</td>
-                    <td>${s.namaIbu || ""}</td>
-                    <td>${s.pekerjaanAyah || ""}</td>
-                    <td>${s.pekerjaanIbu || ""}</td>
-                    <td>${s.desa || ""}</td>
-                    <td>${s.kecamatan || ""}</td>
-                    <td>${s.kabupaten || ""}</td>
-                    <td>${s.provinsi || ""}</td>
-                    <td>${s.kodePos || ""}</td>
-                </tr>
-            `;
-        });
-
-        html += `</tbody></table></div>`;
-        container.innerHTML = html;
-
-        // =========================
-        // DROPDOWN KELAS (FIX UTAMA)
-        // =========================
+        // ================= DROPDOWN KELAS =================
         const select = document.getElementById("filterKelas");
 
-if (select) {
+        if (select) {
 
-    const kelasSet = [...new Set(
-        siswa.map(s => s.kelas).filter(Boolean)
-    )].sort();
+            const kelasSet = [...new Set(
+                siswa.map(s => s.kelas).filter(Boolean)
+            )].sort((a, b) => a.localeCompare(b));
 
-    select.innerHTML = `<option value="">📚 Semua Kelas</option>`;
+            select.innerHTML = `<option value="">📚 Semua Kelas</option>`;
 
-    kelasSet.forEach(k => {
-        select.innerHTML += `<option value="${k}">${k}</option>`;
-    });
-}
+            kelasSet.forEach(k => {
+                select.innerHTML += `<option value="${k}">${k}</option>`;
+            });
+        }
+
+        // reset filter
+        const search = document.getElementById("searchSiswa");
+        if (search) search.value = "";
+
+        if (select) select.value = "";
+
     } catch (err) {
-
         console.error(err);
 
         const container = document.getElementById("dataSiswaContainer");
@@ -1388,38 +1326,28 @@ if (select) {
         }
     }
 }
-
 let selectedNama = "";
 let selectedKelas = "";
 
-function pilihSiswa(nama,kelas){
+function pilihSiswa(nama, kelas) {
 
     selectedNama = decodeURIComponent(nama);
     selectedKelas = decodeURIComponent(kelas);
 
-    document
-      .getElementById("namaSiswaModal")
-      .innerText = selectedNama;
+    document.getElementById("namaSiswaModal").innerText = selectedNama;
+    document.getElementById("kelasSiswaModal").innerText = selectedKelas;
 
-    document
-      .getElementById("kelasSiswaModal")
-      .innerText = selectedKelas;
-
-    const modal =
-      document.getElementById("modalSiswa");
-
+    const modal = document.getElementById("modalSiswa");
     modal.classList.remove("hidden");
     modal.style.display = "flex";
 }
 
-function tutupModalSiswa(){
-
-    const modal =
-      document.getElementById("modalSiswa");
-
+function tutupModalSiswa() {
+    const modal = document.getElementById("modalSiswa");
     modal.style.display = "none";
     modal.classList.add("hidden");
 }
+
 
 function inputSiswa(){
 
@@ -1491,6 +1419,13 @@ function renderTableSiswa(data) {
                     <th>Kelas</th>
                     <th>NIK</th>
                     <th>NISN</th>
+                    <th>JK</th>
+                    <th>TTL</th>
+                    <th>Agama</th>
+                    <th>Anak Ke</th>
+                    <th>Tahun Masuk</th>
+                    <th>Ayah</th>
+                    <th>Ibu</th>
                 </tr>
             </thead>
             <tbody>
@@ -1501,14 +1436,29 @@ function renderTableSiswa(data) {
         const foto = s.foto || "";
 
         html += `
-        <tr>
+        <tr onclick="pilihSiswa('${encodeURIComponent(s.nama)}','${encodeURIComponent(s.kelas)}')">
+
             <td>${i + 1}</td>
-            <td>${foto ? `<img src="${foto}" class="foto-siswa">` : "📷"}</td>
+
+            <td>
+                ${foto
+                    ? `<img src="${foto}" class="foto-siswa">`
+                    : "📷"}
+            </td>
+
             <td>${s.namaPanggilan || ""}</td>
             <td>${s.nama || ""}</td>
             <td>${s.kelas || ""}</td>
             <td>${s.nik || ""}</td>
             <td>${s.nisn || ""}</td>
+            <td>${s.jenisKelamin || ""}</td>
+            <td>${s.ttl || ""}</td>
+            <td>${s.agama || ""}</td>
+            <td>${s.anakKe || ""}</td>
+            <td>${s.tahunMasuk || ""}</td>
+            <td>${s.namaAyah || ""}</td>
+            <td>${s.namaIbu || ""}</td>
+
         </tr>
         `;
     });
@@ -1517,3 +1467,12 @@ function renderTableSiswa(data) {
 
     container.innerHTML = html;
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const search = document.getElementById("searchSiswa");
+    const kelas = document.getElementById("filterKelas");
+
+    if (search) search.addEventListener("input", filterSiswa);
+    if (kelas) kelas.addEventListener("change", filterSiswa);
+});
