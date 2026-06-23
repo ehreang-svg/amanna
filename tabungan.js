@@ -1271,50 +1271,96 @@ async function loadDataSiswaPage(){
     try{
 
         const res = await fetch(
-            TABUNGAN_API + "?action=getDataSiswa"
+            GS_URL + "?action=getDataSiswa"
         );
 
         const result = await res.json();
 
         if(!result.status){
 
-            dataSiswaContainer.innerHTML =
-                result.message;
+            document.getElementById(
+                "dataSiswaContainer"
+            ).innerHTML =
+            result.message;
 
             return;
         }
 
         let html = `
-        <table class="table">
-            <tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>Kelas</th>
-                <th>JK</th>
-            </tr>
+        <div style="overflow:auto">
+        <table border="1" width="100%" cellspacing="0" cellpadding="5">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>NAMA PANGGILAN</th>
+                    <th>NAMA</th>
+                    <th>KELAS</th>
+                    <th>NIK</th>
+                    <th>NISN</th>
+                    <th>JENIS KELAMIN</th>
+                    <th>TTL</th>
+                    <th>AGAMA</th>
+                    <th>ANAK KE</th>
+                    <th>TAHUN MASUK</th>
+                    <th>NAMA AYAH</th>
+                    <th>NAMA IBU</th>
+                    <th>PEKERJAAN AYAH</th>
+                    <th>PEKERJAAN IBU</th>
+                    <th>DESA</th>
+                    <th>KECAMATAN</th>
+                    <th>KABUPATEN</th>
+                    <th>PROVINSI</th>
+                    <th>KODE POS</th>
+                </tr>
+            </thead>
+            <tbody>
         `;
 
         result.data.forEach((s,i)=>{
 
             html += `
             <tr>
-                <td>${i+1}</td>
-                <td>${s.nama}</td>
-                <td>${s.kelas}</td>
-                <td>${s.jenisKelamin}</td>
+                <td>${i + 1}</td>
+                <td>${s.namaPanggilan || ""}</td>
+                <td>${s.nama || ""}</td>
+                <td>${s.kelas || ""}</td>
+                <td>${s.nik || ""}</td>
+                <td>${s.nisn || ""}</td>
+                <td>${s.jenisKelamin || ""}</td>
+                <td>${s.ttl || ""}</td>
+                <td>${s.agama || ""}</td>
+                <td>${s.anakKe || ""}</td>
+                <td>${s.tahunMasuk || ""}</td>
+                <td>${s.namaAyah || ""}</td>
+                <td>${s.namaIbu || ""}</td>
+                <td>${s.pekerjaanAyah || ""}</td>
+                <td>${s.pekerjaanIbu || ""}</td>
+                <td>${s.desa || ""}</td>
+                <td>${s.kecamatan || ""}</td>
+                <td>${s.kabupaten || ""}</td>
+                <td>${s.provinsi || ""}</td>
+                <td>${s.kodePos || ""}</td>
             </tr>
             `;
 
         });
 
-        html += "</table>";
+        html += `
+            </tbody>
+        </table>
+        </div>
+        `;
 
-        dataSiswaContainer.innerHTML = html;
+        document.getElementById(
+            "dataSiswaContainer"
+        ).innerHTML = html;
 
     }catch(err){
 
-        dataSiswaContainer.innerHTML =
-            err.toString();
+        document.getElementById(
+            "dataSiswaContainer"
+        ).innerHTML =
+        "Error : " + err;
 
     }
 
