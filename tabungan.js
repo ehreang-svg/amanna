@@ -1376,17 +1376,7 @@ let selectedKelas = "";
 
 function pilihSiswa(nama, kelas){
 
-    selectedNama = decodeURIComponent(nama);
-    selectedKelas = decodeURIComponent(kelas);
-
-    document.getElementById("namaSiswaModal").innerText =
-        selectedNama;
-
-    document.getElementById("kelasSiswaModal").innerText =
-        selectedKelas;
-
-    document.getElementById("modalSiswa").style.display =
-        "flex";
+    alert("klik berhasil");
 }
 
 function tutupModalSiswa(){
