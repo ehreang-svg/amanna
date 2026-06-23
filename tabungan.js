@@ -1241,7 +1241,7 @@ async function detailSiswa(nama,kelas){
 
     const res = await fetch(
         TABUNGAN_API +
-        "?action=getIdentitasSiswa" +
+        "?action=getDataSiswa" +
         "&nama=" + encodeURIComponent(nama) +
         "&kelas=" + encodeURIComponent(kelas)
     );
