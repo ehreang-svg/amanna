@@ -1266,31 +1266,129 @@ async function detailSiswa(nama,kelas){
 
 }
 
-async function loadDataSiswaFast() {
+async function loadDataSiswaPage() {
     try {
 
+        const container = document.getElementById("dataSiswaContainer");
+
+        if (!container) {
+            console.warn("❌ dataSiswaContainer tidak ditemukan di DOM");
+            return;
+        }
+
         const res = await fetch(TABUNGAN_API + "?action=getDataSiswa");
-        const json = await res.json();
+        const data = await res.json();
 
-        if (!json.status) return alert("Gagal load data");
+        if (!data.status) {
+            container.innerHTML = `<p>${data.message}</p>`;
+            return;
+        }
 
-        window._dataSiswa = json.data || [];
+        const siswa = data.data || [];
 
-        // isi dropdown kelas
-        const kelasSet = [...new Set(window._dataSiswa.map(s => s.kelas).filter(Boolean))];
+        // simpan global
+        window._dataSiswa = siswa;
 
-        const select = document.getElementById("filterKelas");
-        select.innerHTML = `<option value="">📚 Semua Kelas</option>`;
+        // =========================
+        // RENDER TABLE
+        // =========================
+        let html = `
+        <div class="table-card" style="overflow-x:auto;">
+            <table class="table-siswa">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Foto</th>
+                        <th>Nama Panggilan</th>
+                        <th>Nama Lengkap</th>
+                        <th>Kelas</th>
+                        <th>NIK</th>
+                        <th>NISN</th>
+                        <th>Jenis Kelamin</th>
+                        <th>TTL</th>
+                        <th>Agama</th>
+                        <th>Anak Ke</th>
+                        <th>Tahun Masuk</th>
+                        <th>Nama Ayah</th>
+                        <th>Nama Ibu</th>
+                        <th>Pekerjaan Ayah</th>
+                        <th>Pekerjaan Ibu</th>
+                        <th>Desa</th>
+                        <th>Kecamatan</th>
+                        <th>Kabupaten</th>
+                        <th>Provinsi</th>
+                        <th>Kode Pos</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
 
-        kelasSet.forEach(k => {
-            select.innerHTML += `<option value="${k}">${k}</option>`;
+        siswa.forEach((s, i) => {
+
+            const foto = s.foto || s.FOTO || "";
+
+            html += `
+                <tr onclick="pilihSiswa(${i})" style="cursor:pointer">
+                    <td>${i + 1}</td>
+                    <td>
+                        ${foto
+                            ? `<img src="${foto}" style="width:50px;height:50px;object-fit:cover;border-radius:50%;border:2px solid #ddd;">`
+                            : "📷"}
+                    </td>
+                    <td>${s.namaPanggilan || ""}</td>
+                    <td>${s.nama || ""}</td>
+                    <td>${s.kelas || s.Kelas || ""}</td>
+                    <td>${s.nik || ""}</td>
+                    <td>${s.nisn || ""}</td>
+                    <td>${s.jenisKelamin || ""}</td>
+                    <td>${s.ttl || ""}</td>
+                    <td>${s.agama || ""}</td>
+                    <td>${s.anakKe || ""}</td>
+                    <td>${s.tahunMasuk || ""}</td>
+                    <td>${s.namaAyah || ""}</td>
+                    <td>${s.namaIbu || ""}</td>
+                    <td>${s.pekerjaanAyah || ""}</td>
+                    <td>${s.pekerjaanIbu || ""}</td>
+                    <td>${s.desa || ""}</td>
+                    <td>${s.kecamatan || ""}</td>
+                    <td>${s.kabupaten || ""}</td>
+                    <td>${s.provinsi || ""}</td>
+                    <td>${s.kodePos || ""}</td>
+                </tr>
+            `;
         });
 
-        // render pertama
-        renderTableFast(window._dataSiswa);
+        html += `</tbody></table></div>`;
+        container.innerHTML = html;
+
+        // =========================
+        // DROPDOWN KELAS (FIX UTAMA)
+        // =========================
+        const select = document.getElementById("filterKelas");
+
+        if (select) {
+
+            const kelasSet = [...new Set(
+                siswa
+                    .map(s => s.kelas || s.Kelas || s.CLASS)
+                    .filter(Boolean)
+            )].sort();
+
+            select.innerHTML = `<option value="">📚 Semua Kelas</option>`;
+
+            kelasSet.forEach(k => {
+                select.innerHTML += `<option value="${k}">${k}</option>`;
+            });
+        }
 
     } catch (err) {
+
         console.error(err);
+
+        const container = document.getElementById("dataSiswaContainer");
+        if (container) {
+            container.innerHTML = "❌ Error: " + err;
+        }
     }
 }
 
