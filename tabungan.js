@@ -1371,34 +1371,55 @@ async function loadDataSiswaPage(){
 
 }
 
-async function pilihSiswa(nama,kelas){
+let selectedNama = "";
+let selectedKelas = "";
 
-    selectedNama =
-        decodeURIComponent(nama);
+function pilihSiswa(nama, kelas){
 
-    selectedKelas =
-        decodeURIComponent(kelas);
+    selectedNama = decodeURIComponent(nama);
+    selectedKelas = decodeURIComponent(kelas);
 
-    document.getElementById(
-        "modalNamaSiswa"
-    ).innerHTML =
-        selectedNama +
-        " (" +
-        selectedKelas +
-        ")";
+    document.getElementById("namaSiswaModal").innerText =
+        selectedNama;
 
-    document
-        .getElementById("modalSiswa")
-        .classList
-        .remove("hidden");
+    document.getElementById("kelasSiswaModal").innerText =
+        selectedKelas;
 
+    document.getElementById("modalSiswa").style.display =
+        "flex";
 }
 
 function tutupModalSiswa(){
 
-    document
-        .getElementById("modalSiswa")
-        .classList
-        .add("hidden");
+    document.getElementById("modalSiswa").style.display =
+        "none";
+}
 
+function inputSiswa(){
+
+    nav("identitasPage");
+
+    tutupModalSiswa();
+}
+
+function editSiswa(){
+
+    nav("editIdentitasPage");
+
+    loadDataEdit(
+        selectedNama,
+        selectedKelas
+    );
+
+    tutupModalSiswa();
+}
+
+function printSiswa(){
+
+    exportIdentitas(
+        selectedNama,
+        selectedKelas
+    );
+
+    tutupModalSiswa();
 }
