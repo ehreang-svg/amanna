@@ -1268,11 +1268,20 @@ async function detailSiswa(nama,kelas){
 
 async function loadDataSiswaPage() {
     try {
+
+        const container = document.getElementById("dataSiswaContainer");
+
+        // 🔥 CEK DOM dulu (INI FIX ERROR UTAMA)
+        if (!container) {
+            console.warn("❌ dataSiswaContainer tidak ditemukan di DOM");
+            return;
+        }
+
         const res = await fetch(TABUNGAN_API + "?action=getDataSiswa");
         const data = await res.json();
 
         if (!data.status) {
-            document.getElementById("dataSiswaContainer").innerHTML = data.message;
+            container.innerHTML = `<p>${data.message}</p>`;
             return;
         }
 
@@ -1358,14 +1367,19 @@ async function loadDataSiswaPage() {
         </div>
         `;
 
-        document.getElementById("dataSiswaContainer").innerHTML = html;
+        container.innerHTML = html;
 
-        // Simpan data global
+        // simpan global data
         window._dataSiswa = data.data;
 
     } catch (err) {
-        document.getElementById("dataSiswaContainer").innerHTML =
-            "Error: " + err;
+        const container = document.getElementById("dataSiswaContainer");
+
+        if (container) {
+            container.innerHTML = "❌ Error: " + err;
+        }
+
+        console.error(err);
     }
 }
 
