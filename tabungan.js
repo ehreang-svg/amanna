@@ -1318,36 +1318,37 @@ async function loadDataSiswaPage(){
 
         result.data.forEach((s,i)=>{
 
-html += `
-<tr onclick="pilihSiswa(
-'${encodeURIComponent(s.nama)}',
-'${encodeURIComponent(s.kelas)}'
-)"
-style="cursor:pointer">
-                <td>${i + 1}</td>
-                <td>${s.namaPanggilan || ""}</td>
-                <td>${s.nama || ""}</td>
-                <td>${s.kelas || ""}</td>
-                <td>${s.nik || ""}</td>
-                <td>${s.nisn || ""}</td>
-                <td>${s.jenisKelamin || ""}</td>
-                <td>${s.ttl || ""}</td>
-                <td>${s.agama || ""}</td>
-                <td>${s.anakKe || ""}</td>
-                <td>${s.tahunMasuk || ""}</td>
-                <td>${s.namaAyah || ""}</td>
-                <td>${s.namaIbu || ""}</td>
-                <td>${s.pekerjaanAyah || ""}</td>
-                <td>${s.pekerjaanIbu || ""}</td>
-                <td>${s.desa || ""}</td>
-                <td>${s.kecamatan || ""}</td>
-                <td>${s.kabupaten || ""}</td>
-                <td>${s.provinsi || ""}</td>
-                <td>${s.kodePos || ""}</td>
-            </tr>
-            `;
+    html += `
+    <tr onclick="pilihSiswa(
+        '${encodeURIComponent(s.nama)}',
+        '${encodeURIComponent(s.kelas)}'
+    )" style="cursor:pointer">
 
-        });
+        <td>${i + 1}</td>
+        <td>${s.namaPanggilan || ""}</td>
+        <td>${s.nama || ""}</td>
+        <td>${s.kelas || ""}</td>
+        <td>${s.nik || ""}</td>
+        <td>${s.nisn || ""}</td>
+        <td>${s.jenisKelamin || ""}</td>
+        <td>${s.ttl || ""}</td>
+        <td>${s.agama || ""}</td>
+        <td>${s.anakKe || ""}</td>
+        <td>${s.tahunMasuk || ""}</td>
+        <td>${s.namaAyah || ""}</td>
+        <td>${s.namaIbu || ""}</td>
+        <td>${s.pekerjaanAyah || ""}</td>
+        <td>${s.pekerjaanIbu || ""}</td>
+        <td>${s.desa || ""}</td>
+        <td>${s.kecamatan || ""}</td>
+        <td>${s.kabupaten || ""}</td>
+        <td>${s.provinsi || ""}</td>
+        <td>${s.kodePos || ""}</td>
+
+    </tr>
+    `;
+
+});
 
         html += `
             </tbody>
