@@ -317,3 +317,44 @@ async function cetakRaportMD(){
 window.loadSiswaMD = loadSiswaMD;
 window.simpanRaportMD = simpanRaportMD;
 window.cetakRaportMD = cetakRaportMD;
+
+async function loadRataKitabMD(){
+
+  const kelas =
+  document.getElementById("kelasMD").value;
+
+  if(!kelas) return;
+
+  try{
+
+    const res = await fetch(
+      API_URL +
+      "?action=getRataKitabMD&kelas=" +
+      encodeURIComponent(kelas)
+    );
+
+    const json = await res.json();
+
+    if(!json.status) return;
+
+    for(let i=1;i<=6;i++){
+
+      const el =
+      document.getElementById(
+        "rataKitab"+i+"MD"
+      );
+
+      if(el){
+        el.innerText =
+        json.data[i-1];
+      }
+
+    }
+
+  }catch(err){
+
+    console.error(err);
+
+  }
+
+}
