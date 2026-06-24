@@ -1,3 +1,94 @@
+nilaiInputs.forEach(id=>{
+document.getElementById(id)
+.addEventListener("input", hitungNilai);
+});
+
+async function loadKelas(){
+
+    const res = await fetch(
+        API_URL + "?action=getKelasMD"
+    );
+
+    const data = await res.json();
+
+    const select =
+    document.getElementById("kelas");
+
+    select.innerHTML =
+    '<option value="">Pilih Kelas</option>';
+
+    data.data.forEach(k=>{
+
+        select.innerHTML += `
+        <option value="${k}">
+            ${k}
+        </option>
+        `;
+
+    });
+
+}
+
+async function loadSiswa(){
+
+    const kelas =
+    document.getElementById("kelas").value;
+
+    if(!kelas) return;
+
+    const res = await fetch(
+    API_URL +
+    "?action=getSiswaByKelas&kelas="
+    + encodeURIComponent(kelas)
+    );
+
+    const data = await res.json();
+
+    const select =
+    document.getElementById("nama");
+
+    select.innerHTML =
+    '<option value="">Pilih Siswa</option>';
+
+    data.data.forEach(s=>{
+
+        select.innerHTML += `
+        <option value="${s.nama}">
+        ${s.nama}
+        </option>
+        `;
+
+    });
+
+}
+
+function hitungNilai(){
+
+    let jumlah = 0;
+
+    for(let i=1;i<=6;i++){
+
+        jumlah += Number(
+            document.getElementById(
+            "nilai"+i
+            ).value || 0
+        );
+
+    }
+
+    const rata =
+    (jumlah / 6).toFixed(2);
+
+    document.getElementById(
+    "jumlah"
+    ).innerText = jumlah;
+
+    document.getElementById(
+    "rata"
+    ).innerText = rata;
+
+}
+
 async function simpanRaportMD(){
 
     const data = {
