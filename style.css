@@ -569,86 +569,199 @@ buttonQuiz { padding: 10px 20px; font-size: 16px; }
     .coverPage { page-break-after: always; }
 }
 
-*MD{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+:root {
+    --primary-color: #2e7d32; /* Hijau Khas Islami/Madrasah */
+    --primary-hover: #1b5e20;
+    --bg-color: #f4f6f8;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --border-color: #e0e0e0;
+  }
 
-bodyMD{
-    font-family:Arial,sans-serif;
-    background:#f5f5f5;
-    padding:15px;
-}
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+  }
 
-.cardMD{
-    background:#fff;
-    border-radius:15px;
-    padding:15px;
-    margin:10px;
-}
+  .hidden { display: none; }
 
-.titleMD{
-    text-align:center;
-    margin-bottom:15px;
-}
+  .cardMD {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
 
-.gridMD{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-    gap:10px;
-}
+  .btn-back {
+    background: none;
+    border: 1px solid var(--border-color);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 6px;
+    transition: all 0.3s;
+  }
+  .btn-back:hover {
+    background: #f0f0f0;
+  }
 
-.sectionMD{
-    margin-top:15px;
-}
+  .titleMD {
+    text-align: center;
+    color: var(--primary-color);
+    font-size: 24px;
+    font-weight: 700;
+    margin: 20px 0 30px 0;
+    letter-spacing: 1px;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
+  }
 
-.tableNilaiMD{
-    width:100%;
-    border-collapse:collapse;
-}
+  .section-title {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
 
-.tableNilaiMD th,
-.tableNilaiMD td{
-    border:1px solid #ddd;
-    padding:8px;
-}
+  .gridMD {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 25px;
+  }
 
-.tableNilaiMD th{
-    background:#0d6efd;
-    color:#fff;
-}
+  .grid-4col { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .grid-3col { grid-template-columns: repeat(3, 1fr); }
 
-.infoMD{
-    margin-top:15px;
-    padding:10px;
-    background:#f5f5f5;
-    border-radius:10px;
-}
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
 
-.btnRowMD{
-    display:flex;
-    gap:10px;
-    margin-top:15px;
-}
+  .form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #666;
+  }
 
-.btnMD{
-    flex:1;
-    border:none;
-    padding:12px;
-    border-radius:10px;
-    color:white;
-    font-weight:bold;
-    cursor:pointer;
-}
+  input, select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 14px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
 
-.btnSaveMD{
-    background:#198754;
-}
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
+  }
 
-.btnPrintMD{
-    background:#fd7e14;
-}
+  .sectionMD {
+    background: #fcfdfc;
+    border: 1px solid #edf2ed;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+  }
+
+  /* Tabel Styling */
+  .table-responsive {
+    overflow-x: auto;
+  }
+
+  .tableNilaiMD {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 5px;
+  }
+
+  .tableNilaiMD th {
+    background-color: #f1f5f1;
+    color: var(--primary-color);
+    text-align: left;
+    padding: 12px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border-color);
+  }
+
+  .tableNilaiMD td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+  }
+
+  .badge-rata {
+    display: inline-block;
+    padding: 6px 12px;
+    background: #eaeded;
+    border-radius: 4px;
+    font-weight: bold;
+    min-width: 30px;
+    text-align: center;
+  }
+
+  /* Pewarnaan Absensi */
+  .status-sakit input { border-left: 4px solid #ffb74d; }
+  .status-izin input { border-left: 4px solid #4fc3f7; }
+  .status-alpa input { border-left: 4px solid #e57373; }
+
+  textarea {
+    resize: vertical;
+    font-family: inherit;
+  }
+
+  /* Tombol Utama */
+  .btnRowMD {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 10px;
+  }
+
+  .btnMD {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btnSaveMD {
+    background-color: var(--primary-color);
+    color: white;
+  }
+  .btnSaveMD:hover { background-color: var(--primary-hover); }
+
+  .btnPrintMD {
+    background-color: #455a64;
+    color: white;
+  }
+  .btnPrintMD:hover { background-color: #37474f; }
+
+  /* Responsif Mobile */
+  @media (max-width: 768px) {
+    .cardMD { padding: 15px; }
+    .grid-3col { grid-template-columns: 1fr; }
+    .btnRowMD { flex-direction: column; }
+    .btnMD { width: 100%; justify-content: center; }
+  }
 .copyright{
     position: fixed;
     bottom: 0;
