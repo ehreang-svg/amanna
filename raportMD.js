@@ -113,19 +113,28 @@ async function loadSiswaMD(){
 function hitungNilaiMD(){
 
   let jumlah = 0;
+  let jumlahMapel = 0;
 
   for(let i=1;i<=6;i++){
 
-    jumlah += Number(
-      document.getElementById(
-        "nilai"+i+"MD"
-      )?.value || 0
-    );
+    const nilai =
+    document.getElementById(
+      "nilai"+i+"MD"
+    )?.value;
+
+    if(nilai !== ""){
+
+      jumlah += Number(nilai);
+      jumlahMapel++;
+
+    }
 
   }
 
   const rata =
-  (jumlah / 6).toFixed(2);
+  jumlahMapel > 0
+  ? (jumlah/jumlahMapel).toFixed(2)
+  : "0";
 
   document.getElementById(
     "jumlahMD"
