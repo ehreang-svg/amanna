@@ -582,54 +582,25 @@ bodyMD{
 }
 
 .cardMD{
-    background:white;
-    border-radius:12px;
-    padding:20px;
-    max-width:900px;
-    margin:auto;
-    box-shadow:0 2px 10px rgba(0,0,0,.1);
+    background:#fff;
+    border-radius:15px;
+    padding:15px;
+    margin:10px;
 }
 
-h2MD{
+.titleMD{
     text-align:center;
-    margin-bottom:20px;
-    color:#2c3e50;
+    margin-bottom:15px;
 }
 
 .gridMD{
     display:grid;
-    grid-template-columns:1fr 1fr;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
     gap:10px;
 }
 
-@media(max-width:700px){
-    .gridMD{
-        grid-template-columns:1fr;
-    }
-}
-
-labelMD{
-    font-size:14px;
-    font-weight:bold;
-    display:block;
-    margin-bottom:5px;
-}
-
-inputMD,
-selectMD,
-textareaMD{
-    width:100%;
-    padding:10px;
-    border:1px solid #ccc;
-    border-radius:8px;
-}
-
-textareaMD{
-    min-height:90px;
-}
-
 .sectionMD{
-    margin-top:20px;
+    margin-top:15px;
 }
 
 .tableNilaiMD{
@@ -644,37 +615,37 @@ textareaMD{
 }
 
 .tableNilaiMD th{
-    background:#3498db;
-    color:white;
-}
-
-.btnMD{
-    border:none;
-    padding:12px;
-    border-radius:8px;
-    color:white;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-.btnMD-saveMD{
-    background:#27ae60;
-}
-
-.btnMD-printMD{
-    background:#e67e22;
-}
-
-.btnMD-rowMD{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-top:20px;
+    background:#0d6efd;
+    color:#fff;
 }
 
 .infoMD{
-    background:#eef7ff;
-    padding:12px;
-    border-radius:8px;
     margin-top:15px;
+    padding:10px;
+    background:#f5f5f5;
+    border-radius:10px;
+}
+
+.btnRowMD{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+}
+
+.btnMD{
+    flex:1;
+    border:none;
+    padding:12px;
+    border-radius:10px;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.btnSaveMD{
+    background:#198754;
+}
+
+.btnPrintMD{
+    background:#fd7e14;
 }
