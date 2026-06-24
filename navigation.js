@@ -24,7 +24,8 @@ const pages = [
     "identitasPage",
     "editIdentitasPage",
     "dataSiswaPage",
-    "exportIdentitasPage"
+    "exportIdentitasPage",
+     "raportMDPage"
 ];
 /* ===========================
    STATE NAVIGASI
