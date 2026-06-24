@@ -839,8 +839,8 @@ loadRataKitabMD();
 <div>
 <label>Semester</label>
 <select id="semesterMD">
-<option value="Ganjil">1 (Ganjil)</option>
-<option value="Genap">2 (Genap)</option>
+<option value="1 (GANJIL)">Ganjil</option>
+<option value="2 (GENAP)">Genap</option>
 </select>
 </div>
 
@@ -865,38 +865,56 @@ loadRataKitabMD();
 
 <tbody>
 
+    
 <tr>
-<td><input id="kitab1MD"></td>
+<td><select id="kitab1MD"> <option value="">PILIH KITAB</option>
+<option>KHULASHOH NURUL YAQIN JUZ 1</option>
+<option>JAWAHIR AL KALAMIYYAH</option>
+</select></td>
 <td><input id="nilai1MD" type="number"  oninput="hitungNilaiMD()"></td>
 <td><span id="rataKitab1MD">0</span></td>
 </tr>
 
 <tr>
-<td><input id="kitab2MD"></td>
-<td><input id="nilai2MD" type="number" oninput="hitungNilaiMD()"></td>
+<td><select id="kitab2MD"> <option value="">PILIH KITAB</option>
+<option>KHULASHOH NURUL YAQIN JUZ 1</option>
+<option>JAWAHIR AL KALAMIYYAH</option>
+</select><td>
+<input id="nilai2MD" type="number" oninput="hitungNilaiMD()"></td>
 <td><span id="rataKitab2MD">0</span></td>
 </tr>
 
-<tr>
-<td><input id="kitab3MD" ></td>
+<tr><td><select id="kitab3MD"> <option value="">PILIH KITAB</option>
+<option>KHULASHOH NURUL YAQIN JUZ 1</option>
+<option>JAWAHIR AL KALAMIYYAH</option>
+</select><td>
 <td><input id="nilai3MD" type="number" oninput="hitungNilaiMD()"></td>
 <td><span id="rataKitab3MD">0</span></td>
 </tr>
 
 <tr>
-<td><input id="kitab4MD"></td>
+<td><select id="kitab4MD"> <option value="">PILIH KITAB</option>
+<option>KHULASHOH NURUL YAQIN JUZ 1</option>
+<option>JAWAHIR AL KALAMIYYAH</option>
+</select><td>
 <td><input id="nilai4MD" type="number" oninput="hitungNilaiMD()"></td>
 <td><span id="rataKitab4MD">0</span></td>
 </tr>
 
 <tr>
-<td><input id="kitab5MD"></td>
+<td><select id="kitab5MD"> <option value="">PILIH KITAB</option>
+<option>KHULASHOH NURUL YAQIN JUZ 1</option>
+<option>JAWAHIR AL KALAMIYYAH</option>
+</select><td>
 <td><input id="nilai5MD" type="number" oninput="hitungNilaiMD()"></td>
 <td><span id="rataKitab5MD">0</span></td>
 </tr>
 
 <tr>
-<td><input id="kitab6MD"></td>
+<td><select id="kitab6MD"> <option value="">PILIH KITAB</option>
+<option>KHULASHOH NURUL YAQIN JUZ 1</option>
+<option>JAWAHIR AL KALAMIYYAH</option>
+</select><td>
 <td><input id="nilai6MD" type="number" oninput="hitungNilaiMD()"></td>
 <td><span id="rataKitab6MD">0</span></td>
 </tr>
@@ -954,18 +972,6 @@ loadRataKitabMD();
 <label>Catatan Mustahiq</label>
 
 <textarea id="catatanMD"></textarea>
-
-</div>
-
-<div class="infoMD">
-
-Jumlah Nilai :
-<span id="jumlahMD">0</span>
-
-<br><br>
-
-Rata-Rata :
-<span id="rataMD">0</span>
 
 </div>
 
