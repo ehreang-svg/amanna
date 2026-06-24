@@ -80,6 +80,12 @@ if (
 ) {
     loadKelasRaport();
 }
+   if (
+    id === "raportMDPage" &&
+    typeof loadKelasMD === "function"
+) {
+    loadKelasMD();
+}
 
 if (
     id === "loginQuiz" &&
