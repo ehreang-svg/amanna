@@ -1,207 +1,320 @@
-nilaiInputs.forEach(id=>{
-document.getElementById(id)
-.addEventListener("input", hitungNilai);
-});
+/* ================= RAPORT MD ================= */
 
-async function loadKelas(){
+const nilaiInputsMD = [
+  "nilai1MD",
+  "nilai2MD",
+  "nilai3MD",
+  "nilai4MD",
+  "nilai5MD",
+  "nilai6MD"
+];
 
-    const res = await fetch(
-        API_URL + "?action=getKelasMD"
-    );
+/* ================= AUTO HITUNG ================= */
 
-    const data = await res.json();
+document.addEventListener("DOMContentLoaded", () => {
 
-    const select =
-    document.getElementById("kelas");
+  nilaiInputsMD.forEach(id => {
 
-    select.innerHTML =
-    '<option value="">Pilih Kelas</option>';
+    const el = document.getElementById(id);
 
-    data.data.forEach(k=>{
-
-        select.innerHTML += `
-        <option value="${k}">
-            ${k}
-        </option>
-        `;
-
-    });
-
-}
-
-async function loadSiswa(){
-
-    const kelas =
-    document.getElementById("kelas").value;
-
-    if(!kelas) return;
-
-    const res = await fetch(
-    API_URL +
-    "?action=getSiswaByKelas&kelas="
-    + encodeURIComponent(kelas)
-    );
-
-    const data = await res.json();
-
-    const select =
-    document.getElementById("nama");
-
-    select.innerHTML =
-    '<option value="">Pilih Siswa</option>';
-
-    data.data.forEach(s=>{
-
-        select.innerHTML += `
-        <option value="${s.nama}">
-        ${s.nama}
-        </option>
-        `;
-
-    });
-
-}
-
-function hitungNilai(){
-
-    let jumlah = 0;
-
-    for(let i=1;i<=6;i++){
-
-        jumlah += Number(
-            document.getElementById(
-            "nilai"+i
-            ).value || 0
-        );
-
+    if(el){
+      el.addEventListener("input", hitungNilaiMD);
     }
 
-    const rata =
-    (jumlah / 6).toFixed(2);
+  });
 
-    document.getElementById(
-    "jumlah"
-    ).innerText = jumlah;
+  loadKelasMD();
 
-    document.getElementById(
-    "rata"
-    ).innerText = rata;
+});
 
-}
+/* ================= LOAD KELAS ================= */
 
-async function simpanRaportMD(){
+async function loadKelasMD(){
 
-    const data = {
-
-        action:"simpanRaportMD",
-
-        nama:nama.value,
-        kelas:kelas.value,
-
-        semester:semester.value,
-
-        tahunAjaran:
-        tahunAjaran.value,
-
-        kitab1:kitab1.value,
-        kitab2:kitab2.value,
-        kitab3:kitab3.value,
-        kitab4:kitab4.value,
-        kitab5:kitab5.value,
-        kitab6:kitab6.value,
-
-        nilai1:nilai1.value,
-        nilai2:nilai2.value,
-        nilai3:nilai3.value,
-        nilai4:nilai4.value,
-        nilai5:nilai5.value,
-        nilai6:nilai6.value,
-
-        kehadiran:
-        kehadiran.value,
-
-        hafalan:
-        hafalan.value,
-
-        akhlaq:
-        akhlaq.value,
-
-        sakit:
-        sakit.value,
-
-        izin:
-        izin.value,
-
-        alpa:
-        alpa.value,
-
-        catatan:
-        catatan.value,
-
-        jumlah:
-        jumlah.innerText,
-
-        rata:
-        rata.innerText,
-
-        mustahiq:
-        mustahiq.value
-
-    };
+  try{
 
     const res = await fetch(
-        API_URL,
-        {
-            method:"POST",
-            body:JSON.stringify(data)
-        }
+      API_URL + "?action=getKelasMD"
     );
 
     const json = await res.json();
 
-    alert(
-        json.message ||
-        "Data berhasil disimpan"
-    );
+    const select =
+    document.getElementById("kelasMD");
+
+    if(!select) return;
+
+    select.innerHTML =
+    '<option value="">Pilih Kelas</option>';
+
+    json.data.forEach(kelas=>{
+
+      select.innerHTML += `
+        <option value="${kelas}">
+          ${kelas}
+        </option>
+      `;
+
+    });
+
+  }catch(err){
+
+    console.error(err);
+
+  }
 
 }
+
+/* ================= LOAD SISWA ================= */
+
+async function loadSiswaMD(){
+
+  try{
+
+    const kelas =
+    document.getElementById("kelasMD").value;
+
+    if(!kelas) return;
+
+    const res = await fetch(
+      API_URL +
+      "?action=getSiswaByKelas&kelas=" +
+      encodeURIComponent(kelas)
+    );
+
+    const json = await res.json();
+
+    const select =
+    document.getElementById("namaMD");
+
+    select.innerHTML =
+    '<option value="">Pilih Siswa</option>';
+
+    json.data.forEach(s=>{
+
+      select.innerHTML += `
+      <option value="${s.nama}">
+        ${s.nama}
+      </option>
+      `;
+
+    });
+
+  }catch(err){
+
+    console.error(err);
+
+  }
+
+}
+
+/* ================= HITUNG NILAI ================= */
+
+function hitungNilaiMD(){
+
+  let jumlah = 0;
+
+  for(let i=1;i<=6;i++){
+
+    jumlah += Number(
+      document.getElementById(
+        "nilai"+i+"MD"
+      )?.value || 0
+    );
+
+  }
+
+  const rata =
+  (jumlah / 6).toFixed(2);
+
+  document.getElementById(
+    "jumlahMD"
+  ).innerText = jumlah;
+
+  document.getElementById(
+    "rataMD"
+  ).innerText = rata;
+
+}
+
+/* ================= SIMPAN ================= */
+
+async function simpanRaportMD(){
+
+  try{
+
+    const data = {
+
+      action:"simpanRaportMD",
+
+      nama:
+      document.getElementById("namaMD").value,
+
+      kelas:
+      document.getElementById("kelasMD").value,
+
+      semester:
+      document.getElementById("semesterMD").value,
+
+      tahunAjaran:
+      document.getElementById("tahunAjaranMD").value,
+
+      kitab1:
+      document.getElementById("kitab1MD").value,
+
+      kitab2:
+      document.getElementById("kitab2MD").value,
+
+      kitab3:
+      document.getElementById("kitab3MD").value,
+
+      kitab4:
+      document.getElementById("kitab4MD").value,
+
+      kitab5:
+      document.getElementById("kitab5MD").value,
+
+      kitab6:
+      document.getElementById("kitab6MD").value,
+
+      nilai1:
+      document.getElementById("nilai1MD").value,
+
+      nilai2:
+      document.getElementById("nilai2MD").value,
+
+      nilai3:
+      document.getElementById("nilai3MD").value,
+
+      nilai4:
+      document.getElementById("nilai4MD").value,
+
+      nilai5:
+      document.getElementById("nilai5MD").value,
+
+      nilai6:
+      document.getElementById("nilai6MD").value,
+
+      kehadiran:
+      document.getElementById("kehadiranMD").value,
+
+      hafalan:
+      document.getElementById("hafalanMD").value,
+
+      akhlaq:
+      document.getElementById("akhlaqMD").value,
+
+      sakit:
+      document.getElementById("sakitMD").value,
+
+      izin:
+      document.getElementById("izinMD").value,
+
+      alpa:
+      document.getElementById("alpaMD").value,
+
+      catatan:
+      document.getElementById("catatanMD").value,
+
+      jumlah:
+      document.getElementById("jumlahMD").innerText,
+
+      rata:
+      document.getElementById("rataMD").innerText,
+
+      mustahiq:
+      document.getElementById("mustahiqMD").value
+
+    };
+
+    const res = await fetch(API_URL,{
+
+      method:"POST",
+
+      headers:{
+        "Content-Type":"application/json"
+      },
+
+      body:JSON.stringify(data)
+
+    });
+
+    const json =
+    await res.json();
+
+    alert(
+      json.message ||
+      "Data berhasil disimpan"
+    );
+
+  }catch(err){
+
+    console.error(err);
+
+    alert(err);
+
+  }
+
+}
+
+/* ================= CETAK ================= */
 
 async function cetakRaportMD(){
 
+  try{
+
     const nama =
-    document.getElementById("nama")
-    .value;
+    document.getElementById("namaMD").value;
 
     if(!nama){
 
-        alert(
-        "Pilih siswa terlebih dahulu"
-        );
+      alert(
+      "Pilih siswa terlebih dahulu"
+      );
 
-        return;
+      return;
+
     }
 
     const res = await fetch(
-    API_URL +
-    "?action=cetakRaportMD&nama="
-    + encodeURIComponent(nama)
+
+      API_URL +
+      "?action=cetakRaportMD&nama=" +
+      encodeURIComponent(nama)
+
     );
 
-    const data = await res.json();
+    const json =
+    await res.json();
 
-    if(data.status){
+    if(json.status){
 
-        window.open(
-        data.pdfUrl,
+      window.open(
+        json.pdfUrl,
         "_blank"
-        );
+      );
 
     }else{
 
-        alert(data.message);
+      alert(
+        json.message ||
+        "Gagal cetak raport"
+      );
 
     }
 
+  }catch(err){
+
+    console.error(err);
+
+    alert(err);
+
+  }
+
 }
 
-loadKelas();
+/* ================= GLOBAL ================= */
+
+window.loadSiswaMD = loadSiswaMD;
+window.simpanRaportMD = simpanRaportMD;
+window.cetakRaportMD = cetakRaportMD;
