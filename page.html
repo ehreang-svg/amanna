@@ -819,7 +819,12 @@ placeholder="Masukkan NISN">
 <div class="gridMD">
 <div>
 <label>Kelas</label>
-<select id="kelasMD" onchange="loadSiswaMD()">
+<select
+id="kelasMD"
+onchange="
+loadSiswaMD();
+loadRataKitabMD();
+">
 <option value="">Pilih Kelas</option>
 </select>
 </div>
