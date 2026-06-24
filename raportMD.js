@@ -227,20 +227,19 @@ async function simpanRaportMD(){
 
     };
 
-    const res = await fetch(API_URL,{
+const formData = new URLSearchParams();
 
-      method:"POST",
+for(const key in data){
+  formData.append(key,data[key] ?? "");
+}
 
-      headers:{
-        "Content-Type":"application/json"
-      },
+const res = await fetch(API_URL,{
+  method:"POST",
+  body:formData
+});
 
-      body:JSON.stringify(data)
+const json = await res.json();
 
-    });
-
-    const json =
-    await res.json();
 
     alert(
       json.message ||
