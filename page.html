@@ -805,3 +805,169 @@ placeholder="Masukkan NISN">
     </div>
 
 </div>
+
+
+<div id="raportMDPage" class="hidden page">
+<div class="card">
+
+<h2>RAPORT MADRASAH DINIYAH</h2>
+
+<div class="grid">
+
+<div>
+<label>Kelas</label>
+<select id="kelas" onchange="loadSiswa()">
+<option value="">Pilih Kelas</option>
+</select>
+</div>
+
+<div>
+<label>Nama Siswa</label>
+<select id="nama">
+<option value="">Pilih Siswa</option>
+</select>
+</div>
+
+<div>
+<label>Semester</label>
+<select id="semester">
+<option>Ganjil</option>
+<option>Genap</option>
+</select>
+</div>
+
+<div>
+<label>Tahun Ajaran</label>
+<input id="tahunAjaran" placeholder="2025/2026">
+</div>
+
+</div>
+
+<div class="section">
+
+<table class="tableNilai">
+
+<thead>
+<tr>
+<th>Kitab</th>
+<th>Nilai</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td><input id="kitab1"></td>
+<td><input id="nilai1" type="number"></td>
+</tr>
+
+<tr>
+<td><input id="kitab2"></td>
+<td><input id="nilai2" type="number"></td>
+</tr>
+
+<tr>
+<td><input id="kitab3"></td>
+<td><input id="nilai3" type="number"></td>
+</tr>
+
+<tr>
+<td><input id="kitab4"></td>
+<td><input id="nilai4" type="number"></td>
+</tr>
+
+<tr>
+<td><input id="kitab5"></td>
+<td><input id="nilai5" type="number"></td>
+</tr>
+
+<tr>
+<td><input id="kitab6"></td>
+<td><input id="nilai6" type="number"></td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="section">
+
+<div class="grid">
+
+<div>
+<label>Kehadiran</label>
+<input id="kehadiran">
+</div>
+
+<div>
+<label>Hafalan</label>
+<input id="hafalan">
+</div>
+
+<div>
+<label>Akhlaq</label>
+<input id="akhlaq">
+</div>
+
+<div>
+<label>Mustahiq / Wali Kelas</label>
+<input id="mustahiq">
+</div>
+
+<div>
+<label>Sakit</label>
+<input id="sakit" type="number" value="0">
+</div>
+
+<div>
+<label>Izin</label>
+<input id="izin" type="number" value="0">
+</div>
+
+<div>
+<label>Alpa</label>
+<input id="alpa" type="number" value="0">
+</div>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<label>Catatan Mustahiq</label>
+
+<textarea id="catatan"></textarea>
+
+</div>
+
+<div class="info">
+
+Jumlah Nilai :
+<span id="jumlah">0</span>
+
+<br><br>
+
+Rata-Rata :
+<span id="rata">0</span>
+
+</div>
+
+<div class="btn-row">
+
+<button class="btn btn-save"
+onclick="simpanRaport()">
+Simpan Raport
+</button>
+
+<button class="btn btn-print"
+onclick="cetakRaport()">
+Cetak PDF
+</button>
+
+</div>
+
+</div>
+</div>
