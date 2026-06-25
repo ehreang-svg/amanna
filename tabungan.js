@@ -188,7 +188,7 @@ async function exportTabunganFilter() {
     const targetTanggal = tanggalValue !== "" ? (tanggalValue.includes("-") ? parseInt(tanggalValue.split("-")[2]) : parseInt(tanggalValue)) : null;
 
     // ==========================================
-    // 4. PROSES PENCETAKAN DATA (KHUSUS KOLOM KANAN & BLANK)
+    // 4. PROSES PENCETAKAN DATA (KOLOM KANAN - DARI ATAS & BLANK)
     // ==========================================
     for (let i = 1; i <= 31; i++) {
         let wajibCetak = false;
@@ -205,15 +205,17 @@ async function exportTabunganFilter() {
             }
         }
 
-        // Cetak data nominal & saldo berjalan tanpa mencetak nomor tanggal sama sekali (Total Blank Row)
+        // Cetak data nominal & saldo berjalan (Total Blank Row)
         if (wajibCetak) {
             const nominal = "Rp " + transaksiPerHari[i].toLocaleString("id-ID");
             const saldoTxt = "Rp " + saldoPerHari[i].toLocaleString("id-ID");
             
             if (targetTanggal !== null) {
-                // KONDISI FILTER TANGGAL AKTIF: Paksa posisi masuk ke kolom KANAN secara presisi
-                // Menggunakan basis baris (i - 1) atau disesuaikan dengan layout buku agar sejajar
-                let yR = yStart + ((i - 1) * rowHeight); 
+                // KONDISI FILTER TANGGAL AKTIF: Dipaksa masuk ke kolom KANAN urut dari atas
+                // Jika tanggal 17 -> (17 - 16) = baris ke-1 dari atas. Jika tanggal 18 -> baris ke-2, dst.
+                let barisKanan = i - 16;
+                let yR = yStart + ((barisKanan - 1) * rowHeight); 
+                
                 rightAlign(nominal, 10.6, yR); 
                 rightAlign(saldoTxt, 13.2, yR); 
             } else {
