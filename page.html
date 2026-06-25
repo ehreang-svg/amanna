@@ -807,121 +807,182 @@ placeholder="Masukkan NISN">
 </div>
 
 
-<div class="page hidden" id="raportMDPage">
-    <div class="back" onclick="backToSiswaMD()">← Kembali</div>
+<div id="raportMDPage" class="page">
+  <div class="cardMD">
     
-    <div class="cardMD">
-        <div class="titleMD">INPUT NILAI RAPOR MD</div>
-        
-        <div class="sectionMD">
-            <h4 class="form-group label" style="margin-bottom:12px; color:var(--accent-color);">BIODATA SANTRI</h4>
-            <div class="gridMD">
-                <div class="form-group">
-                    <label for="namaMD">Nama Lengkap</label>
-                    <input id="namaMD" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="nisMD">NIS</label>
-                    <input id="nisMD" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="kelasMD">Kelas</label>
-                    <input id="kelasMD" readonly>
-                </div>
-            </div>
-        </div>
+    <button class="back" onclick="goBack()" style="margin-bottom: 24px;">
+      <span style="margin-right: 8px;">←</span> Kembali ke Dashboard
+    </button>
 
-        <div class="sectionMD">
-            <h4 class="form-group label" style="margin-bottom:12px; color:var(--accent-color);">NILAI MATA PELAJARAN</h4>
-            <div class="table-card">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Mata Pelajaran</th>
-                            <th style="width: 120px;">Nilai</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>Al-Qur'an</td><td><input type="number" id="quranMD" min="0" max="100" oninput="hitungRataMD()"></td></tr>
-                        <tr><td>Hadits</td><td><input type="number" id="haditsMD" min="0" max="100" oninput="hitungRataMD()"></td></tr>
-                        <tr><td>Aqidah</td><td><input type="number" id="aqidahMD" min="0" max="100" oninput="hitungRataMD()"></td></tr>
-                        <tr><td>Fiqih</td><td><input type="number" id="fiqihMD" min="0" max="100" oninput="hitungRataMD()"></td></tr>
-                        <tr><td>Tarikh</td><td><input type="number" id="tarikhMD" min="0" max="100" oninput="hitungRataMD()"></td></tr>
-                        <tr><td>Bahasa Arab</td><td><input type="number" id="arabMD" min="0" max="100" oninput="hitungRataMD()"></td></tr>
-                        <tr style="background:#f8fafc; font-weight:bold;">
-                            <td>RATA-RATA</td>
-                            <td><span class="badge-rata" id="rataMD">0</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <h2 class="titleMD">Raport Madrasah Diniyah</h2>
 
-        <div class="sectionMD">
-            <h4 class="form-group label" style="margin-bottom:12px; color:var(--accent-color);">ABSENSI & KEPRIBADIAN</h4>
-            <div class="gridMD" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
-                <div class="form-group status-sakit">
-                    <label for="sakitMD">Sakit (Hari)</label>
-                    <input type="number" id="sakitMD" min="0" value="0">
-                </div>
-                <div class="form-group status-izin">
-                    <label for="izinMD">Izin (Hari)</label>
-                    <input type="number" id="izinMD" min="0" value="0">
-                </div>
-                <div class="form-group status-alpa">
-                    <label for="alpaMD">Alpa (Hari)</label>
-                    <input type="number" id="alpaMD" min="0" value="0">
-                </div>
-            </div>
-            
-            <div class="gridMD" style="margin-top:16px;">
-                <div class="form-group">
-                    <label for="ibadahMD">Praktek Ibadah</label>
-                    <select id="ibadahMD">
-                        <option value="">PREDIKAT</option>
-                        <option>SANGAT BAIK</option>
-                        <option>BAIK</option>
-                        <option>CUKUP BAIK</option>
-                        <option>KURANG BAIK</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="hafalanMD">Hafalan</label>
-                    <select id="hafalanMD">
-                        <option value="">PREDIKAT</option>
-                        <option>SANGAT BAIK</option>
-                        <option>BAIK</option>
-                        <option>CUKUP BAIK</option>
-                        <option>KURANG BAIK</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="akhlaqMD">Akhlaq</label>
-                    <select id="akhlaqMD">
-                        <option value="">PREDIKAT</option>
-                        <option>SANGAT BAIK</option>
-                        <option>BAIK</option>
-                        <option>CUKUP BAIK</option>
-                        <option>KURANG BAIK</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="mustahiqMD">Wali Kelas / Mustahiq</label>
-                    <input id="mustahiqMD" placeholder="Nama Guru">
-                </div>
-            </div>
-        </div>
+    <div class="gridMD" style="margin-bottom: 24px;">
+      <div class="form-group">
+        <label for="kelasMD">Kelas</label>
+        <select id="kelasMD" onchange="loadSiswaMD(); loadRataKitabMD();">
+          <option value="">Pilih Kelas</option>
+        </select>
+      </div>
 
-        <div class="sectionMD">
-            <div class="form-group">
-                <label for="catatanMD" style="font-weight:700; margin-bottom: 8px;">Catatan Mustahiq</label>
-                <textarea id="catatanMD" rows="3" placeholder="Tuliskan catatan perkembangan santri di sini..."></textarea>
-            </div>
-        </div>
+      <div class="form-group">
+        <label for="namaMD">Nama Siswa</label>
+        <select id="namaMD">
+          <option value="">Pilih Siswa</option>
+        </select>
+      </div>
 
-        <div class="btnRowMD">
-            <button class="btnMD btnSaveMD" onclick="simpanRaportMD()">✓ Simpan Rapor</button>
-            <button class="btnMD btnPrintMD" onclick="cetakRaportMD()">🖨️ Cetak Preview</button>
-        </div>
+      <div class="form-group">
+        <label for="semesterMD">Semester</label>
+        <select id="semesterMD">
+          <option value="1 (GANJIL)">Ganjil</option>
+          <option value="2 (GENAP)">Genap</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="tahunAjaranMD">Tahun Ajaran</label>
+        <input id="tahunAjaranMD" placeholder="E.g., 2025/2026">
+      </div>
     </div>
+
+    <div class="sectionMD">
+      <h4 class="form-group label" style="margin-bottom: 16px; color: var(--accent-color); text-transform: uppercase; letter-spacing: 0.5px;">Nilai Kitab / Pelajaran</h4>
+      <div class="table-card">
+        <table class="tableNilaiMD">
+          <thead>
+            <tr>
+              <th>Kitab / Mata Pelajaran</th>
+              <th style="width: 160px; text-align: center;">Nilai</th>
+              <th style="width: 160px; text-align: center;">Rata Kelas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <select id="kitab1MD">
+                  <option value="">PILIH KITAB</option>
+                  <option>KHULASHOH NURUL YAQIN JUZ 1</option>
+                  <option>JAWAHIR AL KALAMIYYAH</option>
+                </select>
+              </td>
+              <td><input id="nilai1MD" type="number" oninput="hitungNilaiMD()" placeholder="0" style="margin-bottom: 0; text-align: center;"></td>
+              <td style="text-align: center;"><span id="rataKitab1MD" class="badge-rata">0</span></td>
+            </tr>
+            <tr>
+              <td>
+                <select id="kitab2MD">
+                  <option value="">PILIH KITAB</option>
+                  <option>KHULASHOH NURUL YAQIN JUZ 1</option>
+                  <option>JAWAHIR AL KALAMIYYAH</option>
+                </select>
+              </td>
+              <td><input id="nilai2MD" type="number" oninput="hitungNilaiMD()" placeholder="0" style="margin-bottom: 0; text-align: center;"></td>
+              <td style="text-align: center;"><span id="rataKitab2MD" class="badge-rata">0</span></td>
+            </tr>
+            <tr>
+              <td>
+                <select id="kitab3MD">
+                  <option value="">PILIH KITAB</option>
+                  <option>KHULASHOH NURUL YAQIN JUZ 1</option>
+                  <option>JAWAHIR AL KALAMIYYAH</option>
+                </select>
+              </td>
+              <td><input id="nilai3MD" type="number" oninput="hitungNilaiMD()" placeholder="0" style="margin-bottom: 0; text-align: center;"></td>
+              <td style="text-align: center;"><span id="rataKitab3MD" class="badge-rata">0</span></td>
+            </tr>
+            <tr>
+              <td>
+                <select id="kitab4MD">
+                  <option value="">PILIH KITAB</option>
+                  <option>KHULASHOH NURUL YAQIN JUZ 1</option>
+                  <option>JAWAHIR AL KALAMIYYAH</option>
+                </select>
+              </td>
+              <td><input id="nilai4MD" type="number" oninput="hitungNilaiMD()" placeholder="0" style="margin-bottom: 0; text-align: center;"></td>
+              <td style="text-align: center;"><span id="rataKitab4MD" class="badge-rata">0</span></td>
+            </tr>
+            <tr>
+              <td>
+                <select id="kitab5MD">
+                  <option value="">PILIH KITAB</option>
+                  <option>KHULASHOH NURUL YAQIN JUZ 1</option>
+                  <option>JAWAHIR AL KALAMIYYAH</option>
+                </select>
+              </td>
+              <td><input id="nilai5MD" type="number" oninput="hitungNilaiMD()" placeholder="0" style="margin-bottom: 0; text-align: center;"></td>
+              <td style="text-align: center;"><span id="rataKitab5MD" class="badge-rata">0</span></td>
+            </tr>
+            <tr>
+              <td>
+                <select id="kitab6MD">
+                  <option value="">PILIH KITAB</option>
+                  <option>KHULASHOH NURUL YAQIN JUZ 1</option>
+                  <option>JAWAHIR AL KALAMIYYAH</option>
+                </select>
+              </td>
+              <td><input id="nilai6MD" type="number" oninput="hitungNilaiMD()" placeholder="0" style="margin-bottom: 0; text-align: center;"></td>
+              <td style="text-align: center;"><span id="rataKitab6MD" class="badge-rata">0</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="sectionMD">
+      <h4 class="form-group label" style="margin-bottom: 16px; color: var(--accent-color); text-transform: uppercase; letter-spacing: 0.5px;">Perkembangan & Absensi</h4>
+      <div class="gridMD" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+        <div class="form-group">
+          <label for="kehadiranMD">Kehadiran</label>
+          <select id="kehadiranMD">
+            <option value="">PREDIKAT</option>
+            <option>SANGAT BAIK</option>
+            <option>BAIK</option>
+            <option>CUKUP BAIK</option>
+            <option>KURANG BAIK</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="hafalanMD">Hafalan</label>
+          <select id="hafalanMD">
+            <option value="">PREDIKAT</option>
+            <option>SANGAT BAIK</option>
+            <option>BAIK</option>
+            <option>CUKUP BAIK</option>
+            <option>KURANG BAIK</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="akhlaqMD">Akhlaq</label>
+          <select id="akhlaqMD">
+            <option value="">PREDIKAT</option>
+            <option>SANGAT BAIK</option>
+            <option>BAIK</option>
+            <option>CUKUP BAIK</option>
+            <option>KURANG BAIK</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="mustahiqMD">Wali Kelas / Mustahiq</label>
+          <input id="mustahiqMD" placeholder="Nama Guru Pengampu">
+        </div>
+      </div>
+    </div>
+
+    <div class="sectionMD">
+      <div class="form-group">
+        <label for="catatanMD" style="font-weight: 700; margin-bottom: 8px; color: var(--text-main);">Catatan Mustahiq</label>
+        <textarea id="catatanMD" rows="3" placeholder="Tuliskan catatan evaluasi dan bimbingan perkembangan santri di sini..."></textarea>
+      </div>
+    </div>
+
+    <div class="btnRowMD">
+      <button class="btnMD btnSaveMD" onclick="simpanRaportMD()">
+        <span style="margin-right: 6px;">✓</span> Simpan Rapor
+      </button>
+      <button class="btnMD btnPrintMD" onclick="cetakRaportMD()">
+        <span style="margin-right: 6px;">🖨️</span> Cetak PDF
+      </button>
+    </div>
+
+  </div>
 </div>
