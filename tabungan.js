@@ -118,147 +118,138 @@ async function loadRekapTabungan(){
 
 /* ===================== EXPORT REKAP TABUNGAN SESUAI FILTER (TANGGAL/BULAN) ===================== */
 
+/* ===================== EXPORT BUKU TABUNGAN SESUAI FILTER (PRINT OUT BANK) ===================== */
+
 async function exportTabunganFilter() {
-    try {
-        const { jsPDF } = window.jspdf;
-        const user = JSON.parse(localStorage.getItem("user")) || {};
-        
-        // 1. Ambil nilai filter persis seperti fungsi loadRekapTabungan Anda
-        let nama = document.getElementById("filterNamaTabungan").value;
-        let kelas = document.getElementById("filterKelasTabungan").value;
-        const bulan = document.getElementById("filterBulanTabungan").value;
-        const tanggal = document.getElementById("filterTanggalTabungan").value;
-        
-        // Proteksi role siswa sesuai logic Anda
-        if ((user.status || "").toLowerCase() === "siswa") { 
-            nama = user.nama; 
-            kelas = user.kelas; 
-        }
+    const { jsPDF } = window.jspdf; 
+    
+    // 1. Ambil format dimensi & filter persis dari exportBukuTabungan bawaan Anda
+    const doc = new jsPDF({ orientation: "landscape", unit: "cm", format: [10, 15] });
+    
+    const user = JSON.parse(localStorage.getItem("user")) || {};
+    let nama = document.getElementById("filterNamaTabungan").value || "-"; 
+    let kelas = document.getElementById("filterKelasTabungan").value || "-";
+    const bulanValue = document.getElementById("filterBulanTabungan").value || "";
+    const tanggalValue = document.getElementById("filterTanggalTabungan").value || "";
 
-        // 2. Ambil data dari API dengan filter spesifik yang diminta
-        const res = await fetch(`${TABUNGAN_API}?action=getRekapTabungan&nama=${encodeURIComponent(nama)}&kelas=${encodeURIComponent(kelas)}&bulan=${encodeURIComponent(bulan)}&tanggal=${encodeURIComponent(tanggal)}`);
-        const data = await res.json(); 
-        
-        if (!data.status) { 
-            alert(data.message); 
-            return; 
-        }
-        
-        if (!data.data || data.data.length === 0) {
-            alert("Tidak ada data tabungan pada tanggal/periode yang dipilih.");
-            return;
-        }
-
-        // 3. Inisialisasi PDF (A4 Portrait)
-        const doc = new jsPDF({
-            orientation: "portrait",
-            unit: "mm",
-            format: "a4"
-        });
-
-        const pageW = doc.internal.pageSize.getWidth();
-        let y = 15;
-
-        // ================= HEADER KOP DOKUMEN =================
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(14);
-        doc.text("YAYASAN AMANNA", pageW / 2, y, { align: "center" });
-        
-        y += 5;
-        doc.setFontSize(11);
-        doc.text("LAPORAN REKAPITULASI TABUNGAN SISWA", pageW / 2, y, { align: "center" });
-        
-        y += 7;
-        doc.setLineWidth(0.4);
-        doc.line(10, y, pageW - 10, y); // Garis pembatas header
-        
-        y += 7;
-
-        // ================= INFORMASI FILTER / PERIODE =================
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(9);
-        
-        doc.text(`Kelas   : ${kelas || "Semua Kelas"}`, 12, y);
-        doc.text(`Siswa   : ${nama || "Semua Siswa"}`, 12, y + 4.5);
-        
-        // Menentukan teks periode berdasarkan filter tanggal/bulan yang diisi
-        let teksPeriode = "Semua Periode";
-        if (tanggal) {
-            teksPeriode = tanggal; // Menampilkan tanggal spesifik (misal: 2026-06-25 atau format sistem Anda)
-        } else if (bulan) {
-            const namaBulan = {"01":"Januari","02":"Februari","03":"Maret","04":"April","05":"Mei","06":"Juni","07":"Juli","08":"Agustus","09":"September","10":"Oktober","11":"November","12":"Desember"};
-            teksPeriode = namaBulan[bulan] || `Bulan ${bulan}`;
-        }
-        doc.text(`Periode : ${teksPeriode}`, 12, y + 9);
-
-        y += 16;
-
-        // ================= HEADER TABEL =================
-        doc.setFont("helvetica", "bold");
-        doc.setFillColor(240, 240, 240); // Background abu-abu terang untuk header tabel
-        doc.rect(10, y - 4, pageW - 20, 6, "F");
-        
-        doc.text("No", 12, y);
-        doc.text("Tanggal", 22, y);
-        doc.text("Nama Siswa", 55, y);
-        doc.text("Kelas", 120, y);
-        doc.text("Nominal", pageW - 12, y, { align: "right" });
-
-        doc.setLineWidth(0.2);
-        doc.line(10, y + 2, pageW - 10, y + 2);
-        
-        y += 6.5;
-        doc.setFont("helvetica", "normal");
-
-        // ================= INDEKS DATA LOOPING =================
-        let total = 0;
-        let no = 1;
-
-        data.data.forEach(r => {
-            // Deteksi otomatis jika data melebihi kapasitas halaman A4 (Auto Paging)
-            if (y > 275) {
-                doc.addPage();
-                y = 20; // Reset koordinat Y ke atas untuk halaman baru
-            }
-
-            total += Number(r.nominal);
-
-            doc.text(String(no++), 12, y);
-            doc.text(String(r.tanggal), 22, y);
-            doc.text(String(r.nama), 55, y);
-            doc.text(String(r.kelas), 120, y);
-            doc.text("Rp " + Number(r.nominal).toLocaleString("id-ID"), pageW - 12, y, { align: "right" });
-            
-            y += 6; // Jarak baris data berikutnya
-        });
-
-        // ================= TOTAL BARIS =================
-        if (y > 270) { doc.addPage(); y = 20; }
-        doc.line(10, y - 4, pageW - 10, y - 4);
-        doc.setFont("helvetica", "bold");
-        doc.text("TOTAL TABUNGAN TERFILTER", 12, y);
-        doc.text("Rp " + total.toLocaleString("id-ID"), pageW - 12, y, { align: "right" });
-
-        // ================= FOOTER / TANDA TANGAN =================
-        y += 15;
-        if (y > 260) { doc.addPage(); y = 20; }
-        
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(8);
-        doc.text("Dicetak otomatis oleh sistem Yayasan Amanna", 12, y);
-        
-        doc.setFontSize(9);
-        doc.text("Petugas,", pageW - 45, y, { align: "center" });
-        y += 18;
-        doc.line(pageW - 60, y, pageW - 30, y); // Garis tanda tangan
-
-        // ================= SAVE FILE =================
-        const cleanPeriode = teksPeriode.replace(/[\/\s+]/g, "_");
-        doc.save(`Rekap_Tabungan_${cleanPeriode}.pdf`);
-
-    } catch (err) {
-        alert("Gagal mengexport data: " + err);
+    if ((user.status || "").toLowerCase() === "siswa") { 
+        nama = user.nama; 
+        kelas = user.kelas; 
     }
+
+    const namaBulan = {"01":"Januari","02":"Februari","03":"Maret","04":"April","05":"Mei","06":"Juni","07":"Juli","08":"Agustus","09":"September","10":"Oktober","11":"November","12":"Desember"};
+    
+    // Label keterangan periode kertas
+    let periodeText = "Semua Periode";
+    if (tanggalValue) {
+        periodeText = tanggalValue.split("-").reverse().join("/"); // format DD/MM/YYYY
+    } else if (bulanValue) {
+        periodeText = namaBulan[bulanValue] || "Bulan " + bulanValue;
+    }
+
+    // 2. Tarik data dari API sesuai parameter tanggal/bulan yang dipilih
+    const res = await fetch(`${TABUNGAN_API}?action=getRekapTabungan&nama=${encodeURIComponent(nama)}&kelas=${encodeURIComponent(kelas)}&bulan=${encodeURIComponent(bulanValue)}&tanggal=${encodeURIComponent(tanggalValue)}`);
+    const data = await res.json(); 
+    
+    if (!data.status || !data.data || data.data.length === 0) { 
+        alert("Data tidak ditemukan untuk filter ini"); 
+        return; 
+    }
+
+    // 3. Mapping data transaksi murni untuk tanggal/bulan yang direquest (Tanpa akumulasi saldo lalu / double print)
+    const transaksi = {};
+    data.data.forEach(r => {
+        // Ambil index hari (1-31)
+        const tgl = String(r.tanggal).includes("/") ? parseInt(r.tanggal.split("/")[0]) : new Date(r.tanggal).getDate();
+        transaksi[tgl] = (transaksi[tgl] || 0) + Number(r.nominal || 0); 
+    });
+
+    // Hitung saldo berjalan *hanya* untuk baris yang aktif di tanggal/periode ini saja
+    const saldoPerHari = {}; 
+    let berjalan = 0;
+    for (let i = 1; i <= 31; i++) { 
+        if (transaksi[i]) { 
+            berjalan += transaksi[i]; 
+            saldoPerHari[i] = berjalan; 
+        } else { 
+            saldoPerHari[i] = null; 
+        } 
+    }
+
+    // 4. Gambar Template Cetakan Bank (Layout dari exportBukuTabungan Anda)
+    doc.setFont("helvetica", "bold"); 
+    doc.setFontSize(11); 
+    doc.text("YAYASAN AMANNA", 7.5, 0.8, { align: "center" });
+    
+    doc.setFontSize(8); 
+    doc.text("BUKU TABUNGAN SISWA (FILTERED)", 7.5, 1.2, { align: "center" });
+    
+    doc.setFont("helvetica", "normal"); 
+    doc.text(`Nama  : ${nama}`, 0.6, 1.8); 
+    doc.text(`Kelas : ${kelas}`, 0.6, 2.2); 
+    doc.text(`Filter : ${periodeText}`, 0.6, 2.6);
+    
+    // Gambar Garis Grid Buku Tabungan Bank
+    doc.setDrawColor(210); 
+    doc.setLineWidth(0.004); 
+    const yStart = 3.0; 
+    doc.rect(0.5, yStart, 14, 6.6); 
+    const mid = 7.5; 
+    doc.line(mid, yStart, mid, yStart + 6.6);
+    
+    doc.line(1.3, yStart, 1.3, yStart + 6.6); 
+    doc.line(3.2, yStart, 3.2, yStart + 6.6); 
+    doc.line(5.8, yStart, 5.8, yStart + 6.6);
+    doc.line(8.8, yStart, 8.8, yStart + 6.6); 
+    doc.line(10.7, yStart, 10.7, yStart + 6.6); 
+    doc.line(13.3, yStart, 13.3, yStart + 6.6);
+    
+    doc.setFontSize(7); 
+    doc.setFont("helvetica", "bold");
+    doc.text("TGL", 0.7, yStart + 0.4); doc.text("SETOR", 2.0, yStart + 0.4); doc.text("SALDO", 4.5, yStart + 0.4);
+    doc.text("TGL", 8.2, yStart + 0.4); doc.text("SETOR", 9.5, yStart + 0.4); doc.text("SALDO", 12.0, yStart + 0.4);
+    doc.line(0.5, yStart + 0.6, 14.5, yStart + 0.6); 
+    
+    doc.setFont("helvetica", "normal");
+
+    // 5. Isi Baris Tanggal 1 s/d 31
+    let yL = yStart + 1.0; 
+    let yR = yStart + 1.0; 
+    const rightAlign = (text, x, y) => { doc.text(text, x, y, { align: "right" }); };
+    
+    for (let i = 1; i <= 31; i++) {
+        const nominal = transaksi[i] ? "Rp " + transaksi[i].toLocaleString("id-ID") : "";
+        const saldoTxt = saldoPerHari[i] !== null ? "Rp " + saldoPerHari[i].toLocaleString("id-ID") : "";
+        
+        if (i <= 16) { 
+            doc.text(String(i), 0.7, yL); 
+            rightAlign(nominal, 3.1, yL); 
+            rightAlign(saldoTxt, 5.7, yL); 
+            yL += 0.32; 
+        } else { 
+            doc.text(String(i), 8.2, yR); 
+            rightAlign(nominal, 10.6, yR); 
+            rightAlign(saldoTxt, 13.2, yR); 
+            yR += 0.32; 
+        }
+    }
+    
+    // Total Akumulasi khusus filter terpilih
+    const total = Object.values(transaksi).reduce((a, b) => a + b, 0); 
+    doc.rect(0.5, 9.0, 14, 0.7); 
+    doc.setFont("helvetica", "bold");
+    doc.text("TOTAL TERFILTER : Rp " + total.toLocaleString("id-ID"), 0.7, 9.45); 
+    
+    // Footer Lembar Buku Tabungan
+    doc.setFont("helvetica", "normal"); 
+    doc.setFontSize(7);
+    doc.text("Petugas", 2.2, 10.2); 
+    doc.text("Orang Tua", 10.7, 10.2); 
+    doc.line(1.5, 11.0, 4.5, 11.0); 
+    doc.line(9.8, 11.0, 13.0, 11.0); 
+    
+    // Unduh PDF hasil filter
+    doc.save(`Buku_Tabungan_Filter_${nama}.pdf`);
 }
 
 /* ===================== CABUTAN ===================== */
