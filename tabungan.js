@@ -184,53 +184,45 @@ async function exportTabunganFilter() {
     const rowHeight = 0.32; 
     const rightAlign = (text, x, y) => { doc.text(text, x, y, { align: "right" }); };
 
-    // ==========================================
-    // 4. PROSES CETAK BERDASARKAN FILTER USER
-    // ==========================================
-    if (tanggalValue !== "") {
-        // -----------------------------------------------------------------
-        // KONDISI 1: JIKA USER MEMFILTER TANGGAL TERTENTU (RAPAT DARI ATAS)
-        // -----------------------------------------------------------------
-        const targetTanggal = tanggalValue.includes("-") ? parseInt(tanggalValue.split("-")[2]) : parseInt(tanggalValue);
+    // Ambil angka tanggal target jika user melakukan filter tanggal
+    const targetTanggal = tanggalValue !== "" ? (tanggalValue.includes("-") ? parseInt(tanggalValue.split("-")[2]) : parseInt(tanggalValue)) : null;
 
-        if (transaksiPerHari[targetTanggal] !== undefined && transaksiPerHari[targetTanggal] !== 0) {
-            let barisKe = 0;
-            
-            const nominalTxt = "Rp " + transaksiPerHari[targetTanggal].toLocaleString("id-ID");
-            const saldoTxt = "Rp " + saldoPerHari[targetTanggal].toLocaleString("id-ID");
+    // ==========================================
+    // 4. PROSES PENCETAKAN DATA (KHUSUS KOLOM KANAN & BLANK)
+    // ==========================================
+    for (let i = 1; i <= 31; i++) {
+        let wajibCetak = false;
 
-            // Hanya mencetak nominal dan saldo berjalan (Tanpa mencetak nomor tanggal)
-            if (barisKe < 16) {
-                let yL = yStart + (barisKe * rowHeight);
-                rightAlign(nominalTxt, 3.1, yL); 
-                rightAlign(saldoTxt, 5.7, yL); 
-            } else if (barisKe < 32) {
-                let yR = yStart + ((barisKe - 16) * rowHeight);
-                rightAlign(nominalTxt, 10.6, yR); 
-                rightAlign(saldoTxt, 13.2, yR); 
+        if (targetTanggal !== null) {
+            // Jika filter tanggal diisi, HANYA cetak jika tanggal looping cocok dengan target tanggal
+            if (i === targetTanggal && transaksiPerHari[i] !== undefined && transaksiPerHari[i] !== 0) {
+                wajibCetak = true;
             }
         } else {
-            alert(`Tidak ada transaksi pada tanggal ${targetTanggal}`);
-            return;
+            // Jika filter tanggal kosong, cetak semua tanggal yang memiliki transaksi
+            if (transaksiPerHari[i] !== undefined && transaksiPerHari[i] !== 0) {
+                wajibCetak = true;
+            }
         }
 
-    } else {
-        // -----------------------------------------------------------------
-        // KONDISI 2: JIKA MELIHAT SATU BULAN PENUH (LOMPAT SESUAI BARIS TANGGAL & BLANK TOTAL)
-        // -----------------------------------------------------------------
-        for (let i = 1; i <= 31; i++) {
-            // Hanya mencetak jika tanggal tersebut memiliki histori transaksi
-            if (transaksiPerHari[i] !== undefined && transaksiPerHari[i] !== 0) {
-                const nominal = "Rp " + transaksiPerHari[i].toLocaleString("id-ID");
-                const saldoTxt = "Rp " + saldoPerHari[i].toLocaleString("id-ID");
-                
+        // Cetak data nominal & saldo berjalan tanpa mencetak nomor tanggal sama sekali (Total Blank Row)
+        if (wajibCetak) {
+            const nominal = "Rp " + transaksiPerHari[i].toLocaleString("id-ID");
+            const saldoTxt = "Rp " + saldoPerHari[i].toLocaleString("id-ID");
+            
+            if (targetTanggal !== null) {
+                // KONDISI FILTER TANGGAL AKTIF: Paksa posisi masuk ke kolom KANAN secara presisi
+                // Menggunakan basis baris (i - 1) atau disesuaikan dengan layout buku agar sejajar
+                let yR = yStart + ((i - 1) * rowHeight); 
+                rightAlign(nominal, 10.6, yR); 
+                rightAlign(saldoTxt, 13.2, yR); 
+            } else {
+                // KONDISI CETAK BULANAN PENUH (Bagi Kolom Kiri & Kanan Otomatis)
                 if (i <= 16) { 
-                    // Kolom Kiri: Posisi baris presisi berdasarkan rumus tanggal
                     let yL = yStart + ((i - 1) * rowHeight);
                     rightAlign(nominal, 3.1, yL); 
                     rightAlign(saldoTxt, 5.7, yL); 
                 } else { 
-                    // Kolom Kanan: Posisi baris presisi berdasarkan rumus tanggal
                     let yR = yStart + ((i - 17) * rowHeight);
                     rightAlign(nominal, 10.6, yR); 
                     rightAlign(saldoTxt, 13.2, yR); 
@@ -239,10 +231,9 @@ async function exportTabunganFilter() {
         }
     }
     
-    // 5. Unduh hasil cetakan buku tabungan
+    // 5. Unduh hasil cetakan buku tabungan filter
     doc.save(`Buku_Tabungan_Filter_${nama}.pdf`);
 }
-
 /* ===================== LOAD KELAS ===================== */
 
 async function loadKelasCabutan() {
