@@ -206,8 +206,8 @@ async function exportTabunganFilter() {
     
     doc.setFontSize(7); 
     doc.setFont("helvetica", "bold");
-    doc.text("TGL", 0.7, yStart + 0.4); doc.text("SETOR", 2.0, yStart + 0.4); doc.text("SALDO", 4.5, yStart + 0.4);
-    doc.text("TGL", 8.2, yStart + 0.4); doc.text("SETOR", 9.5, yStart + 0.4); doc.text("SALDO", 12.0, yStart + 0.4);
+    doc.text("", 0.7, yStart + 0.4); doc.text("", 2.0, yStart + 0.4); doc.text("", 4.5, yStart + 0.4);
+    doc.text("", 8.2, yStart + 0.4); doc.text("", 9.5, yStart + 0.4); doc.text("", 12.0, yStart + 0.4);
     doc.line(0.5, yStart + 0.6, 14.5, yStart + 0.6); 
     
     doc.setFont("helvetica", "normal");
@@ -238,13 +238,13 @@ async function exportTabunganFilter() {
     const total = Object.values(transaksi).reduce((a, b) => a + b, 0); 
     doc.rect(0.5, 9.0, 14, 0.7); 
     doc.setFont("helvetica", "bold");
-    doc.text("TOTAL TERFILTER : Rp " + total.toLocaleString("id-ID"), 0.7, 9.45); 
+    doc.text("", 0.7, 9.45); 
     
     // Footer Lembar Buku Tabungan
     doc.setFont("helvetica", "normal"); 
     doc.setFontSize(7);
-    doc.text("Petugas", 2.2, 10.2); 
-    doc.text("Orang Tua", 10.7, 10.2); 
+    doc.text("", 2.2, 10.2); 
+    doc.text("", 10.7, 10.2); 
     doc.line(1.5, 11.0, 4.5, 11.0); 
     doc.line(9.8, 11.0, 13.0, 11.0); 
     
