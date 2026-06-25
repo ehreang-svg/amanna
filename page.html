@@ -251,284 +251,393 @@
 </div>
 </div>
 
-<!-- REKAP TABUNGAN -->
 <div class="page hidden" id="rekapTabunganPage">
-<div class="back" onclick="goBack()">← Kembali</div>
-<div class="card">
-<h2>Rekap Tabungan</h2>
-<br>
-<select id="filterKelasTabungan" onchange="loadFilterNamaTabungan();loadRekapTabungan()"><option value="">Semua Kelas</option></select>
-<select id="filterNamaTabungan" onchange="loadRekapTabungan()"><option value="">Semua Siswa</option></select>
-<input type="text" id="filterTanggalTabungan" placeholder="dd/MM/yyyy">
-<select id="filterBulanTabungan">
-<option value="">Semua Bulan</option>
-<option value="01">Januari</option>
-<option value="02">Februari</option>
-<option value="03">Maret</option>
-<option value="04">April</option>
-<option value="05">Mei</option>
-<option value="06">Juni</option>
-<option value="07">Juli</option>
-<option value="08">Agustus</option>
-<option value="09">September</option>
-<option value="10">Oktober</option>
-<option value="11">November</option>
-<option value="12">Desember</option>
-</select>
-<button onclick="loadRekapTabungan()">Tampilkan</button>
-<br><br>
-<button onclick="exportBukuTabungan()">Export Buku Tabungan</button>
-<br><br>
-<button onclick="cetakKwitansi()">Cetak Kwitansi</button>
-<br><br>
-<div id="rekapTabunganBox"></div>
-</div>
+  <button class="back" onclick="goBack()">← Kembali ke Dashboard</button>
+  
+  <div class="card">
+    <h2 style="margin-bottom: 24px; font-size: 22px; color: var(--text-main); border-left: 4px solid var(--accent-color); padding-left: 12px;">Rekap Tabungan Siswa</h2>
+    
+    <div class="gridMD" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
+      <div class="form-group">
+        <label for="filterKelasTabungan">Filter Kelas</label>
+        <select id="filterKelasTabungan" onchange="loadFilterNamaTabungan();loadRekapTabungan()">
+          <option value="">Semua Kelas</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="filterNamaTabungan">Nama Siswa</label>
+        <select id="filterNamaTabungan" onchange="loadRekapTabungan()">
+          <option value="">Semua Siswa</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="filterTanggalTabungan">Tanggal Spesifik</label>
+        <input type="text" id="filterTanggalTabungan" placeholder="dd/MM/yyyy">
+      </div>
+      
+      <div class="form-group">
+        <label for="filterBulanTabungan">Bulan</label>
+        <select id="filterBulanTabungan">
+          <option value="">Semua Bulan</option>
+          <option value="01">Januari</option>
+          <option value="02">Februari</option>
+          <option value="03">Maret</option>
+          <option value="04">April</option>
+          <option value="05">Mei</option>
+          <option value="06">Juni</option>
+          <option value="07">Juli</option>
+          <option value="08">Agustus</option>
+          <option value="09">September</option>
+          <option value="10">Oktober</option>
+          <option value="11">November</option>
+          <option value="12">Desember</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="data-toolbar" style="margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 10px;">
+      <button onclick="loadRekapTabungan()" style="width: auto; padding: 12px 24px; background: var(--primary-gradient);">🔍 Tampilkan Data</button>
+      <button onclick="exportBukuTabungan()" class="btn-add" style="width: auto; padding: 12px 20px;">📥 Export Buku Tabungan</button>
+      <button onclick="cetakKwitansi()" class="btn-print" style="width: auto; padding: 12px 20px;">🖨️ Cetak Kwitansi</button>
+    </div>
+    
+    <div id="rekapTabunganBox" class="table-card" style="border: none; box-shadow: none;"></div>
+  </div>
 </div>
 
-<!-- INPUT RAPORT -->
 <div class="page hidden" id="raportPage">
-<div class="back" onclick="goBack()">← Kembali</div>
-<div class="card">
-<h2>Input Raport</h2>
-<select id="rKelas" onchange="loadNamaRaport()">
-    <option value="">Pilih Kelas</option>
-</select>
-
-<select id="rNama" onchange= "isiNikRaport()">
-    <option value="">Pilih Nama Siswa</option>
-</select>
+  <button class="back" onclick="goBack()">← Kembali</button>
+  
+  <div class="cardMD">
+    <h2 class="titleMD">Input Raport PAUD / TK</h2>
     
-<input id="rNik" placeholder="NIK" readonly>
-<select id="rFase">
-    <option value="">Pilih Fase</option>
-    <option value="Fondasi">Fondasi</option>
-    <option value="A">A</option>
-    <option value="B">B</option>
-    <option value="C">C</option>
-</select>
-<input id="rTahun" placeholder="Tahun Ajaran">
-<select id="rSemester">
-    <option value="">Pilih Semester</option>
-    <option value="1 (GANJIL)">1 (GANJIL)</option>
-    <option value="2 (GENAP)">2 (GENAP)</option>
-</select>
-<input id="rTinggi" placeholder="Tinggi Badan">
-<input id="rBerat" placeholder="Berat Badan">
-    <select id="rAgama">
-    <option value="">Pilih predikat agama</option>
-    <option value="sangat baik">A</option>
-    <option value="baik">B</option>
-    <option value="cukup baik">C</option>
-    <option value="perlu bimbingan">D</option>
-    </select>
+    <div class="sectionMD">
+      <h4 class="form-group label" style="margin-bottom:16px; color:var(--accent-color); font-weight:700;">DATA ACUAN SISWA</h4>
+      <div class="gridMD" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+        <div class="form-group">
+          <label for="rKelas">Kelas</label>
+          <select id="rKelas" onchange="loadNamaRaport()"><option value="">Pilih Kelas</option></select>
+        </div>
+        <div class="form-group">
+          <label for="rNama">Nama Siswa</label>
+          <select id="rNama" onchange="isiNikRaport()"><option value="">Pilih Nama Siswa</option></select>
+        </div>
+        <div class="form-group">
+          <label for="rNik">NIK Siswa</label>
+          <input id="rNik" placeholder="NIK Otomatis" readonly>
+        </div>
+      </div>
+      
+      <div class="gridMD" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-top: 12px;">
+        <div class="form-group">
+          <label for="rFase">Fase Perkembangan</label>
+          <select id="rFase">
+            <option value="">Pilih Fase</option>
+            <option value="Fondasi">Fondasi</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="rTahun">Tahun Ajaran</label>
+          <input id="rTahun" placeholder="E.g., 2025/2026">
+        </div>
+        <div class="form-group">
+          <label for="rSemester">Semester</label>
+          <select id="rSemester">
+            <option value="">Pilih Semester</option>
+            <option value="1 (GANJIL)">1 (GANJIL)</option>
+            <option value="2 (GENAP)">2 (GENAP)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="rTinggi">Tinggi Badan (cm)</label>
+          <input id="rTinggi" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label for="rBerat">Berat Badan (kg)</label>
+          <input id="rBerat" placeholder="0">
+        </div>
+      </div>
+    </div>
 
-    <select id="rJatiDiri">
-    <option value="">Pilih predikat jati diri</option>
-    <option value="sangat baik">A</option>
-    <option value="baik">B</option>
-    <option value="cukup baik">C</option>
-    <option value="perlu bimbingan">D</option>
-    </select>
+    <div class="sectionMD">
+      <h4 class="form-group label" style="margin-bottom:16px; color:var(--accent-color); font-weight:700;">CAPAIAN PREDIKAT PERKEMBANGAN</h4>
+      <div class="gridMD">
+        <div class="form-group">
+          <label for="rAgama">Nilai Agama & Budi Pekerti</label>
+          <select id="rAgama">
+            <option value="">Pilih predikat agama</option>
+            <option value="sangat baik">A (Sangat Baik)</option>
+            <option value="baik">B (Baik)</option>
+            <option value="cukup baik">C (Cukup Baik)</option>
+            <option value="perlu bimbingan">D (Perlu Bimbingan)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="rJatiDiri">Nilai Jati Diri</label>
+          <select id="rJatiDiri">
+            <option value="">Pilih predikat jati diri</option>
+            <option value="sangat baik">A (Sangat Baik)</option>
+            <option value="baik">B (Baik)</option>
+            <option value="cukup baik">C (Cukup Baik)</option>
+            <option value="perlu bimbingan">D (Perlu Bimbingan)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="rLiterasi">Nilai Literasi & STEAM</label>
+          <select id="rLiterasi">
+            <option value="">Pilih predikat literasi</option>
+            <option value="sangat baik">A (Sangat Baik)</option>
+            <option value="baik">B (Baik)</option>
+            <option value="cukup baik">C (Cukup Baik)</option>
+            <option value="perlu bimbingan">D (Perlu Bimbingan)</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="gridMD" style="margin-top: 12px;">
+        <div class="form-group">
+          <label for="rP5">Projek Penguatan Profil Pelajar Pancasila (P5)</label>
+          <select id="rP5">
+            <option value="">Pilih predikat P5</option>
+            <option value="sangat baik">A (Sangat Baik)</option>
+            <option value="baik">B (Baik)</option>
+            <option value="cukup baik">C (Cukup Baik)</option>
+            <option value="perlu bimbingan">D (Perlu Bimbingan)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="rPerkembangan">Ekstrakurikuler / Perkembangan Lain</label>
+          <select id="rPerkembangan">
+            <option value="">Pilih predikat perkembangan</option>
+            <option value="sangat baik">A (Sangat Baik)</option>
+            <option value="baik">B (Baik)</option>
+            <option value="cukup baik">C (Cukup Baik)</option>
+            <option value="perlu bimbingan">D (Perlu Bimbingan)</option>
+          </select>
+        </div>
+      </div>
+    </div>
 
-    <select id="rLiterasi">
-    <option value="">Pilih predikat jati diri</option>
-    <option value="sangat baik">A</option>
-    <option value="baik">B</option>
-    <option value="cukup baik">C</option>
-    <option value="perlu bimbingan">D</option>
-    </select>
+    <div class="sectionMD">
+      <div class="gridMD">
+        <div class="form-group status-sakit"><label for="rSakit">Sakit (Hari)</label><input id="rSakit" placeholder="0"></div>
+        <div class="form-group status-izin"><label for="rIzin">Izin (Hari)</label><input id="rIzin" placeholder="0"></div>
+        <div class="form-group status-alpa"><label for="rAlpa">Alpa (Hari)</label><input id="rAlpa" placeholder="0"></div>
+      </div>
+      <div class="gridMD" style="margin-top: 16px;">
+        <div class="form-group"><label for="rOrtu">Nama Orang Tua / Wali</label><input id="rOrtu" placeholder="Nama Lengkap Ortu"></div>
+        <div class="form-group"><label for="rGuru">Nama Wali Kelas / Guru</label><input id="rGuru" placeholder="Nama Lengkap Guru"></div>
+      </div>
+    </div>
 
-    <select id="rP5">
-    <option value="">Pilih predikat jati diri</option>
-    <option value="sangat baik">A</option>
-    <option value="baik">B</option>
-    <option value="cukup baik">C</option>
-    <option value="perlu bimbingan">D</option>
-    </select>
+    <div class="sectionMD" style="background: #f1f5f9;">
+      <h4 class="form-group label" style="margin-bottom:16px; color:#334155; font-weight:700;">LAMPIRAN DOKUMENTASI (FOTO)</h4>
+      <div class="gridMD">
+        <div class="form-group">
+          <label for="fotoAgama" style="font-weight:600;">Foto Kegiatan Agama</label>
+          <input type="file" id="fotoAgama" style="padding: 8px; background:#fff;">
+        </div>
+        <div class="form-group">
+          <label for="fotoJati" style="font-weight:600;">Foto Jati Diri</label>
+          <input type="file" id="fotoJati" style="padding: 8px; background:#fff;">
+        </div>
+        <div class="form-group">
+          <label for="fotoLiterasi" style="font-weight:600;">Foto Literasi & STEAM</label>
+          <input type="file" id="fotoLiterasi" style="padding: 8px; background:#fff;">
+        </div>
+        <div class="form-group">
+          <label for="fotoP5" style="font-weight:600;">Foto Projek P5</label>
+          <input type="file" id="fotoP5" style="padding: 8px; background:#fff;">
+        </div>
+      </div>
+    </div>
 
-    <select id="rPerkembangan">
-    <option value="">Pilih predikat jati diri</option>
-    <option value="sangat baik">A</option>
-    <option value="baik">B</option>
-    <option value="cukup baik">C</option>
-    <option value="perlu bimbingan">D</option>
-    </select>
-
-<input id="rSakit" placeholder="Sakit">
-<input id="rIzin" placeholder="Izin">
-<input id="rAlpa" placeholder="Alpa">
-<input id="rOrtu" placeholder="Nama Orang Tua">
-<input id="rGuru" placeholder="Nama Guru">
-
-<label>Foto Agama</label><input type="file" id="fotoAgama">
-<label>Foto Jati Diri</label><input type="file" id="fotoJati">
-<label>Foto Literasi</label><input type="file" id="fotoLiterasi">
-<label>Foto P5</label><input type="file" id="fotoP5">
-
-<button onclick="simpanRaportPAUD()">
-💾 Simpan Ke Spreadsheet
-</button>
-<br><br>
-<button onclick="previewRaport()">Preview Raport</button>
-<br><br>
-<button onclick="generateRaport()">
-Generate Raport
-</button>
-    
+    <div class="btnRowMD" style="margin-top:28px;">
+      <button class="btnMD btnSaveMD" onclick="simpanRaportPAUD()">💾 Simpan Ke Spreadsheet</button>
+      <button class="btnMD" style="background:#0284c7;" onclick="previewRaport()">👁️ Preview Raport</button>
+      <button class="btnMD" style="background:#4f46e5;" onclick="generateRaport()">⚙️ Generate Raport</button>
+    </div>
+  </div>
 </div>
-</div>
 
-<!-- PREVIEW RAPORT -->
 <div class="page hidden" id="previewRaportPage">
-<div class="back" onclick="goBack()">← Kembali</div>
-<button onclick="exportRaportPDF()" style="margin-bottom:20px; background:#16a34a; max-width:200px; margin-left:auto; margin-right:auto; display:block;">Export PDF Sekarang</button>
-<div class="raport-preview-box">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+    <button class="back" onclick="goBack()" style="margin-bottom:0;">← Kembali</button>
+    <button onclick="exportRaportPDF()" style="width:auto; background:#16a34a; font-weight:700; padding:12px 24px;">🚀 Export PDF Sekarang</button>
+  </div>
+  <div class="raport-preview-box" style="background:#fff; border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); padding:24px; min-height:500px;">
     <div id="raportContainer"></div>
-</div>
+  </div>
 </div>
 
 <div class="page hidden" id="kognitifPage">
-<div class="back" onclick="goBack()">← Kembali</div>
-
-<div class="card">
-
+  <button class="back" onclick="goBack()">← Kembali</button>
+  
+  <div class="cardMD">
+    <h2 class="titleMD">Input Raport Kognitif</h2>
     
-<h2>Input Raport Kognitif</h2>
+    <div class="sectionMD">
+      <div class="gridMD" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+        <div class="form-group">
+          <label for="kKelas">Pilih Kelas</label>
+          <select id="kKelas" onchange="loadNamaKognitif(); toggleBahasaInggris();"><option value="">Pilih Kelas</option></select>
+        </div>
+        <div class="form-group">
+          <label for="kNama">Nama Siswa</label>
+          <select id="kNama"><option value="">Pilih Nama Siswa</option></select>
+        </div>
+        <div class="form-group">
+          <label for="kSemester">Semester</label>
+          <select id="kSemester">
+            <option value="">Pilih Semester</option>
+            <option value="1 (GANJIL)">1 (GANJIL)</option>
+            <option value="2 (GENAP)">2 (GENAP)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="kTahun">Tahun Ajaran</label>
+          <input id="kTahun" placeholder="2025/2026">
+        </div>
+      </div>
+    </div>
 
-<select id="kKelas" onchange="loadNamaKognitif(); toggleBahasaInggris();">
-    <option value="">Pilih Kelas</option>
-</select>
+    <div class="sectionMD">
+      <h4 class="form-group label" style="margin-bottom:16px; color:var(--accent-color); font-weight:700;">PEROLEHAN NILAI MATA PELAJARAN</h4>
+      <div class="gridMD" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+        <div class="form-group"><label for="kIqro">Bacaan Iqro</label><input id="kIqro" type="number" placeholder="0-100"></div>
+        <div class="form-group"><label for="kShalat">Hafalan Bacaan Shalat</label><input id="kShalat" type="number" placeholder="0-100"></div>
+        <div class="form-group"><label for="kSurah">Hafalan Surah Pendek</label><input id="kSurah" type="number" placeholder="0-100"></div>
+        <div class="form-group"><label for="kPraktek">Praktek Shalat</label><input id="kPraktek" type="number" placeholder="0-100"></div>
+        <div class="form-group"><label for="kMembaca">Kemampuan Membaca</label><input id="kMembaca" type="number" placeholder="0-100"></div>
+      </div>
+      <div class="gridMD" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-top:12px;">
+        <div class="form-group"><label for="kTajwid">Nilai Tajwid</label><input id="kTajwid" type="number" placeholder="0-100"></div>
+        <div class="form-group"><label for="kDoa">Doa & Adab Harian</label><input id="kDoa" type="number" placeholder="0-100"></div>
+        <div class="form-group"><label for="kKitabah">Tahsinul Kitabah</label><input id="kKitabah" type="number" placeholder="0-100"></div>
+        <div class="form-group"><label for="kDinul">Dinul Islam</label><input id="kDinul" type="number" placeholder="0-100"></div>
+        <div class="form-group"><label for="kInggris">Bahasa Inggris</label><input id="kInggris" type="number" placeholder="0-100"></div>
+        <div class="form-group"><label for="kBerhitung">Kemampuan Berhitung</label><input id="kBerhitung" type="number" placeholder="0-100"></div>
+      </div>
+    </div>
 
-<select id="kNama">
-    <option value="">Pilih Nama Siswa</option>
-</select>
-    
-<select id="kSemester">
-    <option value="">Pilih Semester</option>
-    <option value="1 (GANJIL)">1 (GANJIL)</option>
-    <option value="2 (GENAP)">2 (GENAP)</option>
-</select>
-<input id="kTahun" placeholder="Tahun Ajaran">
+    <div class="sectionMD">
+      <div class="gridMD" style="grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));">
+        <div class="form-group status-izin"><label for="kIzin">Jumlah Izin</label><input id="kIzin" type="number" value="0"></div>
+        <div class="form-group status-sakit"><label for="kSakit">Jumlah Sakit</label><input id="kSakit" type="number" value="0"></div>
+        <div class="form-group status-alpa"><label for="kLain">Lain-lain / Alpa</label><input id="kLain" type="number" value="0"></div>
+      </div>
+      <div class="gridMD" style="margin-top:16px;">
+        <div class="form-group"><label for="kWali">Nama Wali Kelas</label><input id="kWali" placeholder="Nama Guru"></div>
+        <div class="form-group"><label for="kKepsek">Nama Kepala Sekolah</label><input id="kKepsek" placeholder="Nama Kepala Sekolah"></div>
+      </div>
+    </div>
 
-<input id="kIqro" type="number" placeholder="Nilai Bacaan Iqro">
-<input id="kShalat" type="number" placeholder="Nilai Hafalan Bacaan Shalat">
-<input id="kSurah" type="number" placeholder="Nilai Hafalan Surah Pendek">
-<input id="kPraktek" type="number" placeholder="Nilai Praktek Shalat">
-<input id="kMembaca" type="number" placeholder="Nilai Membaca">
-<input id="kTajwid" type="number" placeholder="Nilai Tajwid">
+    <div class="sectionMD" style="background:#f8fafc;">
+      <h4 class="form-group label" style="margin-bottom:16px; color:#1e293b; font-weight:700;">PERKEMBANGAN KEPRIBADIAN & SIKAP</h4>
+      
+      <div class="gridMD">
+        <div class="form-group">
+          <label for="kSehat">Kesehatan / Kondisi Badan</label>
+          <select id="kSehat">
+            <option value="SB">Sangat Baik</option>
+            <option value="B">Baik</option>
+            <option value="N">Normal</option>
+            <option value="PP">Perlu Pengawasan</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="kBersih">Kebersihan dan Kerapihan</label>
+          <select id="kBersih">
+            <option value="SB">Sangat Baik</option>
+            <option value="B">Baik</option>
+            <option value="N">Normal</option>
+            <option value="PP">Perlu Pengawasan</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="kDisiplin">Kehadiran dan Kedisiplinan</label>
+          <select id="kDisiplin">
+            <option value="SB">Sangat Baik</option>
+            <option value="B">Baik</option>
+            <option value="N">Normal</option>
+            <option value="PP">Perlu Pengawasan</option>
+          </select>
+        </div>
+      </div>
 
-<input id="kDoa" type="number" placeholder="Nilai Doa & Adab">
-<input id="kKitabah" type="number" placeholder="Nilai Tahsinul Kitabah">
-<input id="kDinul" type="number" placeholder="Nilai Dinul Islam">
-<input id="kInggris" type="number" placeholder="Nilai Bahasa Inggris">
-<input id="kBerhitung" type="number" placeholder="Nilai Berhitung">
+      <div class="gridMD" style="margin-top:12px;">
+        <div class="form-group">
+          <label for="kKerjasama">Semangat Kerjasama</label>
+          <select id="kKerjasama">
+            <option value="SB">Sangat Baik</option>
+            <option value="B">Baik</option>
+            <option value="N">Normal</option>
+            <option value="PP">Perlu Pengawasan</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="kAdaptasi">Penyesuaian Diri / Adaptasi</label>
+          <select id="kAdaptasi">
+            <option value="SB">Sangat Baik</option>
+            <option value="B">Baik</option>
+            <option value="N">Normal</option>
+            <option value="PP">Perlu Pengawasan</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="kVokal">Vokal / Kemampuan Berbahasa</label>
+          <select id="kVokal">
+            <option value="SB">Sangat Baik</option>
+            <option value="B">Baik</option>
+            <option value="N">Normal</option>
+            <option value="PP">Perlu Pengawasan</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="kKreatif">Kreativitas Belajar</label>
+          <select id="kKreatif">
+            <option value="SB">Sangat Baik</option>
+            <option value="B">Baik</option>
+            <option value="N">Normal</option>
+            <option value="PP">Perlu Pengawasan</option>
+          </select>
+        </div>
+      </div>
+    </div>
 
-<input id="kIzin" type="number" placeholder="Jumlah Izin">
-<input id="kSakit" type="number" placeholder="Jumlah Sakit">
-<input id="kLain" type="number" placeholder="Jumlah Lain-lain">
+    <div class="sectionMD">
+      <div class="form-group">
+        <label for="kSaran" style="font-weight:700; color:var(--text-main); margin-bottom:6px;">Saran / Peringatan Perkembangan</label>
+        <textarea id="kSaran" rows="3" placeholder="Tulis catatan atau saran bagi wali murid di sini..."></textarea>
+      </div>
+      <div class="gridMD" style="margin-top:14px;">
+        <div class="form-group"><label for="kTempat">Tempat Penerbitan</label><input type="text" id="kTempat" value="Cirebon"></div>
+        <div class="form-group"><label for="kTanggal">Tanggal Pembagian Raport</label><input type="date" id="kTanggal"></div>
+      </div>
+    </div>
 
-<input id="kWali" placeholder="Nama Wali Kelas">
-<input id="kKepsek" placeholder="Nama Kepala Sekolah">
-
-<hr>
-
-<h3>Perkembangan Kepribadian</h3>
-
-<label>Kesehatan / Kondisi Badan</label>
-<select id="kSehat">
-    <option value="SB">Sangat Baik</option>
-    <option value="B">Baik</option>
-    <option value="N">Normal</option>
-    <option value="PP">Perlu Pengawasan</option>
-</select>
-
-<label>Kebersihan dan Kerapihan</label>
-<select id="kBersih">
-    <option value="SB">Sangat Baik</option>
-    <option value="B">Baik</option>
-    <option value="N">Normal</option>
-    <option value="PP">Perlu Pengawasan</option>
-</select>
-
-<label>Kehadiran dan Kedisiplinan</label>
-<select id="kDisiplin">
-    <option value="SB">Sangat Baik</option>
-    <option value="B">Baik</option>
-    <option value="N">Normal</option>
-    <option value="PP">Perlu Pengawasan</option>
-</select>
-
-<label>Kerjasama</label>
-<select id="kKerjasama">
-    <option value="SB">Sangat Baik</option>
-    <option value="B">Baik</option>
-    <option value="N">Normal</option>
-    <option value="PP">Perlu Pengawasan</option>
-</select>
-
-<label>Penyesuaian Diri</label>
-<select id="kAdaptasi">
-    <option value="SB">Sangat Baik</option>
-    <option value="B">Baik</option>
-    <option value="N">Normal</option>
-    <option value="PP">Perlu Pengawasan</option>
-</select>
-
-<label>Vokal / Kemampuan Berbahasa</label>
-<select id="kVokal">
-    <option value="SB">Sangat Baik</option>
-    <option value="B">Baik</option>
-    <option value="N">Normal</option>
-    <option value="PP">Perlu Pengawasan</option>
-</select>
-
-<label>Kreativitas Belajar</label>
-<select id="kKreatif">
-    <option value="SB">Sangat Baik</option>
-    <option value="B">Baik</option>
-    <option value="N">Normal</option>
-    <option value="PP">Perlu Pengawasan</option>
-</select>
-
-<label>Saran / Peringatan</label>
-<textarea id="kSaran"></textarea>
-
-<label>Tempat</label>
-<input type="text" id="kTempat" value="Cirebon">
-
-<label>Tanggal Raport</label>
-<input type="date" id="kTanggal">
-
-<button onclick="simpanKognitif()">
-💾Simpan kognitif</button>
-<br>
-<br>
-
-<button onclick="previewKognitif()">
-Preview Kognitif
-</button>
-<br>
-<br>
-<button onclick="generateKognitif()">
-Cetak Rapot Kognitif</button>
-    
+    <div class="btnRowMD" style="margin-top:24px;">
+      <button class="btnMD btnSaveMD" onclick="simpanKognitif()">💾 Simpan Kognitif</button>
+      <button class="btnMD" style="background:#0284c7;" onclick="previewKognitif()">👁️ Preview Kognitif</button>
+      <button class="btnMD" style="background:#4f46e5;" onclick="generateKognitif()">🖨️ Cetak Rapot Kognitif</button>
+    </div>
+  </div>
 </div>
-</div>
 
-
-<!-- PREVIEW KOGNITIF -->
 <div class="page hidden" id="previewKognitifPage">
-<div class="back" onclick="goBack()">← Kembali</div>
-
-<button onclick="exportKognitifPDF()"
-style="background:#16a34a;margin-bottom:20px;">
-Export PDF
-</button>
-<div class="raport-preview-box">
-<div id="kognitifContainer"></div>
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+    <button class="back" onclick="goBack()" style="margin-bottom:0;">← Kembali</button>
+    <button onclick="exportKognitifPDF()" style="width:auto; background:#16a34a; font-weight:700; padding:12px 24px;">🚀 Export PDF</button>
+  </div>
+  <div class="raport-preview-box" style="background:#fff; border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); padding:24px; min-height:500px;">
+    <div id="kognitifContainer"></div>
+  </div>
 </div>
-</div>
-
 <!-- CABUTAN --->
 <div class="page hidden" id="cabutanPage">
 <div class="back" onclick="goBack()">← Kembali</div>
