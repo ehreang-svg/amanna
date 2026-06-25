@@ -118,7 +118,98 @@ async function loadRekapTabungan(){
 
 /* ===================== EXPORT REKAP TABUNGAN SESUAI FILTER (TANGGAL/BULAN) ===================== */
 
-// Pastikan koordinat awal Y kembali ke baris paling atas
+async function exportTabunganFilter() {
+    const { jsPDF } = window.jspdf; 
+    
+    // 1. Format dimensi tetap landscape buku bank [10, 15] cm
+    const doc = new jsPDF({ orientation: "landscape", unit: "cm", format: [10, 15] });
+    
+    const user = JSON.parse(localStorage.getItem("user")) || {};
+    let nama = document.getElementById("filterNamaTabungan").value || "-"; 
+    let kelas = document.getElementById("filterKelasTabungan").value || "-";
+    const bulanValue = document.getElementById("filterBulanTabungan").value || "";
+    const tanggalValue = document.getElementById("filterTanggalTabungan").value || "";
+
+    if ((user.status || "").toLowerCase() === "siswa") { 
+        nama = user.nama; 
+        kelas = user.kelas; 
+    }
+
+    // Nama Bulan untuk Header PDF
+    const namaBulan = {
+        "01":"Januari","02":"Februari","03":"Maret","04":"April","05":"Mei","06":"Juni",
+        "07":"Juli","08":"Agustus","09":"September","10":"Oktober","11":"November","12":"Desember"
+    };
+    const bulanText = namaBulan[bulanValue] || "Semua Bulan";
+
+    // TRIK SALDO: Mengosongkan parameter tanggal ke API agar ditarik semua data bulan tersebut 
+    // demi kalkulasi saldo kumulatif berjalan yang benar dari tanggal 1.
+    const res = await fetch(`${TABUNGAN_API}?action=getRekapTabungan&nama=${encodeURIComponent(nama)}&kelas=${encodeURIComponent(kelas)}&bulan=${encodeURIComponent(bulanValue)}&tanggal=`);
+    const data = await res.json(); 
+
+    if (!data.status || !data.data || data.data.length === 0) { 
+        alert("Data tidak ditemukan untuk filter ini"); 
+        return; 
+    }
+
+    // ==========================================
+    // 2. DESAIN HEADER & STRUKTUR TABEL (GARIS)
+    // ==========================================
+    doc.setFont("helvetica", "bold"); 
+    doc.setFontSize(11); 
+    doc.text("YAYASAN AMANNA", 7.5, 0.8, { align: "center" });
+    
+    doc.setFontSize(8); 
+    doc.text("BUKU TABUNGAN SISWA", 7.5, 1.2, { align: "center" });
+    
+    doc.setFont("helvetica", "normal"); 
+    doc.text(`Nama  : ${nama}`, 0.6, 1.8); 
+    doc.text(`Kelas : ${kelas}`, 0.6, 2.2); 
+    doc.text(`Bulan : ${bulanText}`, 0.6, 2.6);
+    
+    // Gambar Kotak & Garis Pembagi Tabel
+    doc.setDrawColor(210); 
+    doc.setLineWidth(0.004); 
+    const yStart = 3.0; 
+    
+    doc.rect(0.5, yStart, 14, 6.6); // Kotak luar utama
+    const mid = 7.5; 
+    doc.line(mid, yStart, mid, yStart + 6.6); // Garis tengah pembagi kolom kiri & kanan
+    
+    // Garis Vertikal Kolom Kiri
+    doc.line(1.3, yStart, 1.3, yStart + 6.6); // Batas Tgl Kiri
+    doc.line(3.2, yStart, 3.2, yStart + 6.6); // Batas Setor Kiri
+    doc.line(5.8, yStart, 5.8, yStart + 6.6); // Batas Saldo Kiri
+    
+    // Garis Vertikal Kolom Kanan
+    doc.line(8.3, yStart, 8.3, yStart + 6.6); // Batas Tgl Kanan
+    doc.line(10.2, yStart, 10.2, yStart + 6.6); // Batas Setor Kanan
+    doc.line(12.8, yStart, 12.8, yStart + 6.6); // Batas Saldo Kanan
+    
+    // Judul Kolom (Header Tabel)
+    doc.setFontSize(7); 
+    doc.setFont("helvetica", "bold");
+    doc.text("TGL", 0.7, yStart + 0.4);   doc.text("SETOR", 2.0, yStart + 0.4);   doc.text("SALDO", 4.5, yStart + 0.4);
+    doc.text("TGL", 7.7, yStart + 0.4);   doc.text("SETOR", 9.0, yStart + 0.4);   doc.text("SALDO", 11.5, yStart + 0.4);
+    
+    doc.line(0.5, yStart + 0.6, 14.5, yStart + 0.6); // Garis horizontal bawah header tabel
+    doc.setFont("helvetica", "normal");
+
+    // Fungsi pembantu teks rata kanan (Right Align)
+    const rightAlign = (text, x, y) => { doc.text(text, x, y, { align: "right" }); };
+
+    // ==========================================
+    // 3. PROSES HITUNG SALDO & PENCETAKAN RAPAT
+    // ==========================================
+    let berjalan = 0;
+    if (data.saldoAwal) {
+        let saldoAwalBersih = String(data.saldoAwal).replace(/[^0-9-]/g, "");
+        berjalan = parseFloat(saldoAwalBersih) || 0;
+    }
+
+    // Urutkan data berdasarkan tanggal asli agar kronologis dari tgl 1, 2, 3...
+    const listTransaksiSemua = data.data.sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
+
     let yL = yStart + 1.0; 
     let yR = yStart + 1.0; 
     let barisCetak = 0;
@@ -130,39 +221,57 @@ async function loadRekapTabungan(){
         let nominalBersih = String(r.nominal || "0").replace(/[^0-9-]/g, "");
         let nilaiNominal = parseFloat(nominalBersih) || 0;
 
-        // Saldo berjalan selalu dihitung secara akumulatif
+        // Saldo berjalan wajib diakumulasikan dari SEMUA transaksi bulan ini tanpa kecuali
         berjalan += nilaiNominal;
 
-        // Jalankan filter tanggal jika user memilih tanggal tertentu
+        // FILTER TANGGAL: Jika user memilih tanggal tertentu, lewati pencetakan yang tidak cocok
         if (tanggalValue) {
             const tglFilterAngka = parseInt(tanggalValue.split("-")[2]) || parseInt(tanggalValue);
             if (tglAngka !== tglFilterAngka) {
-                return; // Lewati baris ini jika tanggal tidak cocok
+                return; // skip cetak baris ini (tapi saldo di atas sudah aman terhitung)
             }
         }
 
-        // Jika lolos filter, naikkan nomor baris cetak
+        // Jika lolos filter tanggal, barulah nomor baris cetak bertambah (Posisi Rapat)
         barisCetak++;
 
         const nominalTxt = "Rp " + nilaiNominal.toLocaleString("id-ID");
         const saldoTxt = "Rp " + berjalan.toLocaleString("id-ID");
         const tglTeks = String(tglAngka);
 
-        // KUNCI PRESISI: Menentukan posisi kolom kiri atau kanan secara mutlak
         if (barisCetak <= 16) { 
-            // KELOMPOK KIRI (Pasti di sebelah kiri dari baris 1 sampai 16)
-            doc.text(tglTeks, 0.7, yL);           // Koordinat X kiri: 0.7
-            rightAlign(nominalTxt, 3.1, yL);     // Koordinat X kiri: 3.1
-            rightAlign(saldoTxt, 5.7, yL);       // Koordinat X kiri: 5.7
-            yL += 0.32;                          // Turun ke baris bawahnya
+            // KELOMPOK KOLOM KIRI (Baris 1 - 16)
+            doc.text(tglTeks, 0.7, yL);
+            rightAlign(nominalTxt, 3.1, yL); 
+            rightAlign(saldoTxt, 5.7, yL); 
+            yL += 0.32; 
         } else if (barisCetak <= 32) { 
-            // KELOMPOK KANAN (Baru pindah ke kanan jika baris sudah lebih dari 16)
-            doc.text(tglTeks, 8.2, yR);           // Koordinat X kanan: 8.2
-            rightAlign(nominalTxt, 10.6, yR);    // Koordinat X kanan: 10.6
-            rightAlign(saldoTxt, 13.2, yR);      // Koordinat X kanan: 13.2
-            yR += 0.32;                          // Turun ke baris bawahnya
+            // KELOMPOK KOLOM KANAN (Baris 17 - 32)
+            doc.text(tglTeks, 7.7, yR);
+            rightAlign(nominalTxt, 10.1, yR); 
+            rightAlign(saldoTxt, 12.7, yR); 
+            yR += 0.32; 
         }
     });
+
+    if (barisCetak === 0) {
+        alert("Tidak ada data transaksi pada tanggal yang dipilih.");
+        return;
+    }
+
+    // ==========================================
+    // 4. FOOTER TANDA TANGAN
+    // ==========================================
+    doc.setFontSize(7);
+    doc.text("Petugas", 2.2, 10.2); 
+    doc.text("Orang Tua", 10.7, 10.2); 
+    doc.line(1.5, 11.0, 4.5, 11.0); 
+    doc.line(9.8, 11.0, 13.0, 11.0); 
+    
+    // Unduh berkas PDF
+    doc.save(`Buku_Tabungan_Filter_${nama}.pdf`);
+}
+
 /* ===================== LOAD KELAS ===================== */
 
 async function loadKelasCabutan() {
