@@ -179,15 +179,15 @@ async function exportTabunganFilter() {
     // 4. Gambar Template Cetakan Bank (Layout dari exportBukuTabungan Anda)
     doc.setFont("helvetica", "bold"); 
     doc.setFontSize(11); 
-    doc.text("YAYASAN AMANNA", 7.5, 0.8, { align: "center" });
+    doc.text(" ", 7.5, 0.8, { align: "center" });
     
     doc.setFontSize(8); 
-    doc.text("BUKU TABUNGAN SISWA (FILTERED)", 7.5, 1.2, { align: "center" });
+    doc.text(" ", 7.5, 1.2, { align: "center" });
     
     doc.setFont("helvetica", "normal"); 
-    doc.text(`Nama  : ${nama}`, 0.6, 1.8); 
-    doc.text(`Kelas : ${kelas}`, 0.6, 2.2); 
-    doc.text(`Filter : ${periodeText}`, 0.6, 2.6);
+    doc.text(` `, 0.6, 1.8); 
+    doc.text(` `, 0.6, 2.2); 
+    doc.text(` `, 0.6, 2.6);
     
     // Gambar Garis Grid Buku Tabungan Bank
     doc.setDrawColor(210); 
