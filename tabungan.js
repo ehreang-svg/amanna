@@ -120,21 +120,22 @@ async function loadRekapTabungan(){
 
 async function exportTabunganFilter() {
     const { jsPDF } = window.jspdf; 
-    
     const doc = new jsPDF({ orientation: "landscape", unit: "cm", format: [10, 15] });
     
     const user = JSON.parse(localStorage.getItem("user")) || {};
     let nama = document.getElementById("filterNamaTabungan").value || "-"; 
     let kelas = document.getElementById("filterKelasTabungan").value || "-";
     const bulanValue = document.getElementById("filterBulanTabungan").value || "";
-    const tanggalValue = document.getElementById("filterTanggalTabungan").value || "";
+    const tanggalValue = document.getElementById("filterTanggalTabungan").value || ""; // Contoh: "2026-06-15" atau "15"
 
     if ((user.status || "").toLowerCase() === "siswa") { 
         nama = user.nama; 
         kelas = user.kelas; 
     }
 
-    const res = await fetch(`${TABUNGAN_API}?action=getRekapTabungan&nama=${encodeURIComponent(nama)}&kelas=${encodeURIComponent(kelas)}&bulan=${encodeURIComponent(bulanValue)}&tanggal=${encodeURIComponent(tanggalValue)}`);
+    // TRIK PENTING: Jangan kirim parameter tanggal ke API agar API mengembalikan seluruh data bulan tersebut
+    // Dengan begitu, kita bisa menghitung saldo berjalan dari tanggal 1 sampai tanggal yang dipilih.
+    const res = await fetch(`${TABUNGAN_API}?action=getRekapTabungan&nama=${encodeURIComponent(nama)}&kelas=${encodeURIComponent(kelas)}&bulan=${encodeURIComponent(bulanValue)}&tanggal=`);
     const data = await res.json(); 
     
     if (!data.status || !data.data || data.data.length === 0) { 
@@ -142,69 +143,66 @@ async function exportTabunganFilter() {
         return; 
     }
 
-    // Ambil saldo awal dari API
+    // 1. Ambil nilai saldo awal bulan dari API
     let berjalan = 0;
     if (data.saldoAwal) {
         let saldoAwalBersih = String(data.saldoAwal).replace(/[^0-9-]/g, "");
         berjalan = parseFloat(saldoAwalBersih) || 0;
     }
 
-    // Pengaturan cetak PDF
+    // 2. Petakan semua transaksi yang ada di bulan itu & hitung Saldo Berjalannya secara berurutan
+    const transaksiPerHari = {};
+    const saldoPerHari = {};
+
+    // Kelompokkan nominal berdasarkan tanggal (1-31)
+    data.data.forEach(r => {
+        const tgl = String(r.tanggal).includes("/") ? parseInt(r.tanggal.split("/")[0]) : new Date(r.tanggal).getDate();
+        let nominalBersih = String(r.nominal || "0").replace(/[^0-9-]/g, "");
+        let nilaiNominal = parseFloat(nominalBersih) || 0;
+        
+        transaksiPerHari[tgl] = (transaksiPerHari[tgl] || 0) + nilaiNominal; 
+    });
+
+    // Jalankan saldo secara estafet dari tanggal 1 sampai 31
+    for (let i = 1; i <= 31; i++) { 
+        if (transaksiPerHari[i] !== undefined) { 
+            berjalan += transaksiPerHari[i]; 
+        }
+        saldoPerHari[i] = berjalan; // Ini mencatat saldo akhir di hari tersebut
+    }
+
+    // 3. Pengaturan Cetak PDF
     doc.setFont("helvetica", "normal");
     doc.setFontSize(7); 
     const yStart = 3.0; 
     const rowHeight = 0.32; 
     const rightAlign = (text, x, y) => { doc.text(text, x, y, { align: "right" }); };
 
-    // KONDISI 1: Jika user memfilter tanggal tertentu (Hanya menampilkan transaksi spesifik rapat dari atas)
+    // 4. Proses Cetak ke PDF berdasarkan Filter User
     if (tanggalValue !== "") {
-        let barisKe = 0;
+        // KONDISI A: User memfilter TANGGAL TERTENTU
+        // Ambil angka tanggalnya saja dari input (misal dari "2026-06-15" diambil angka 15)
+        const targetTanggal = tanggalValue.includes("-") ? parseInt(tanggalValue.split("-")[2]) : parseInt(tanggalValue);
 
-        data.data.forEach(r => {
-            let nominalBersih = String(r.nominal || "0").replace(/[^0-9-]/g, "");
-            let nilaiNominal = parseFloat(nominalBersih) || 0;
-            
-            // Saldo berjalan langsung ditambahkan secara berurutan sesuai data yang masuk
-            berjalan += nilaiNominal; 
+        // Cek apakah di tanggal tersebut ada transaksi
+        if (transaksiPerHari[targetTanggal] !== undefined && transaksiPerHari[targetTanggal] !== 0) {
+            const nominalTxt = "Rp " + transaksiPerHari[targetTanggal].toLocaleString("id-ID");
+            const saldoTxt = "Rp " + saldoPerHari[targetTanggal].toLocaleString("id-ID"); // Menggunakan saldo berjalan yang sudah akurat
 
-            const nominalTxt = "Rp " + nilaiNominal.toLocaleString("id-ID");
-            const saldoTxt = "Rp " + berjalan.toLocaleString("id-ID");
-
-            // Mengisi kolom kiri atau kanan secara berurutan (maksimal 16 baris per kolom)
-            if (barisKe < 16) {
-                let yL = yStart + (barisKe * rowHeight);
-                rightAlign(nominalTxt, 3.1, yL); 
-                rightAlign(saldoTxt, 5.7, yL); 
-            } else if (barisKe < 32) {
-                let yR = yStart + ((barisKe - 16) * rowHeight);
-                rightAlign(nominalTxt, 10.6, yR); 
-                rightAlign(saldoTxt, 13.2, yR); 
-            }
-            barisKe++;
-        });
-
-    } 
-    // KONDISI 2: Jika melihat satu bulan penuh (Logika posisi pas sesuai angka tanggal)
-    else {
-        const transaksi = {};
-        data.data.forEach(r => {
-            const tgl = String(r.tanggal).includes("/") ? parseInt(r.tanggal.split("/")[0]) : new Date(r.tanggal).getDate();
-            let nominalBersih = String(r.nominal || "0").replace(/[^0-9-]/g, "");
-            let nilaiNominal = parseFloat(nominalBersih) || 0;
-            transaksi[tgl] = (transaksi[tgl] || 0) + nilaiNominal; 
-        });
-
-        const saldoPerHari = {}; 
-        for (let i = 1; i <= 31; i++) { 
-            if (transaksi[i] !== undefined) { 
-                berjalan += transaksi[i]; 
-            }
-            saldoPerHari[i] = berjalan; 
+            // Cetak di baris paling atas (baris ke-1) agar PDF rapi
+            rightAlign(nominalTxt, 3.1, yStart); 
+            rightAlign(saldoTxt, 5.7, yStart); 
+        } else {
+            alert(`Tidak ada transaksi pada tanggal ${targetTanggal}`);
+            return;
         }
 
+    } else {
+        // KONDISI B: User TIDAK memfilter tanggal (Melihat Satu Bulan Penuh)
+        // Cetak melompat pas sesuai baris tanggalnya masing-masing
         for (let i = 1; i <= 31; i++) {
-            if (transaksi[i] !== undefined && transaksi[i] !== 0) {
-                const nominal = "Rp " + transaksi[i].toLocaleString("id-ID");
+            if (transaksiPerHari[i] !== undefined && transaksiPerHari[i] !== 0) {
+                const nominal = "Rp " + transaksiPerHari[i].toLocaleString("id-ID");
                 const saldoTxt = "Rp " + saldoPerHari[i].toLocaleString("id-ID");
                 
                 if (i <= 16) { 
