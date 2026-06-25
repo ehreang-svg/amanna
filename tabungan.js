@@ -120,21 +120,23 @@ async function loadRekapTabungan(){
 
 async function exportTabunganFilter() {
     const { jsPDF } = window.jspdf; 
+    
+    // 1. Format dimensi tetap landscape buku bank [10, 15] cm
     const doc = new jsPDF({ orientation: "landscape", unit: "cm", format: [10, 15] });
     
     const user = JSON.parse(localStorage.getItem("user")) || {};
     let nama = document.getElementById("filterNamaTabungan").value || "-"; 
     let kelas = document.getElementById("filterKelasTabungan").value || "-";
     const bulanValue = document.getElementById("filterBulanTabungan").value || "";
-    const tanggalValue = document.getElementById("filterTanggalTabungan").value || ""; // Contoh: "2026-06-15" atau "15"
+    const tanggalValue = document.getElementById("filterTanggalTabungan").value || ""; // Format bisa "2026-06-15" atau "15"
 
     if ((user.status || "").toLowerCase() === "siswa") { 
         nama = user.nama; 
         kelas = user.kelas; 
     }
 
-    // TRIK PENTING: Jangan kirim parameter tanggal ke API agar API mengembalikan seluruh data bulan tersebut
-    // Dengan begitu, kita bisa menghitung saldo berjalan dari tanggal 1 sampai tanggal yang dipilih.
+    // TRIK SALDO: Sengaja mengosongkan parameter tanggal (&tanggal=) saat fetch ke API
+    // Biarkan API menarik seluruh data di bulan tersebut agar JavaScript bisa menghitung saldo berjalan dari tanggal 1
     const res = await fetch(`${TABUNGAN_API}?action=getRekapTabungan&nama=${encodeURIComponent(nama)}&kelas=${encodeURIComponent(kelas)}&bulan=${encodeURIComponent(bulanValue)}&tanggal=`);
     const data = await res.json(); 
     
@@ -143,18 +145,20 @@ async function exportTabunganFilter() {
         return; 
     }
 
-    // 1. Ambil nilai saldo awal bulan dari API
+    // ==========================================
+    // 2. PROSES HITUNG SALDO BERJALAN KUMULATIF
+    // ==========================================
     let berjalan = 0;
     if (data.saldoAwal) {
+        // Pertahankan angka dan tanda minus (-) jika ada penarikan uang, hapus titik pemisah ribuan
         let saldoAwalBersih = String(data.saldoAwal).replace(/[^0-9-]/g, "");
         berjalan = parseFloat(saldoAwalBersih) || 0;
     }
 
-    // 2. Petakan semua transaksi yang ada di bulan itu & hitung Saldo Berjalannya secara berurutan
     const transaksiPerHari = {};
     const saldoPerHari = {};
 
-    // Kelompokkan nominal berdasarkan tanggal (1-31)
+    // Kelompokkan semua transaksi yang ditarik ke dalam index tanggal (1-31)
     data.data.forEach(r => {
         const tgl = String(r.tanggal).includes("/") ? parseInt(r.tanggal.split("/")[0]) : new Date(r.tanggal).getDate();
         let nominalBersih = String(r.nominal || "0").replace(/[^0-9-]/g, "");
@@ -163,54 +167,76 @@ async function exportTabunganFilter() {
         transaksiPerHari[tgl] = (transaksiPerHari[tgl] || 0) + nilaiNominal; 
     });
 
-    // Jalankan saldo secara estafet dari tanggal 1 sampai 31
+    // Jalankan kalkulasi saldo secara estafet (kumulatif) dari tanggal 1 sampai 31
     for (let i = 1; i <= 31; i++) { 
         if (transaksiPerHari[i] !== undefined) { 
             berjalan += transaksiPerHari[i]; 
         }
-        saldoPerHari[i] = berjalan; // Ini mencatat saldo akhir di hari tersebut
+        saldoPerHari[i] = berjalan; // Mencatat saldo akhir harian yang valid
     }
 
-    // 3. Pengaturan Cetak PDF
+
+    // ==========================================
+    // 3. PENGATURAN CETAK & FONT PDF
+    // ==========================================
     doc.setFont("helvetica", "normal");
     doc.setFontSize(7); 
-    const yStart = 3.0; 
-    const rowHeight = 0.32; 
+    
     const rightAlign = (text, x, y) => { doc.text(text, x, y, { align: "right" }); };
 
-    // 4. Proses Cetak ke PDF berdasarkan Filter User
+
+    // ==========================================
+    // 4. PROSES CETAK BERDASARKAN FILTER USER
+    // ==========================================
     if (tanggalValue !== "") {
-        // KONDISI A: User memfilter TANGGAL TERTENTU
-        // Ambil angka tanggalnya saja dari input (misal dari "2026-06-15" diambil angka 15)
+        // -----------------------------------------------------------------
+        // KONDISI A: JIKA USER MEMFILTER TANGGAL TERTENTU
+        // -----------------------------------------------------------------
+        // Ambil angka tanggalnya saja (misal dari "2026-06-15" diambil angka 15)
         const targetTanggal = tanggalValue.includes("-") ? parseInt(tanggalValue.split("-")[2]) : parseInt(tanggalValue);
 
-        // Cek apakah di tanggal tersebut ada transaksi
         if (transaksiPerHari[targetTanggal] !== undefined && transaksiPerHari[targetTanggal] !== 0) {
             const nominalTxt = "Rp " + transaksiPerHari[targetTanggal].toLocaleString("id-ID");
-            const saldoTxt = "Rp " + saldoPerHari[targetTanggal].toLocaleString("id-ID"); // Menggunakan saldo berjalan yang sudah akurat
+            const saldoTxt = "Rp " + saldoPerHari[targetTanggal].toLocaleString("id-ID");
 
-            // Cetak di baris paling atas (baris ke-1) agar PDF rapi
-            rightAlign(nominalTxt, 3.1, yStart); 
-            rightAlign(saldoTxt, 5.7, yStart); 
+            // Jika memfilter tanggal tertentu, dicetak rapat di baris paling atas (Y = 3.0) agar PDF tidak kosong melompong
+            const ySatuTanggal = 3.00; 
+            rightAlign(nominalTxt, 3.1, ySatuTanggal); 
+            rightAlign(saldoTxt, 5.7, ySatuTanggal); 
         } else {
             alert(`Tidak ada transaksi pada tanggal ${targetTanggal}`);
             return;
         }
 
     } else {
-        // KONDISI B: User TIDAK memfilter tanggal (Melihat Satu Bulan Penuh)
-        // Cetak melompat pas sesuai baris tanggalnya masing-masing
+        // -----------------------------------------------------------------
+        // KONDISI B: JIKA MELIHAT SATU BULAN PENUH (POSISI PRESISE SESUAI GARIS BUKU)
+        // -----------------------------------------------------------------
+        
+        // --- SILAKAN SETTING 3 ANGKA DI BAWAH INI JIKA POSISI DENGAN BUKU FISIK BELUM PAS ---
+        const yStartKiri  = 3.00; // Koordinat Y (tinggi) untuk baris pertama di KOLOM KIRI (Tanggal 1)
+        const yStartKanan = 3.00; // Koordinat Y (tinggi) untuk baris pertama di KOLOM KANAN (Tanggal 17)
+        const rowHeight   = 0.35; // Jarak vertikal antar baris (Coba ganti ke 0.33 / 0.34 / 0.36 jika kurang pas)
+        // -----------------------------------------------------------------------------------
+
         for (let i = 1; i <= 31; i++) {
+            // Hanya cetak tanggal yang memiliki histori transaksi
             if (transaksiPerHari[i] !== undefined && transaksiPerHari[i] !== 0) {
                 const nominal = "Rp " + transaksiPerHari[i].toLocaleString("id-ID");
                 const saldoTxt = "Rp " + saldoPerHari[i].toLocaleString("id-ID");
                 
                 if (i <= 16) { 
-                    let yL = yStart + ((i - 1) * rowHeight);
+                    // Kolom Kiri: Rumus (i - 1) membuat posisi baris melompat presisi mengikuti angka tanggalnya
+                    let yL = yStartKiri + ((i - 1) * rowHeight);
+                    
+                    // Koordinat X (Horizontal): 3.1 untuk nominal, 5.7 untuk kolom saldo
                     rightAlign(nominal, 3.1, yL); 
                     rightAlign(saldoTxt, 5.7, yL); 
                 } else { 
-                    let yR = yStart + ((i - 17) * rowHeight);
+                    // Kolom Kanan: Tanggal 17 akan dikurangi 17 sehingga menjadi baris ke-0 di kolom kanan
+                    let yR = yStartKanan + ((i - 17) * rowHeight);
+                    
+                    // Koordinat X (Horizontal): 10.6 untuk nominal, 13.2 untuk kolom saldo
                     rightAlign(nominal, 10.6, yR); 
                     rightAlign(saldoTxt, 13.2, yR); 
                 }
@@ -218,6 +244,7 @@ async function exportTabunganFilter() {
         }
     }
     
+    // 5. Unduh hasil cetakan buku tabungan
     doc.save(`Buku_Tabungan_Filter_${nama}.pdf`);
 }
 
