@@ -539,7 +539,7 @@ async function exportBukuTabungan() {
         else { doc.text(String(i), 8.2, yR); rightAlign(nominal, 10.6, yR); rightAlign(saldoTxt, 13.2, yR); yR += 0.32; }
     }
     const total = Object.values(transaksi).reduce((a, b) => a + b, 0); doc.rect(0.5, 9.0, 14, 0.7); doc.setFont("helvetica", "bold");
-    doc.text("", 0.7, 9.45); doc.setFont("helvetica", "normal"); doc.setFontSize(7);
+    doc.text("" + total.toLocaleString(""), 0.7, 9.45); doc.setFont("helvetica", "normal"); doc.setFontSize(7);
     doc.text("Petugas", 2.2, 10.2); doc.text("Orang Tua", 10.7, 10.2); doc.line(1.5, 11.0, 4.5, 11.0); doc.line(9.8, 11.0, 13.0, 11.0); doc.save(`Buku_Tabungan_${nama}.pdf`);
 }
 
