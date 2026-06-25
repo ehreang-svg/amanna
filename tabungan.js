@@ -144,43 +144,10 @@ async function exportTabunganFilter() {
         return; 
     }
 
-    // 3. Mapping data transaksi murni & pastikan konversi ke angka BENAR
-    const transaksi = {};
-    data.data.forEach(r => {
-        // Ambil tanggal
-        const tgl = String(r.tanggal).includes("/") ? parseInt(r.tanggal.split("/")[0]) : new Date(r.tanggal).getDate();
-        
-        // Bersihkan nominal dari karakter non-angka (seperti titik, koma, atau Rp jika ada dari database)
-        let nominalBersih = String(r.nominal || "0").replace(/[^0-9.-]/g, "");
-        let nilaiNominal = parseFloat(nominalBersih) || 0;
+    // 3. Urutkan data berdasarkan tanggal terkecil ke terbesar agar saldo berjalan benar
+    const listTransaksi = data.data.sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
 
-        // Akumulasikan jika ada lebih dari 1 transaksi di tanggal yang sama
-        transaksi[tgl] = (transaksi[tgl] || 0) + nilaiNominal; 
-    });
-
-    // 4. Perhitungan Saldo Berjalan Kumulatif (INTI MASALAH)
-    const saldoPerHari = {}; 
-    let berjalan = 0;
-
-    // Jika API mengirimkan nilai saldo awal (kumulatif bulan lalu), pakai nilai itu
-    if (data.saldoAwal) {
-        let saldoAwalBersih = String(data.saldoAwal).replace(/[^0-9.-]/g, "");
-        berjalan = parseFloat(saldoAwalBersih) || 0;
-    }
-
-    // Loop 1 sampai 31 untuk mengisi saldo harian secara estafet
-    for (let i = 1; i <= 31; i++) { 
-        if (transaksi[i] !== undefined && transaksi[i] !== 0) { 
-            berjalan += transaksi[i]; // Saldo bertambah/berkurang sesuai transaksi hari ini
-        }
-        saldoPerHari[i] = berjalan; // Hari ini menyimpan total saldo terakhir
-    }
-
-    // [DEBUGGING] Cek di Inspect Element -> Console apakah angka sudah berjalan
-    console.log("Data Transaksi Per Tanggal:", transaksi);
-    console.log("Hasil Saldo Berjalan Per Tanggal:", saldoPerHari);
-
-    // 5. Pengaturan Font untuk Angka
+    // 4. Pengaturan Font untuk Angka
     doc.setFont("helvetica", "normal");
     doc.setFontSize(7); 
     
@@ -189,26 +156,37 @@ async function exportTabunganFilter() {
     let yR = yStart + 1.0; 
     const rightAlign = (text, x, y) => { doc.text(text, x, y, { align: "right" }); };
     
-    // 6. Cetak data nominal & saldo berjalan ke PDF
-    for (let i = 1; i <= 31; i++) {
-        // Hanya cetak baris jika pada tanggal tersebut MEMANG ADA transaksi murni
-        if (transaksi[i]) {
-            const nominal = "Rp " + transaksi[i].toLocaleString("id-ID");
-            const saldoTxt = "Rp " + saldoPerHari[i].toLocaleString("id-ID");
-            
-            if (i <= 16) { 
-                // Kolom Kiri
-                rightAlign(nominal, 3.1, yL); 
-                rightAlign(saldoTxt, 5.7, yL); 
-                yL += 0.32; 
-            } else { 
-                // Kolom Kanan
-                rightAlign(nominal, 10.6, yR); 
-                rightAlign(saldoTxt, 13.2, yR); 
-                yR += 0.32; 
-            }
+    // Variabel saldo berjalan kumulatif
+    let berjalan = data.saldoAwal ? parseFloat(String(data.saldoAwal).replace(/[^0-9.-]/g, "")) : 0;
+
+    // 5. Cetak berdasarkan jumlah BARIS DATA yang ada (bukan loop tanggal 1-31)
+    listTransaksi.forEach((r, index) => {
+        // Bersihkan nominal dari teks/titik/koma, ubah jadi angka murni
+        let nominalBersih = String(r.nominal || "0").replace(/[^0-9.-]/g, "");
+        let nilaiNominal = parseFloat(nominalBersih) || 0;
+
+        // Hitung Saldo Berjalan (ditambahkan terus seiring baris bertambah)
+        berjalan += nilaiNominal; 
+
+        // Format ke Rupiah untuk dicetak
+        const nominalTxt = "Rp " + nilaiNominal.toLocaleString("id-ID");
+        const saldoTxt = "Rp " + berjalan.toLocaleString("id-ID");
+        
+        // Aturan Kolom Kiri dan Kanan Buku Tabungan (Maksimal 16 baris per kolom)
+        let barisKe = index + 1; 
+
+        if (barisKe <= 16) { 
+            // Kolom Kiri
+            rightAlign(nominalTxt, 3.1, yL); 
+            rightAlign(saldoTxt, 5.7, yL); 
+            yL += 0.32; 
+        } else if (barisKe <= 32) { 
+            // Kolom Kanan
+            rightAlign(nominalTxt, 10.6, yR); 
+            rightAlign(saldoTxt, 13.2, yR); 
+            yR += 0.32; 
         }
-    }
+    });
     
     // Unduh PDF
     doc.save(`Buku_Tabungan_Filter_${nama}.pdf`);
@@ -557,7 +535,7 @@ async function exportBukuTabungan() {
         else { doc.text(String(i), 8.2, yR); rightAlign(nominal, 10.6, yR); rightAlign(saldoTxt, 13.2, yR); yR += 0.32; }
     }
     const total = Object.values(transaksi).reduce((a, b) => a + b, 0); doc.rect(0.5, 9.0, 14, 0.7); doc.setFont("helvetica", "bold");
-    doc.text("TOTAL SALDO : Rp " + total.toLocaleString("id-ID"), 0.7, 9.45); doc.setFont("helvetica", "normal"); doc.setFontSize(7);
+    doc.text(""), 0.7, 9.45); doc.setFont("helvetica", "normal"); doc.setFontSize(7);
     doc.text("Petugas", 2.2, 10.2); doc.text("Orang Tua", 10.7, 10.2); doc.line(1.5, 11.0, 4.5, 11.0); doc.line(9.8, 11.0, 13.0, 11.0); doc.save(`Buku_Tabungan_${nama}.pdf`);
 }
 
