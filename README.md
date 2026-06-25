@@ -1,2 +1,2 @@
-# amanna
-aplikasi sekolah
+# YAYASAN AMANNA
+Informasi sekolah digital
