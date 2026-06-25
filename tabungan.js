@@ -116,6 +116,151 @@ async function loadRekapTabungan(){
     }catch(err){ alert(err); }
 }
 
+/* ===================== EXPORT REKAP TABUNGAN SESUAI FILTER (TANGGAL/BULAN) ===================== */
+
+async function exportTabunganFilter() {
+    try {
+        const { jsPDF } = window.jspdf;
+        const user = JSON.parse(localStorage.getItem("user")) || {};
+        
+        // 1. Ambil nilai filter persis seperti fungsi loadRekapTabungan Anda
+        let nama = document.getElementById("filterNamaTabungan").value;
+        let kelas = document.getElementById("filterKelasTabungan").value;
+        const bulan = document.getElementById("filterBulanTabungan").value;
+        const tanggal = document.getElementById("filterTanggalTabungan").value;
+        
+        // Proteksi role siswa sesuai logic Anda
+        if ((user.status || "").toLowerCase() === "siswa") { 
+            nama = user.nama; 
+            kelas = user.kelas; 
+        }
+
+        // 2. Ambil data dari API dengan filter spesifik yang diminta
+        const res = await fetch(`${TABUNGAN_API}?action=getRekapTabungan&nama=${encodeURIComponent(nama)}&kelas=${encodeURIComponent(kelas)}&bulan=${encodeURIComponent(bulan)}&tanggal=${encodeURIComponent(tanggal)}`);
+        const data = await res.json(); 
+        
+        if (!data.status) { 
+            alert(data.message); 
+            return; 
+        }
+        
+        if (!data.data || data.data.length === 0) {
+            alert("Tidak ada data tabungan pada tanggal/periode yang dipilih.");
+            return;
+        }
+
+        // 3. Inisialisasi PDF (A4 Portrait)
+        const doc = new jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
+        });
+
+        const pageW = doc.internal.pageSize.getWidth();
+        let y = 15;
+
+        // ================= HEADER KOP DOKUMEN =================
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text("YAYASAN AMANNA", pageW / 2, y, { align: "center" });
+        
+        y += 5;
+        doc.setFontSize(11);
+        doc.text("LAPORAN REKAPITULASI TABUNGAN SISWA", pageW / 2, y, { align: "center" });
+        
+        y += 7;
+        doc.setLineWidth(0.4);
+        doc.line(10, y, pageW - 10, y); // Garis pembatas header
+        
+        y += 7;
+
+        // ================= INFORMASI FILTER / PERIODE =================
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        
+        doc.text(`Kelas   : ${kelas || "Semua Kelas"}`, 12, y);
+        doc.text(`Siswa   : ${nama || "Semua Siswa"}`, 12, y + 4.5);
+        
+        // Menentukan teks periode berdasarkan filter tanggal/bulan yang diisi
+        let teksPeriode = "Semua Periode";
+        if (tanggal) {
+            teksPeriode = tanggal; // Menampilkan tanggal spesifik (misal: 2026-06-25 atau format sistem Anda)
+        } else if (bulan) {
+            const namaBulan = {"01":"Januari","02":"Februari","03":"Maret","04":"April","05":"Mei","06":"Juni","07":"Juli","08":"Agustus","09":"September","10":"Oktober","11":"November","12":"Desember"};
+            teksPeriode = namaBulan[bulan] || `Bulan ${bulan}`;
+        }
+        doc.text(`Periode : ${teksPeriode}`, 12, y + 9);
+
+        y += 16;
+
+        // ================= HEADER TABEL =================
+        doc.setFont("helvetica", "bold");
+        doc.setFillColor(240, 240, 240); // Background abu-abu terang untuk header tabel
+        doc.rect(10, y - 4, pageW - 20, 6, "F");
+        
+        doc.text("No", 12, y);
+        doc.text("Tanggal", 22, y);
+        doc.text("Nama Siswa", 55, y);
+        doc.text("Kelas", 120, y);
+        doc.text("Nominal", pageW - 12, y, { align: "right" });
+
+        doc.setLineWidth(0.2);
+        doc.line(10, y + 2, pageW - 10, y + 2);
+        
+        y += 6.5;
+        doc.setFont("helvetica", "normal");
+
+        // ================= INDEKS DATA LOOPING =================
+        let total = 0;
+        let no = 1;
+
+        data.data.forEach(r => {
+            // Deteksi otomatis jika data melebihi kapasitas halaman A4 (Auto Paging)
+            if (y > 275) {
+                doc.addPage();
+                y = 20; // Reset koordinat Y ke atas untuk halaman baru
+            }
+
+            total += Number(r.nominal);
+
+            doc.text(String(no++), 12, y);
+            doc.text(String(r.tanggal), 22, y);
+            doc.text(String(r.nama), 55, y);
+            doc.text(String(r.kelas), 120, y);
+            doc.text("Rp " + Number(r.nominal).toLocaleString("id-ID"), pageW - 12, y, { align: "right" });
+            
+            y += 6; // Jarak baris data berikutnya
+        });
+
+        // ================= TOTAL BARIS =================
+        if (y > 270) { doc.addPage(); y = 20; }
+        doc.line(10, y - 4, pageW - 10, y - 4);
+        doc.setFont("helvetica", "bold");
+        doc.text("TOTAL TABUNGAN TERFILTER", 12, y);
+        doc.text("Rp " + total.toLocaleString("id-ID"), pageW - 12, y, { align: "right" });
+
+        // ================= FOOTER / TANDA TANGAN =================
+        y += 15;
+        if (y > 260) { doc.addPage(); y = 20; }
+        
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.text("Dicetak otomatis oleh sistem Yayasan Amanna", 12, y);
+        
+        doc.setFontSize(9);
+        doc.text("Petugas,", pageW - 45, y, { align: "center" });
+        y += 18;
+        doc.line(pageW - 60, y, pageW - 30, y); // Garis tanda tangan
+
+        // ================= SAVE FILE =================
+        const cleanPeriode = teksPeriode.replace(/[\/\s+]/g, "_");
+        doc.save(`Rekap_Tabungan_${cleanPeriode}.pdf`);
+
+    } catch (err) {
+        alert("Gagal mengexport data: " + err);
+    }
+}
+
 /* ===================== CABUTAN ===================== */
 
 
