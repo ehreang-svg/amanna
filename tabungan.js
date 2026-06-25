@@ -119,65 +119,134 @@ async function loadRekapTabungan(){
 /* ===================== EXPORT REKAP TABUNGAN SESUAI FILTER (TANGGAL/BULAN) ===================== */
 
 async function exportTabunganFilter() {
-    const { jsPDF } = window.jspdf; 
-    
-    const doc = new jsPDF({ orientation: "landscape", unit: "cm", format: [10, 15] });
-    
+    const { jsPDF } = window.jspdf;
+
+    const doc = new jsPDF({
+        orientation: "landscape",
+        unit: "cm",
+        format: [10, 15]
+    });
+
     const user = JSON.parse(localStorage.getItem("user")) || {};
-    let nama = document.getElementById("filterNamaTabungan").value || "-"; 
+
+    let nama = document.getElementById("filterNamaTabungan").value || "-";
     let kelas = document.getElementById("filterKelasTabungan").value || "-";
     const bulanValue = document.getElementById("filterBulanTabungan").value || "";
     const tanggalValue = document.getElementById("filterTanggalTabungan").value || "";
 
-    if ((user.status || "").toLowerCase() === "siswa") { 
-        nama = user.nama; 
-        kelas = user.kelas; 
+    if ((user.status || "").toLowerCase() === "siswa") {
+        nama = user.nama;
+        kelas = user.kelas;
     }
 
-    const res = await fetch(`${TABUNGAN_API}?action=getRekapTabungan&nama=${encodeURIComponent(nama)}&kelas=${encodeURIComponent(kelas)}&bulan=${encodeURIComponent(bulanValue)}&tanggal=${encodeURIComponent(tanggalValue)}`);
-    const data = await res.json(); 
-    
-    if (!data.status || !data.data || data.data.length === 0) { 
-        alert("Data tidak ditemukan untuk filter ini"); 
-        return; 
+    // Ambil SEMUA transaksi dalam bulan
+    const res = await fetch(
+        `${TABUNGAN_API}?action=getRekapTabungan&nama=${encodeURIComponent(nama)}&kelas=${encodeURIComponent(kelas)}&bulan=${encodeURIComponent(bulanValue)}&tanggal=`
+    );
+
+    const data = await res.json();
+
+    if (!data.status || !data.data || data.data.length === 0) {
+        alert("Data tidak ditemukan.");
+        return;
     }
+
+    // Urutkan berdasarkan tanggal
+    const list = data.data.sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
+
+    // Saldo awal
+    let saldo = Number(
+        String(data.saldoAwal || 0).replace(/[^0-9-]/g, "")
+    ) || 0;
 
     const transaksi = {};
-    data.data.forEach(r => {
-        const tgl = String(r.tanggal).includes("/") ? parseInt(r.tanggal.split("/")[0]) : new Date(r.tanggal).getDate();
-        transaksi[tgl] = (transaksi[tgl] || 0) + Number(r.nominal || 0); 
+
+    list.forEach(r => {
+
+        const tgl = String(r.tanggal).includes("/")
+            ? parseInt(r.tanggal.split("/")[0])
+            : new Date(r.tanggal).getDate();
+
+        const nominal = Number(
+            String(r.nominal).replace(/[^0-9-]/g, "")
+        ) || 0;
+
+        saldo += nominal;
+
+        if (!transaksi[tgl]) {
+            transaksi[tgl] = {
+                nominal: 0,
+                saldo: saldo
+            };
+        }
+
+        transaksi[tgl].nominal += nominal;
+        transaksi[tgl].saldo = saldo;
     });
 
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(7); 
-    
-    const yStart = 3.0; 
-    let yL = yStart + 1.0; 
-    let yR = yStart + 1.0; 
-    const rightAlign = (text, x, y) => { doc.text(text, x, y, { align: "right" }); };
-    
+    doc.setFontSize(7);
+
+    const yStart = 3.0;
+
+    let yL = yStart + 1.0;
+    let yR = yStart + 1.0;
+
+    const rightAlign = (text, x, y) => {
+        doc.text(text, x, y, { align: "right" });
+    };
+
     for (let i = 1; i <= 31; i++) {
-        const nominal = transaksi[i] ? "Rp " + transaksi[i].toLocaleString("id-ID") : "";
-        // Saldo tidak berjalan = nilainya sama dengan nominal setoran hari itu saja
-        const saldoTxt = nominal; 
-        
-        if (i <= 16) { 
-            if (nominal) {
-                rightAlign(nominal, 3.1, yL); 
-                rightAlign(saldoTxt, 5.7, yL); 
+
+        // Jika memilih tanggal tertentu, lewati tanggal lain
+        if (tanggalValue) {
+            const tglFilter = parseInt(tanggalValue.split("-")[2]);
+            if (i !== tglFilter) {
+
+                if (i <= 16) {
+                    yL += 0.32;
+                } else {
+                    yR += 0.32;
+                }
+
+                continue;
             }
-            yL += 0.32; 
-        } else { 
-            if (nominal) {
-                rightAlign(nominal, 10.6, yR); 
-                rightAlign(saldoTxt, 13.2, yR); 
-            }
-            yR += 0.32; 
+        }
+
+        const nominal = transaksi[i]
+            ? "Rp " + transaksi[i].nominal.toLocaleString("id-ID")
+            : "";
+
+        const saldoTxt = transaksi[i]
+            ? "Rp " + transaksi[i].saldo.toLocaleString("id-ID")
+            : "";
+
+        if (i <= 16) {
+
+            if (nominal)
+                rightAlign(nominal, 3.1, yL);
+
+            if (saldoTxt)
+                rightAlign(saldoTxt, 5.7, yL);
+
+            yL += 0.32;
+
+        } else {
+
+            if (nominal)
+                rightAlign(nominal, 10.6, yR);
+
+            if (saldoTxt)
+                rightAlign(saldoTxt, 13.2, yR);
+
+            yR += 0.32;
         }
     }
-    
+
     doc.save(`Buku_Tabungan_Filter_${nama}.pdf`);
 }
+
+
 /* ===================== LOAD KELAS ===================== */
 
 async function loadKelasCabutan() {
