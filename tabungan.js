@@ -147,36 +147,35 @@ async function exportTabunganFilter() {
     // 3. Mapping data transaksi murni & pastikan konversi ke angka BENAR
     const transaksi = {};
     data.data.forEach(r => {
-        // Ambil tanggal
+        // Ambil tanggal angka (1-31)
         const tgl = String(r.tanggal).includes("/") ? parseInt(r.tanggal.split("/")[0]) : new Date(r.tanggal).getDate();
         
-        // Bersihkan nominal dari karakter non-angka (seperti titik, koma, atau Rp jika ada dari database)
-        let nominalBersih = String(r.nominal || "0").replace(/[^0-9.-]/g, "");
+        // Bersihkan nominal. Jika ada tanda minus untuk penarikan, pertahankan.
+        let nominalBersih = String(r.nominal || "0").replace(/[^0-9-]/g, ""); // Hapus titik/koma ribuan, sisakan minus jika ada
         let nilaiNominal = parseFloat(nominalBersih) || 0;
 
         // Akumulasikan jika ada lebih dari 1 transaksi di tanggal yang sama
         transaksi[tgl] = (transaksi[tgl] || 0) + nilaiNominal; 
     });
 
-    // 4. Perhitungan Saldo Berjalan Kumulatif (INTI MASALAH)
+    // 4. Perhitungan Saldo Berjalan Kumulatif
     const saldoPerHari = {}; 
     let berjalan = 0;
 
-    // Jika API mengirimkan nilai saldo awal (kumulatif bulan lalu), pakai nilai itu
     if (data.saldoAwal) {
-        let saldoAwalBersih = String(data.saldoAwal).replace(/[^0-9.-]/g, "");
+        let saldoAwalBersih = String(data.saldoAwal).replace(/[^0-9-]/g, "");
         berjalan = parseFloat(saldoAwalBersih) || 0;
     }
 
     // Loop 1 sampai 31 untuk mengisi saldo harian secara estafet
     for (let i = 1; i <= 31; i++) { 
-        if (transaksi[i] !== undefined && transaksi[i] !== 0) { 
-            berjalan += transaksi[i]; // Saldo bertambah/berkurang sesuai transaksi hari ini
+        if (transaksi[i] !== undefined) { 
+            berjalan += transaksi[i]; 
         }
-        saldoPerHari[i] = berjalan; // Hari ini menyimpan total saldo terakhir
+        saldoPerHari[i] = berjalan; 
     }
 
-    // [DEBUGGING] Cek di Inspect Element -> Console apakah angka sudah berjalan
+    // [DEBUGGING]
     console.log("Data Transaksi Per Tanggal:", transaksi);
     console.log("Hasil Saldo Berjalan Per Tanggal:", saldoPerHari);
 
@@ -184,28 +183,27 @@ async function exportTabunganFilter() {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(7); 
     
-    const yStart = 3.0; 
-    let yL = yStart + 1.0; 
-    let yR = yStart + 1.0; 
+    const yStart = 3.0; // Batas atas baris pertama
+    const rowHeight = 0.32; // Jarak antar baris buku tabungan
     const rightAlign = (text, x, y) => { doc.text(text, x, y, { align: "right" }); };
     
-    // 6. Cetak data nominal & saldo berjalan ke PDF
+    // 6. Cetak data nominal & saldo berjalan ke PDF berdasarkan TANGGAL NYATA
     for (let i = 1; i <= 31; i++) {
         // Hanya cetak baris jika pada tanggal tersebut MEMANG ADA transaksi murni
-        if (transaksi[i]) {
+        if (transaksi[i] !== undefined && transaksi[i] !== 0) {
             const nominal = "Rp " + transaksi[i].toLocaleString("id-ID");
             const saldoTxt = "Rp " + saldoPerHari[i].toLocaleString("id-ID");
             
             if (i <= 16) { 
-                // Kolom Kiri
+                // Kolom Kiri: Posisi Y dihitung berdasarkan tanggal (i - 1) agar melompat sesuai barisnya
+                let yL = yStart + ((i - 1) * rowHeight);
                 rightAlign(nominal, 3.1, yL); 
                 rightAlign(saldoTxt, 5.7, yL); 
-                yL += 0.32; 
             } else { 
-                // Kolom Kanan
+                // Kolom Kanan: Tanggal 17 adalah baris pertama di kolom kanan (17 - 17 = 0)
+                let yR = yStart + ((i - 17) * rowHeight);
                 rightAlign(nominal, 10.6, yR); 
                 rightAlign(saldoTxt, 13.2, yR); 
-                yR += 0.32; 
             }
         }
     }
