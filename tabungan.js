@@ -126,7 +126,7 @@ async function exportTabunganFilter() {
     let nama = document.getElementById("filterNamaTabungan").value || "-"; 
     let kelas = document.getElementById("filterKelasTabungan").value || "-";
     const bulanValue = document.getElementById("filterBulanTabungan").value || "";
-    const tanggalValue = document.getElementById("filterTanggalTabungan").value || ""; // Format bisa "2026-06-15" atau "15"
+    const tanggalValue = document.getElementById("filterTanggalTabungan").value || ""; 
 
     if ((user.status || "").toLowerCase() === "siswa") { 
         nama = user.nama; 
@@ -136,8 +136,7 @@ async function exportTabunganFilter() {
     const namaBulan = {"01":"Januari","02":"Februari","03":"Maret","04":"April","05":"Mei","06":"Juni","07":"Juli","08":"Agustus","09":"September","10":"Oktober","11":"November","12":"Desember"};
     const bulanText = namaBulan[bulanValue] || "Semua Bulan";
 
-    // TRIK SALDO: Mengosongkan parameter tanggal ke API agar ditarik semua data bulan tersebut 
-    // demi kalkulasi saldo kumulatif berjalan yang benar dari tanggal 1.
+    // Fetch all data for the month to maintain accurate progressive balance calculations
     const res = await fetch(`${TABUNGAN_API}?action=getRekapTabungan&nama=${encodeURIComponent(nama)}&kelas=${encodeURIComponent(kelas)}&bulan=${encodeURIComponent(bulanValue)}&tanggal=`);
     const data = await res.json(); 
     
@@ -146,7 +145,7 @@ async function exportTabunganFilter() {
         return; 
     }
 
-    // 1. Ambil Nilai Saldo Awal Kumulatif dari API
+    // --- BALANCE CALCULATION ENGINE ---
     let berjalan = 0;
     if (data.saldoAwal) {
         let saldoAwalBersih = String(data.saldoAwal).replace(/[^0-9-]/g, "");
@@ -156,7 +155,6 @@ async function exportTabunganFilter() {
     const transaksiPerHari = {};
     const saldoPerHari = {};
 
-    // Kelompokkan nominal berdasarkan tanggal (1-31)
     data.data.forEach(r => {
         const tgl = String(r.tanggal).includes("/") ? parseInt(r.tanggal.split("/")[0]) : new Date(r.tanggal).getDate();
         let nominalBersih = String(r.nominal || "0").replace(/[^0-9-]/g, "");
@@ -165,7 +163,6 @@ async function exportTabunganFilter() {
         transaksiPerHari[tgl] = (transaksiPerHari[tgl] || 0) + nilaiNominal; 
     });
 
-    // Jalankan hitungan saldo secara estafet dari tanggal 1 sampai 31
     for (let i = 1; i <= 31; i++) { 
         if (transaksiPerHari[i] !== undefined) { 
             berjalan += transaksiPerHari[i]; 
@@ -173,9 +170,7 @@ async function exportTabunganFilter() {
         saldoPerHari[i] = berjalan; 
     }
 
-    // ==========================================
-    // DEKORASI & HEADER (SAMA PERSIS DENGAN ASLI)
-    // ==========================================
+    // --- STRUCTURAL LAYOUT (COPIED EXACTLY FROM YOUR WORKING FUNCTION) ---
     doc.setFont("helvetica", "bold"); 
     doc.setFontSize(11); 
     doc.text("YAYASAN AMANNA", 7.5, 0.8, { align: "center" });
@@ -188,7 +183,6 @@ async function exportTabunganFilter() {
     doc.text(`Kelas : ${kelas}`, 0.6, 2.2); 
     doc.text(`Bulan : ${bulanText}`, 0.6, 2.6);
     
-    // Pembuatan Garis & Kotak Tabel (Sama Persis)
     doc.setDrawColor(210); 
     doc.setLineWidth(0.004); 
     const yStart = 3.0; 
@@ -203,7 +197,6 @@ async function exportTabunganFilter() {
     doc.line(10.7, yStart, 10.7, yStart + 6.6); 
     doc.line(13.3, yStart, 13.3, yStart + 6.6);
     
-    // Header Kolom Tabel (Sama Persis)
     doc.setFontSize(7); 
     doc.setFont("helvetica", "bold");
     doc.text("TGL", 0.7, yStart + 0.4); 
@@ -216,45 +209,44 @@ async function exportTabunganFilter() {
     doc.line(0.5, yStart + 0.6, 14.5, yStart + 0.6); 
     doc.setFont("helvetica", "normal");
 
-    // ==========================================
-    // PROSES PENCETAKAN DATA (ADAPTIF FILTER TANGGAL)
-    // ==========================================
+    // --- DATA RENDERING ROW LOOP (THE GRIDS) ---
     let yL = yStart + 1.0; 
     let yR = yStart + 1.0; 
     const rightAlign = (text, x, y) => { doc.text(text, x, y, { align: "right" }); };
     
-    // Tentukan apakah user sedang memfilter tanggal tertentu
+    // Parse target date if selected
     const targetTanggal = tanggalValue !== "" ? (tanggalValue.includes("-") ? parseInt(tanggalValue.split("-")[2]) : parseInt(tanggalValue)) : null;
 
     for (let i = 1; i <= 31; i++) {
-        // Logika Teks Nominal & Saldo Berjalan
-        let nominal = transaksiPerHari[i] ? "Rp " + transaksiPerHari[i].toLocaleString("id-ID") : "";
-        let saldoTxt = transaksiPerHari[i] ? "Rp " + saldoPerHari[i].toLocaleString("id-ID") : "";
-
-        // JIKA USER MEMFILTER TANGGAL: Kosongkan baris tanggal lain, hanya isi tanggal pilihan
-        if (targetTanggal !== null && i !== targetTanggal) {
-            nominal = "";
-            saldoTxt = "";
+        // Condition: determine text content depending on filter criteria
+        let showRowData = false;
+        if (targetTanggal === null) {
+            // No date filter: show if transaction exists (Exactly matching original behavior)
+            if (transaksiPerHari[i]) showRowData = true;
+        } else {
+            // Date filter active: only show row data if matches targeted day
+            if (i === targetTanggal && transaksiPerHari[i]) showRowData = true;
         }
 
-        // Cetak Baris mengikuti looping 1-31 secara presisi sesuai format asli Anda
+        const nominal = showRowData ? "Rp " + transaksiPerHari[i].toLocaleString("id-ID") : "";
+        const saldoTxt = showRowData ? "Rp " + saldoPerHari[i].toLocaleString("id-ID") : "";
+
+        // Render to column system exactly like original code structure
         if (i <= 16) { 
             doc.text(String(i), 0.7, yL); 
-            if (nominal !== "") rightAlign(nominal, 3.1, yL); 
-            if (saldoTxt !== "") rightAlign(saldoTxt, 5.7, yL); 
-            yL += 0.32; 
+            if (nominal) rightAlign(nominal, 3.1, yL); 
+            if (saldoTxt) rightAlign(saldoTxt, 5.7, yL); 
+            yL += 0.32; // Increments precisely on every loop tick up to 16
         } else { 
             doc.text(String(i), 8.2, yR); 
-            if (nominal !== "") rightAlign(nominal, 10.6, yR); 
-            if (saldoTxt !== "") rightAlign(saldoTxt, 13.2, yR); 
-            yR += 0.32; 
+            if (nominal) rightAlign(nominal, 10.6, yR); 
+            if (saldoTxt) rightAlign(saldoTxt, 13.2, yR); 
+            yR += 0.32; // Increments precisely on every loop tick from 17 to 31
         }
     }
 
-    // ==========================================
-    // FOOTER & TOTAL (SAMA PERSIS DENGAN ASLI)
-    // ==========================================
-    // Jika filter tanggal aktif, total bawah menyesuaikan nominal tanggal itu saja, jika tidak total keseluruhan bulan.
+    // --- FOOTER & TOTALS ---
+    // If filtering a single date, total dynamically shows that day's sum; otherwise shows entire month total
     const total = targetTanggal !== null ? (transaksiPerHari[targetTanggal] || 0) : Object.values(transaksiPerHari).reduce((a, b) => a + b, 0); 
     
     doc.rect(0.5, 9.0, 14, 0.7); 
@@ -268,7 +260,6 @@ async function exportTabunganFilter() {
     doc.line(1.5, 11.0, 4.5, 11.0); 
     doc.line(9.8, 11.0, 13.0, 11.0); 
 
-    // Unduh PDF hasil filter
     doc.save(`Buku_Tabungan_Filter_${nama}.pdf`);
 }
 
