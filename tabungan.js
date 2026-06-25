@@ -180,7 +180,7 @@ async function exportTabunganFilter() {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(7); 
     
-    const yStart = 3.0; 
+    const yStart = 3.0; // Baris paling atas
     const rowHeight = 0.32; 
     const rightAlign = (text, x, y) => { doc.text(text, x, y, { align: "right" }); };
 
@@ -188,38 +188,36 @@ async function exportTabunganFilter() {
     const targetTanggal = tanggalValue !== "" ? (tanggalValue.includes("-") ? parseInt(tanggalValue.split("-")[2]) : parseInt(tanggalValue)) : null;
 
     // ==========================================
-    // 4. PROSES PENCETAKAN DATA (KOLOM KANAN - DARI ATAS & BLANK)
+    // 4. PROSES PENCETAKAN DATA (PASTI DI ATAS SEBELAH KANAN)
     // ==========================================
-    for (let i = 1; i <= 31; i++) {
-        let wajibCetak = false;
-
-        if (targetTanggal !== null) {
-            // Jika filter tanggal diisi, HANYA cetak jika tanggal looping cocok dengan target tanggal
-            if (i === targetTanggal && transaksiPerHari[i] !== undefined && transaksiPerHari[i] !== 0) {
-                wajibCetak = true;
-            }
+    if (targetTanggal !== null) {
+        // -----------------------------------------------------------------
+        // KONDISI FILTER TANGGAL AKTIF: LANGSUNG DIKUNCI DI ATAS SEBELAH KANAN
+        // -----------------------------------------------------------------
+        if (transaksiPerHari[targetTanggal] !== undefined && transaksiPerHari[targetTanggal] !== 0) {
+            const nominal = "Rp " + transaksiPerHari[targetTanggal].toLocaleString("id-ID");
+            const saldoTxt = "Rp " + saldoPerHari[targetTanggal].toLocaleString("id-ID");
+            
+            // yStart + 0 membuat baris ini tepat mengunci posisi baris ke-1 di kolom kanan (sejajar tanggal 17 asli)
+            let yR_Fixed = yStart; 
+            
+            // X = 10.6 & 13.2 mengunci posisi horizontal di kolom sebelah kanan
+            rightAlign(nominal, 10.6, yR_Fixed); 
+            rightAlign(saldoTxt, 13.2, yR_Fixed); 
         } else {
-            // Jika filter tanggal kosong, cetak semua tanggal yang memiliki transaksi
-            if (transaksiPerHari[i] !== undefined && transaksiPerHari[i] !== 0) {
-                wajibCetak = true;
-            }
+            alert(`Tidak ada transaksi pada tanggal ${targetTanggal}`);
+            return;
         }
 
-        // Cetak data nominal & saldo berjalan (Total Blank Row)
-        if (wajibCetak) {
-            const nominal = "Rp " + transaksiPerHari[i].toLocaleString("id-ID");
-            const saldoTxt = "Rp " + saldoPerHari[i].toLocaleString("id-ID");
-            
-            if (targetTanggal !== null) {
-                // KONDISI FILTER TANGGAL AKTIF: Dipaksa masuk ke kolom KANAN urut dari atas
-                // Jika tanggal 17 -> (17 - 16) = baris ke-1 dari atas. Jika tanggal 18 -> baris ke-2, dst.
-                let barisKanan = i - 16;
-                let yR = yStart + ((barisKanan - 1) * rowHeight); 
+    } else {
+        // -----------------------------------------------------------------
+        // KONDISI CETAK BULANAN PENUH (Bagi Kolom Kiri & Kanan Otomatis)
+        // -----------------------------------------------------------------
+        for (let i = 1; i <= 31; i++) {
+            if (transaksiPerHari[i] !== undefined && transaksiPerHari[i] !== 0) {
+                const nominal = "Rp " + transaksiPerHari[i].toLocaleString("id-ID");
+                const saldoTxt = "Rp " + saldoPerHari[i].toLocaleString("id-ID");
                 
-                rightAlign(nominal, 10.6, yR); 
-                rightAlign(saldoTxt, 13.2, yR); 
-            } else {
-                // KONDISI CETAK BULANAN PENUH (Bagi Kolom Kiri & Kanan Otomatis)
                 if (i <= 16) { 
                     let yL = yStart + ((i - 1) * rowHeight);
                     rightAlign(nominal, 3.1, yL); 
@@ -236,6 +234,7 @@ async function exportTabunganFilter() {
     // 5. Unduh hasil cetakan buku tabungan filter
     doc.save(`Buku_Tabungan_Filter_${nama}.pdf`);
 }
+
 /* ===================== LOAD KELAS ===================== */
 
 async function loadKelasCabutan() {
