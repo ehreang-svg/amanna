@@ -118,107 +118,51 @@ async function loadRekapTabungan(){
 
 /* ===================== EXPORT REKAP TABUNGAN SESUAI FILTER (TANGGAL/BULAN) ===================== */
 
-async function exportTabunganFilter() {
-    const { jsPDF } = window.jspdf; 
-    
-    // 1. Format dimensi tetap landscape buku bank [10, 15] cm
-    const doc = new jsPDF({ orientation: "landscape", unit: "cm", format: [10, 15] });
-    
-    const user = JSON.parse(localStorage.getItem("user")) || {};
-    let nama = document.getElementById("filterNamaTabungan").value || "-"; 
-    let kelas = document.getElementById("filterKelasTabungan").value || "-";
-    const bulanValue = document.getElementById("filterBulanTabungan").value || "";
-    const tanggalValue = document.getElementById("filterTanggalTabungan").value || "";
-
-    if ((user.status || "").toLowerCase() === "siswa") { 
-        nama = user.nama; 
-        kelas = user.kelas; 
-    }
-
-    // TRIK SALDO: Mengosongkan parameter tanggal ke API agar ditarik semua data bulan tersebut 
-    // demi kalkulasi saldo kumulatif berjalan yang benar dari tanggal 1.
-    const res = await fetch(`${TABUNGAN_API}?action=getRekapTabungan&nama=${encodeURIComponent(nama)}&kelas=${encodeURIComponent(kelas)}&bulan=${encodeURIComponent(bulanValue)}&tanggal=`);
-    const data = await res.json(); 
-
-    if (!data.status || !data.data || data.data.length === 0) { 
-        alert("Data tidak ditemukan untuk filter ini"); 
-        return; 
-    }
-
-    // Urutkan transaksi dari tanggal terlama ke terbaru
-    const listTransaksiSemua = data.data.sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
-
-    // Pengaturan font awal jsPDF
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(7); 
-    
-    const yStart = 3.0; 
+// Pastikan koordinat awal Y kembali ke baris paling atas
     let yL = yStart + 1.0; 
     let yR = yStart + 1.0; 
-    const rightAlign = (text, x, y) => { doc.text(text, x, y, { align: "right" }); };
-
-    // ==========================================
-    // 2. HITUNG SALDO BERJALAN & FILTER CETAK
-    // ==========================================
-    let berjalan = 0;
-    if (data.saldoAwal) {
-        let saldoAwalBersih = String(data.saldoAwal).replace(/[^0-9-]/g, "");
-        berjalan = parseFloat(saldoAwalBersih) || 0;
-    }
-
     let barisCetak = 0;
 
     listTransaksiSemua.forEach((r) => {
-        // Ambil komponen tanggal data ini
         const tglObj = new Date(r.tanggal);
         const tglAngka = String(r.tanggal).includes("/") ? parseInt(r.tanggal.split("/")[0]) : tglObj.getDate();
         
-        // Bersihkan nominal
         let nominalBersih = String(r.nominal || "0").replace(/[^0-9-]/g, "");
         let nilaiNominal = parseFloat(nominalBersih) || 0;
 
-        // Saldo berjalan wajib diakumulasikan dari SEMUA transaksi bulan ini
+        // Saldo berjalan selalu dihitung secara akumulatif
         berjalan += nilaiNominal;
 
-        // JIKA user memfilter tanggal spesifik, dan data ini tidak cocok dengan tanggal tersebut, 
-        // maka LEWATI proses cetak (tapi saldo tetap terhitung di atas)
+        // Jalankan filter tanggal jika user memilih tanggal tertentu
         if (tanggalValue) {
             const tglFilterAngka = parseInt(tanggalValue.split("-")[2]) || parseInt(tanggalValue);
             if (tglAngka !== tglFilterAngka) {
-                return; // skip cetak baris ini
+                return; // Lewati baris ini jika tanggal tidak cocok
             }
         }
 
-        // Jika lolos filter tanggal, naikkan hitungan baris cetak agar posisi RAPAT
+        // Jika lolos filter, naikkan nomor baris cetak
         barisCetak++;
 
         const nominalTxt = "Rp " + nilaiNominal.toLocaleString("id-ID");
         const saldoTxt = "Rp " + berjalan.toLocaleString("id-ID");
         const tglTeks = String(tglAngka);
 
+        // KUNCI PRESISI: Menentukan posisi kolom kiri atau kanan secara mutlak
         if (barisCetak <= 16) { 
-            // Kolom Kiri
-            doc.text(tglTeks, 0.7, yL);
-            rightAlign(nominalTxt, 3.1, yL); 
-            rightAlign(saldoTxt, 5.7, yL); 
-            yL += 0.32; 
+            // KELOMPOK KIRI (Pasti di sebelah kiri dari baris 1 sampai 16)
+            doc.text(tglTeks, 0.7, yL);           // Koordinat X kiri: 0.7
+            rightAlign(nominalTxt, 3.1, yL);     // Koordinat X kiri: 3.1
+            rightAlign(saldoTxt, 5.7, yL);       // Koordinat X kiri: 5.7
+            yL += 0.32;                          // Turun ke baris bawahnya
         } else if (barisCetak <= 32) { 
-            // Kolom Kanan
-            doc.text(tglTeks, 8.2, yR);
-            rightAlign(nominalTxt, 10.6, yR); 
-            rightAlign(saldoTxt, 13.2, yR); 
-            yR += 0.32; 
+            // KELOMPOK KANAN (Baru pindah ke kanan jika baris sudah lebih dari 16)
+            doc.text(tglTeks, 8.2, yR);           // Koordinat X kanan: 8.2
+            rightAlign(nominalTxt, 10.6, yR);    // Koordinat X kanan: 10.6
+            rightAlign(saldoTxt, 13.2, yR);      // Koordinat X kanan: 13.2
+            yR += 0.32;                          // Turun ke baris bawahnya
         }
     });
-
-    if (barisCetak === 0) {
-        alert("Tidak ada transaksi pada tanggal yang dipilih.");
-        return;
-    }
-    
-    // Unduh PDF
-    doc.save(`Buku_Tabungan_Filter_${nama}.pdf`);
-}
 /* ===================== LOAD KELAS ===================== */
 
 async function loadKelasCabutan() {
