@@ -117,6 +117,7 @@ async function loadRekapTabungan(){
 }
 
 /* ===================== EXPORT REKAP TABUNGAN SESUAI FILTER (TANGGAL/BULAN) ===================== */
+
 async function exportTabunganFilter() {
     const { jsPDF } = window.jspdf; 
     
@@ -134,7 +135,7 @@ async function exportTabunganFilter() {
         kelas = user.kelas; 
     }
 
-    // 2. Tarik data dari API sesuai parameter tanggal/bulan yang dipilih
+    // 2. Tarik data dari API
     const res = await fetch(`${TABUNGAN_API}?action=getRekapTabungan&nama=${encodeURIComponent(nama)}&kelas=${encodeURIComponent(kelas)}&bulan=${encodeURIComponent(bulanValue)}&tanggal=${encodeURIComponent(tanggalValue)}`);
     const data = await res.json(); 
     
@@ -143,26 +144,41 @@ async function exportTabunganFilter() {
         return; 
     }
 
-    // 3. Mapping data transaksi murni untuk tanggal/bulan yang direquest
+    // 3. Mapping data transaksi murni & pastikan konversi ke angka BENAR
     const transaksi = {};
     data.data.forEach(r => {
+        // Ambil tanggal
         const tgl = String(r.tanggal).includes("/") ? parseInt(r.tanggal.split("/")[0]) : new Date(r.tanggal).getDate();
-        transaksi[tgl] = (transaksi[tgl] || 0) + Number(r.nominal || 0); 
+        
+        // Bersihkan nominal dari karakter non-angka (seperti titik, koma, atau Rp jika ada dari database)
+        let nominalBersih = String(r.nominal || "0").replace(/[^0-9.-]/g, "");
+        let nilaiNominal = parseFloat(nominalBersih) || 0;
+
+        // Akumulasikan jika ada lebih dari 1 transaksi di tanggal yang sama
+        transaksi[tgl] = (transaksi[tgl] || 0) + nilaiNominal; 
     });
 
-    // 4. Hitung saldo berjalan secara akumulatif (Kumulatif Maju)
+    // 4. Perhitungan Saldo Berjalan Kumulatif (INTI MASALAH)
     const saldoPerHari = {}; 
-    // Jika API Anda menyediakan data saldo awal sebelum periode filter, 
-    // ganti angka 0 di bawah ini menjadi data saldo awal tersebut (misal: data.saldoAwal atau data.saldo_sebelumnya)
-    let berjalan = data.saldoAwal || 0; 
+    let berjalan = 0;
 
-    for (let i = 1; i <= 31; i++) { 
-        if (transaksi[i]) { 
-            berjalan += transaksi[i]; 
-        }
-        // Saldo hari ini menyimpan akumulasi terakhir, mencegah nilai menjadi null jika tidak ada transaksi
-        saldoPerHari[i] = berjalan; 
+    // Jika API mengirimkan nilai saldo awal (kumulatif bulan lalu), pakai nilai itu
+    if (data.saldoAwal) {
+        let saldoAwalBersih = String(data.saldoAwal).replace(/[^0-9.-]/g, "");
+        berjalan = parseFloat(saldoAwalBersih) || 0;
     }
+
+    // Loop 1 sampai 31 untuk mengisi saldo harian secara estafet
+    for (let i = 1; i <= 31; i++) { 
+        if (transaksi[i] !== undefined && transaksi[i] !== 0) { 
+            berjalan += transaksi[i]; // Saldo bertambah/berkurang sesuai transaksi hari ini
+        }
+        saldoPerHari[i] = berjalan; // Hari ini menyimpan total saldo terakhir
+    }
+
+    // [DEBUGGING] Cek di Inspect Element -> Console apakah angka sudah berjalan
+    console.log("Data Transaksi Per Tanggal:", transaksi);
+    console.log("Hasil Saldo Berjalan Per Tanggal:", saldoPerHari);
 
     // 5. Pengaturan Font untuk Angka
     doc.setFont("helvetica", "normal");
@@ -173,26 +189,28 @@ async function exportTabunganFilter() {
     let yR = yStart + 1.0; 
     const rightAlign = (text, x, y) => { doc.text(text, x, y, { align: "right" }); };
     
-    // 6. Cetak data nominal & saldo berjalan (Hanya mencetak baris yang ada transaksinya)
+    // 6. Cetak data nominal & saldo berjalan ke PDF
     for (let i = 1; i <= 31; i++) {
-        // Teks nominal dan saldo hanya dibuat jika ada transaksi di tanggal (i) tersebut
-        const nominal = transaksi[i] ? "Rp " + transaksi[i].toLocaleString("id-ID") : "";
-        const saldoTxt = transaksi[i] ? "Rp " + saldoPerHari[i].toLocaleString("id-ID") : "";
-        
-        if (i <= 16) { 
-            // Kolom Kiri (Tanggal 1 - 16)
-            if (nominal) rightAlign(nominal, 3.1, yL); 
-            if (saldoTxt) rightAlign(saldoTxt, 5.7, yL); 
-            yL += 0.32; 
-        } else { 
-            // Kolom Kanan (Tanggal 17 - 31)
-            if (nominal) rightAlign(nominal, 10.6, yR); 
-            if (saldoTxt) rightAlign(saldoTxt, 13.2, yR); 
-            yR += 0.32; 
+        // Hanya cetak baris jika pada tanggal tersebut MEMANG ADA transaksi murni
+        if (transaksi[i]) {
+            const nominal = "Rp " + transaksi[i].toLocaleString("id-ID");
+            const saldoTxt = "Rp " + saldoPerHari[i].toLocaleString("id-ID");
+            
+            if (i <= 16) { 
+                // Kolom Kiri
+                rightAlign(nominal, 3.1, yL); 
+                rightAlign(saldoTxt, 5.7, yL); 
+                yL += 0.32; 
+            } else { 
+                // Kolom Kanan
+                rightAlign(nominal, 10.6, yR); 
+                rightAlign(saldoTxt, 13.2, yR); 
+                yR += 0.32; 
+            }
         }
     }
     
-    // Unduh PDF hasil filter murni angka
+    // Unduh PDF
     doc.save(`Buku_Tabungan_Filter_${nama}.pdf`);
 }
 
