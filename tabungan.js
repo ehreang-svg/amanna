@@ -199,15 +199,13 @@ async function exportTabunganFilter() {
             const nominalTxt = "Rp " + transaksiPerHari[targetTanggal].toLocaleString("id-ID");
             const saldoTxt = "Rp " + saldoPerHari[targetTanggal].toLocaleString("id-ID");
 
-            // Mengikuti desain fungsi acuan Anda (mencetak rapat dari atas berurutan)
+            // Hanya mencetak nominal dan saldo berjalan (Tanpa mencetak nomor tanggal)
             if (barisKe < 16) {
                 let yL = yStart + (barisKe * rowHeight);
-                doc.text(String(targetTanggal), 0.7, yL); // Opsional: Tulis nomor tanggalnya
                 rightAlign(nominalTxt, 3.1, yL); 
                 rightAlign(saldoTxt, 5.7, yL); 
             } else if (barisKe < 32) {
                 let yR = yStart + ((barisKe - 16) * rowHeight);
-                doc.text(String(targetTanggal), 8.2, yR); // Opsional: Tulis nomor tanggalnya
                 rightAlign(nominalTxt, 10.6, yR); 
                 rightAlign(saldoTxt, 13.2, yR); 
             }
@@ -218,24 +216,22 @@ async function exportTabunganFilter() {
 
     } else {
         // -----------------------------------------------------------------
-        // KONDISI 2: JIKA MELIHAT SATU BULAN PENUH (LOMPAT SESUAI BARIS TANGGAL & BLANK ROW)
+        // KONDISI 2: JIKA MELIHAT SATU BULAN PENUH (LOMPAT SESUAI BARIS TANGGAL & BLANK TOTAL)
         // -----------------------------------------------------------------
         for (let i = 1; i <= 31; i++) {
-            // Hanya mencetak jika tanggal tersebut MEMANG memiliki histori transaksi (Sistem Blank Row)
+            // Hanya mencetak jika tanggal tersebut memiliki histori transaksi
             if (transaksiPerHari[i] !== undefined && transaksiPerHari[i] !== 0) {
                 const nominal = "Rp " + transaksiPerHari[i].toLocaleString("id-ID");
                 const saldoTxt = "Rp " + saldoPerHari[i].toLocaleString("id-ID");
                 
                 if (i <= 16) { 
-                    // Kolom Kiri: Posisi baris presisi dikunci berdasarkan rumus tanggal ((i - 1) * rowHeight)
+                    // Kolom Kiri: Posisi baris presisi berdasarkan rumus tanggal
                     let yL = yStart + ((i - 1) * rowHeight);
-                    doc.text(String(i), 0.7, yL); // Cetak nomor tanggal di awal kolom kiri
                     rightAlign(nominal, 3.1, yL); 
                     rightAlign(saldoTxt, 5.7, yL); 
                 } else { 
-                    // Kolom Kanan: Posisi baris presisi dikunci berdasarkan rumus tanggal ((i - 17) * rowHeight)
+                    // Kolom Kanan: Posisi baris presisi berdasarkan rumus tanggal
                     let yR = yStart + ((i - 17) * rowHeight);
-                    doc.text(String(i), 8.2, yR); // Cetak nomor tanggal di awal kolom kanan
                     rightAlign(nominal, 10.6, yR); 
                     rightAlign(saldoTxt, 13.2, yR); 
                 }
@@ -246,7 +242,6 @@ async function exportTabunganFilter() {
     // 5. Unduh hasil cetakan buku tabungan
     doc.save(`Buku_Tabungan_Filter_${nama}.pdf`);
 }
-
 
 /* ===================== LOAD KELAS ===================== */
 
