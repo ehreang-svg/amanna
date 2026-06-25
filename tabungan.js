@@ -117,9 +117,6 @@ async function loadRekapTabungan(){
 }
 
 /* ===================== EXPORT REKAP TABUNGAN SESUAI FILTER (TANGGAL/BULAN) ===================== */
-
-/* ===================== EXPORT BUKU TABUNGAN SESUAI FILTER (PRINT OUT BANK) ===================== */
-
 async function exportTabunganFilter() {
     const { jsPDF } = window.jspdf; 
     
@@ -153,19 +150,21 @@ async function exportTabunganFilter() {
         transaksi[tgl] = (transaksi[tgl] || 0) + Number(r.nominal || 0); 
     });
 
-    // Hitung saldo berjalan hanya untuk baris yang aktif di tanggal/periode ini saja
+    // 4. Hitung saldo berjalan secara akumulatif (Kumulatif Maju)
     const saldoPerHari = {}; 
-    let berjalan = 0;
+    // Jika API Anda menyediakan data saldo awal sebelum periode filter, 
+    // ganti angka 0 di bawah ini menjadi data saldo awal tersebut (misal: data.saldoAwal atau data.saldo_sebelumnya)
+    let berjalan = data.saldoAwal || 0; 
+
     for (let i = 1; i <= 31; i++) { 
         if (transaksi[i]) { 
             berjalan += transaksi[i]; 
-            saldoPerHari[i] = berjalan; 
-        } else { 
-            saldoPerHari[i] = null; 
-        } 
+        }
+        // Saldo hari ini menyimpan akumulasi terakhir, mencegah nilai menjadi null jika tidak ada transaksi
+        saldoPerHari[i] = berjalan; 
     }
 
-    // 4. Pengaturan Font untuk Angka
+    // 5. Pengaturan Font untuk Angka
     doc.setFont("helvetica", "normal");
     doc.setFontSize(7); 
     
@@ -174,18 +173,19 @@ async function exportTabunganFilter() {
     let yR = yStart + 1.0; 
     const rightAlign = (text, x, y) => { doc.text(text, x, y, { align: "right" }); };
     
-    // 5. Cetak data nominal & saldo berjalan (Semua garis grid dan teks label di-BLANK-kan)
+    // 6. Cetak data nominal & saldo berjalan (Hanya mencetak baris yang ada transaksinya)
     for (let i = 1; i <= 31; i++) {
+        // Teks nominal dan saldo hanya dibuat jika ada transaksi di tanggal (i) tersebut
         const nominal = transaksi[i] ? "Rp " + transaksi[i].toLocaleString("id-ID") : "";
-        const saldoTxt = saldoPerHari[i] !== null ? "Rp " + saldoPerHari[i].toLocaleString("id-ID") : "";
+        const saldoTxt = transaksi[i] ? "Rp " + saldoPerHari[i].toLocaleString("id-ID") : "";
         
         if (i <= 16) { 
-            // Jika ada transaksi, cetak angka nominal dan saldo pada koordinat kolom kiri
+            // Kolom Kiri (Tanggal 1 - 16)
             if (nominal) rightAlign(nominal, 3.1, yL); 
             if (saldoTxt) rightAlign(saldoTxt, 5.7, yL); 
             yL += 0.32; 
         } else { 
-            // Jika ada transaksi, cetak angka nominal dan saldo pada koordinat kolom kanan
+            // Kolom Kanan (Tanggal 17 - 31)
             if (nominal) rightAlign(nominal, 10.6, yR); 
             if (saldoTxt) rightAlign(saldoTxt, 13.2, yR); 
             yR += 0.32; 
