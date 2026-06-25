@@ -1,0 +1,2 @@
+
+    doc.text("TOTAL SALDO : Rp " + total.toLocaleString("id-ID"), 0.7, 9.45); doc.setFont("helvetica", "normal"); doc.setFontSize(7);
