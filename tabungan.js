@@ -120,6 +120,8 @@ async function loadRekapTabungan(){
 
 async function exportTabunganFilter() {
     const { jsPDF } = window.jspdf; 
+    
+    // 1. Format dimensi tetap landscape buku bank [10, 15] cm
     const doc = new jsPDF({ orientation: "landscape", unit: "cm", format: [10, 15] });
     
     const user = JSON.parse(localStorage.getItem("user")) || {};
@@ -133,6 +135,7 @@ async function exportTabunganFilter() {
         kelas = user.kelas; 
     }
 
+    // 2. Tarik data dari API
     const res = await fetch(`${TABUNGAN_API}?action=getRekapTabungan&nama=${encodeURIComponent(nama)}&kelas=${encodeURIComponent(kelas)}&bulan=${encodeURIComponent(bulanValue)}&tanggal=${encodeURIComponent(tanggalValue)}`);
     const data = await res.json(); 
     
@@ -141,14 +144,10 @@ async function exportTabunganFilter() {
         return; 
     }
 
-    // ==========================================
-    // 🔍 KOTAK DETEKSI OTOMATIS (CEK DI CONSOLE)
-    // ==========================================
-    console.log("=== HASIL FILTER DARI API ===");
-    console.log("Raw Data dari API:", data.data);
-    
+    // 3. Urutkan data berdasarkan tanggal terkecil ke terbesar agar saldo berjalan benar
     const listTransaksi = data.data.sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
-    
+
+    // 4. Pengaturan Font untuk Angka
     doc.setFont("helvetica", "normal");
     doc.setFontSize(7); 
     
@@ -157,45 +156,41 @@ async function exportTabunganFilter() {
     let yR = yStart + 1.0; 
     const rightAlign = (text, x, y) => { doc.text(text, x, y, { align: "right" }); };
     
-    let berjalan = 0;
-    if (data.saldoAwal) {
-        berjalan = parseFloat(String(data.saldoAwal).replace(/[^0-9.-]/g, "")) || 0;
-    }
+    // Variabel saldo berjalan kumulatif
+    let berjalan = data.saldoAwal ? parseFloat(String(data.saldoAwal).replace(/[^0-9.-]/g, "")) : 0;
 
-    console.log("Saldo Awal Awalnya:", berjalan);
-
+    // 5. Cetak berdasarkan jumlah BARIS DATA yang ada (bukan loop tanggal 1-31)
     listTransaksi.forEach((r, index) => {
-        // Cek tipe data nominal per baris
-        console.log(`Baris ${index + 1} - r.nominal asli:`, r.nominal, `| Tipe data:`, typeof r.nominal);
-
+        // Bersihkan nominal dari teks/titik/koma, ubah jadi angka murni
         let nominalBersih = String(r.nominal || "0").replace(/[^0-9.-]/g, "");
         let nilaiNominal = parseFloat(nominalBersih) || 0;
 
-        console.log(`Baris ${index + 1} - r.nominal setelah jadi angka murni:`, nilaiNominal);
-
-        // Proses penjumlahan saldo berjalan
+        // Hitung Saldo Berjalan (ditambahkan terus seiring baris bertambah)
         berjalan += nilaiNominal; 
 
-        console.log(`Baris ${index + 1} - Saldo berjalan setelah ditambah:`, berjalan);
-
+        // Format ke Rupiah untuk dicetak
         const nominalTxt = "Rp " + nilaiNominal.toLocaleString("id-ID");
         const saldoTxt = "Rp " + berjalan.toLocaleString("id-ID");
         
+        // Aturan Kolom Kiri dan Kanan Buku Tabungan (Maksimal 16 baris per kolom)
         let barisKe = index + 1; 
+
         if (barisKe <= 16) { 
+            // Kolom Kiri
             rightAlign(nominalTxt, 3.1, yL); 
             rightAlign(saldoTxt, 5.7, yL); 
             yL += 0.32; 
         } else if (barisKe <= 32) { 
+            // Kolom Kanan
             rightAlign(nominalTxt, 10.6, yR); 
             rightAlign(saldoTxt, 13.2, yR); 
             yR += 0.32; 
         }
     });
     
+    // Unduh PDF
     doc.save(`Buku_Tabungan_Filter_${nama}.pdf`);
 }
-
 
 
 /* ===================== LOAD KELAS ===================== */
