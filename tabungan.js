@@ -120,8 +120,6 @@ async function loadRekapTabungan(){
 
 async function exportTabunganFilter() {
     const { jsPDF } = window.jspdf; 
-    
-    // 1. Format dimensi tetap landscape buku bank [10, 15] cm
     const doc = new jsPDF({ orientation: "landscape", unit: "cm", format: [10, 15] });
     
     const user = JSON.parse(localStorage.getItem("user")) || {};
@@ -135,8 +133,11 @@ async function exportTabunganFilter() {
         kelas = user.kelas; 
     }
 
-    // TRIK SALDO: Sengaja mengosongkan parameter tanggal (&tanggal=) saat fetch ke API
-    // Biarkan API menarik seluruh data di bulan tersebut agar JavaScript bisa menghitung saldo berjalan dari tanggal 1
+    const namaBulan = {"01":"Januari","02":"Februari","03":"Maret","04":"April","05":"Mei","06":"Juni","07":"Juli","08":"Agustus","09":"September","10":"Oktober","11":"November","12":"Desember"};
+    const bulanText = namaBulan[bulanValue] || "Semua Bulan";
+
+    // TRIK SALDO: Mengosongkan parameter tanggal ke API agar ditarik semua data bulan tersebut 
+    // demi kalkulasi saldo kumulatif berjalan yang benar dari tanggal 1.
     const res = await fetch(`${TABUNGAN_API}?action=getRekapTabungan&nama=${encodeURIComponent(nama)}&kelas=${encodeURIComponent(kelas)}&bulan=${encodeURIComponent(bulanValue)}&tanggal=`);
     const data = await res.json(); 
     
@@ -145,12 +146,9 @@ async function exportTabunganFilter() {
         return; 
     }
 
-    // ==========================================
-    // 2. PROSES HITUNG SALDO BERJALAN KUMULATIF
-    // ==========================================
+    // 1. Ambil Nilai Saldo Awal Kumulatif dari API
     let berjalan = 0;
     if (data.saldoAwal) {
-        // Pertahankan angka dan tanda minus (-) jika ada penarikan uang, hapus titik pemisah ribuan
         let saldoAwalBersih = String(data.saldoAwal).replace(/[^0-9-]/g, "");
         berjalan = parseFloat(saldoAwalBersih) || 0;
     }
@@ -158,7 +156,7 @@ async function exportTabunganFilter() {
     const transaksiPerHari = {};
     const saldoPerHari = {};
 
-    // Kelompokkan semua transaksi yang ditarik ke dalam index tanggal (1-31)
+    // Kelompokkan nominal berdasarkan tanggal (1-31)
     data.data.forEach(r => {
         const tgl = String(r.tanggal).includes("/") ? parseInt(r.tanggal.split("/")[0]) : new Date(r.tanggal).getDate();
         let nominalBersih = String(r.nominal || "0").replace(/[^0-9-]/g, "");
@@ -167,84 +165,110 @@ async function exportTabunganFilter() {
         transaksiPerHari[tgl] = (transaksiPerHari[tgl] || 0) + nilaiNominal; 
     });
 
-    // Jalankan kalkulasi saldo secara estafet (kumulatif) dari tanggal 1 sampai 31
+    // Jalankan hitungan saldo secara estafet dari tanggal 1 sampai 31
     for (let i = 1; i <= 31; i++) { 
         if (transaksiPerHari[i] !== undefined) { 
             berjalan += transaksiPerHari[i]; 
         }
-        saldoPerHari[i] = berjalan; // Mencatat saldo akhir harian yang valid
+        saldoPerHari[i] = berjalan; 
     }
 
-
     // ==========================================
-    // 3. PENGATURAN CETAK & FONT PDF
+    // DEKORASI & HEADER (SAMA PERSIS DENGAN ASLI)
     // ==========================================
-    doc.setFont("helvetica", "normal");
+    doc.setFont("helvetica", "bold"); 
+    doc.setFontSize(11); 
+    doc.text("YAYASAN AMANNA", 7.5, 0.8, { align: "center" });
+    
+    doc.setFontSize(8); 
+    doc.text("BUKU TABUNGAN SISWA", 7.5, 1.2, { align: "center" });
+    
+    doc.setFont("helvetica", "normal"); 
+    doc.text(`Nama  : ${nama}`, 0.6, 1.8); 
+    doc.text(`Kelas : ${kelas}`, 0.6, 2.2); 
+    doc.text(`Bulan : ${bulanText}`, 0.6, 2.6);
+    
+    // Pembuatan Garis & Kotak Tabel (Sama Persis)
+    doc.setDrawColor(210); 
+    doc.setLineWidth(0.004); 
+    const yStart = 3.0; 
+    doc.rect(0.5, yStart, 14, 6.6); 
+    const mid = 7.5; 
+    
+    doc.line(mid, yStart, mid, yStart + 6.6);
+    doc.line(1.3, yStart, 1.3, yStart + 6.6); 
+    doc.line(3.2, yStart, 3.2, yStart + 6.6); 
+    doc.line(5.8, yStart, 5.8, yStart + 6.6);
+    doc.line(8.8, yStart, 8.8, yStart + 6.6); 
+    doc.line(10.7, yStart, 10.7, yStart + 6.6); 
+    doc.line(13.3, yStart, 13.3, yStart + 6.6);
+    
+    // Header Kolom Tabel (Sama Persis)
     doc.setFontSize(7); 
+    doc.setFont("helvetica", "bold");
+    doc.text("TGL", 0.7, yStart + 0.4); 
+    doc.text("SETOR", 2.0, yStart + 0.4); 
+    doc.text("SALDO", 4.5, yStart + 0.4);
+    doc.text("TGL", 8.2, yStart + 0.4); 
+    doc.text("SETOR", 9.5, yStart + 0.4); 
+    doc.text("SALDO", 12.0, yStart + 0.4);
     
+    doc.line(0.5, yStart + 0.6, 14.5, yStart + 0.6); 
+    doc.setFont("helvetica", "normal");
+
+    // ==========================================
+    // PROSES PENCETAKAN DATA (ADAPTIF FILTER TANGGAL)
+    // ==========================================
+    let yL = yStart + 1.0; 
+    let yR = yStart + 1.0; 
     const rightAlign = (text, x, y) => { doc.text(text, x, y, { align: "right" }); };
+    
+    // Tentukan apakah user sedang memfilter tanggal tertentu
+    const targetTanggal = tanggalValue !== "" ? (tanggalValue.includes("-") ? parseInt(tanggalValue.split("-")[2]) : parseInt(tanggalValue)) : null;
 
+    for (let i = 1; i <= 31; i++) {
+        // Logika Teks Nominal & Saldo Berjalan
+        let nominal = transaksiPerHari[i] ? "Rp " + transaksiPerHari[i].toLocaleString("id-ID") : "";
+        let saldoTxt = transaksiPerHari[i] ? "Rp " + saldoPerHari[i].toLocaleString("id-ID") : "";
 
-    // ==========================================
-    // 4. PROSES CETAK BERDASARKAN FILTER USER
-    // ==========================================
-    if (tanggalValue !== "") {
-        // -----------------------------------------------------------------
-        // KONDISI A: JIKA USER MEMFILTER TANGGAL TERTENTU
-        // -----------------------------------------------------------------
-        // Ambil angka tanggalnya saja (misal dari "2026-06-15" diambil angka 15)
-        const targetTanggal = tanggalValue.includes("-") ? parseInt(tanggalValue.split("-")[2]) : parseInt(tanggalValue);
-
-        if (transaksiPerHari[targetTanggal] !== undefined && transaksiPerHari[targetTanggal] !== 0) {
-            const nominalTxt = "Rp " + transaksiPerHari[targetTanggal].toLocaleString("id-ID");
-            const saldoTxt = "Rp " + saldoPerHari[targetTanggal].toLocaleString("id-ID");
-
-            // Jika memfilter tanggal tertentu, dicetak rapat di baris paling atas (Y = 3.0) agar PDF tidak kosong melompong
-            const ySatuTanggal = 3.00; 
-            rightAlign(nominalTxt, 3.1, ySatuTanggal); 
-            rightAlign(saldoTxt, 5.7, ySatuTanggal); 
-        } else {
-            alert(`Tidak ada transaksi pada tanggal ${targetTanggal}`);
-            return;
+        // JIKA USER MEMFILTER TANGGAL: Kosongkan baris tanggal lain, hanya isi tanggal pilihan
+        if (targetTanggal !== null && i !== targetTanggal) {
+            nominal = "";
+            saldoTxt = "";
         }
 
-    } else {
-        // -----------------------------------------------------------------
-        // KONDISI B: JIKA MELIHAT SATU BULAN PENUH (POSISI PRESISE SESUAI GARIS BUKU)
-        // -----------------------------------------------------------------
-        
-        // --- SILAKAN SETTING 3 ANGKA DI BAWAH INI JIKA POSISI DENGAN BUKU FISIK BELUM PAS ---
-        const yStartKiri  = 3.00; // Koordinat Y (tinggi) untuk baris pertama di KOLOM KIRI (Tanggal 1)
-        const yStartKanan = 3.00; // Koordinat Y (tinggi) untuk baris pertama di KOLOM KANAN (Tanggal 17)
-        const rowHeight   = 0.35; // Jarak vertikal antar baris (Coba ganti ke 0.33 / 0.34 / 0.36 jika kurang pas)
-        // -----------------------------------------------------------------------------------
-
-        for (let i = 1; i <= 31; i++) {
-            // Hanya cetak tanggal yang memiliki histori transaksi
-            if (transaksiPerHari[i] !== undefined && transaksiPerHari[i] !== 0) {
-                const nominal = "Rp " + transaksiPerHari[i].toLocaleString("id-ID");
-                const saldoTxt = "Rp " + saldoPerHari[i].toLocaleString("id-ID");
-                
-                if (i <= 16) { 
-                    // Kolom Kiri: Rumus (i - 1) membuat posisi baris melompat presisi mengikuti angka tanggalnya
-                    let yL = yStartKiri + ((i - 1) * rowHeight);
-                    
-                    // Koordinat X (Horizontal): 3.1 untuk nominal, 5.7 untuk kolom saldo
-                    rightAlign(nominal, 3.1, yL); 
-                    rightAlign(saldoTxt, 5.7, yL); 
-                } else { 
-                    // Kolom Kanan: Tanggal 17 akan dikurangi 17 sehingga menjadi baris ke-0 di kolom kanan
-                    let yR = yStartKanan + ((i - 17) * rowHeight);
-                    
-                    // Koordinat X (Horizontal): 10.6 untuk nominal, 13.2 untuk kolom saldo
-                    rightAlign(nominal, 10.6, yR); 
-                    rightAlign(saldoTxt, 13.2, yR); 
-                }
-            }
+        // Cetak Baris mengikuti looping 1-31 secara presisi sesuai format asli Anda
+        if (i <= 16) { 
+            doc.text(String(i), 0.7, yL); 
+            if (nominal !== "") rightAlign(nominal, 3.1, yL); 
+            if (saldoTxt !== "") rightAlign(saldoTxt, 5.7, yL); 
+            yL += 0.32; 
+        } else { 
+            doc.text(String(i), 8.2, yR); 
+            if (nominal !== "") rightAlign(nominal, 10.6, yR); 
+            if (saldoTxt !== "") rightAlign(saldoTxt, 13.2, yR); 
+            yR += 0.32; 
         }
     }
+
+    // ==========================================
+    // FOOTER & TOTAL (SAMA PERSIS DENGAN ASLI)
+    // ==========================================
+    // Jika filter tanggal aktif, total bawah menyesuaikan nominal tanggal itu saja, jika tidak total keseluruhan bulan.
+    const total = targetTanggal !== null ? (transaksiPerHari[targetTanggal] || 0) : Object.values(transaksiPerHari).reduce((a, b) => a + b, 0); 
     
-    // 5. Unduh hasil cetakan buku tabungan
+    doc.rect(0.5, 9.0, 14, 0.7); 
+    doc.setFont("helvetica", "bold");
+    doc.text("" + total.toLocaleString("id-ID"), 0.7, 9.45); 
+    
+    doc.setFont("helvetica", "normal"); 
+    doc.setFontSize(7);
+    doc.text("Petugas", 2.2, 10.2); 
+    doc.text("Orang Tua", 10.7, 10.2); 
+    doc.line(1.5, 11.0, 4.5, 11.0); 
+    doc.line(9.8, 11.0, 13.0, 11.0); 
+
+    // Unduh PDF hasil filter
     doc.save(`Buku_Tabungan_Filter_${nama}.pdf`);
 }
 
