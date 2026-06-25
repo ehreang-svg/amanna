@@ -164,6 +164,7 @@ if (
     alert(`Tidak ada transaksi pada tanggal ${targetTanggal}`);
     return;
 }
+}
 
 /* ===================== LOAD KELAS ===================== */
 
