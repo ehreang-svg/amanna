@@ -121,7 +121,6 @@ async function loadRekapTabungan(){
 async function exportTabunganFilter() {
     const { jsPDF } = window.jspdf; 
     
-    // 1. Format dimensi tetap landscape buku bank [10, 15] cm
     const doc = new jsPDF({ orientation: "landscape", unit: "cm", format: [10, 15] });
     
     const user = JSON.parse(localStorage.getItem("user")) || {};
@@ -135,7 +134,6 @@ async function exportTabunganFilter() {
         kelas = user.kelas; 
     }
 
-    // 2. Tarik data dari API
     const res = await fetch(`${TABUNGAN_API}?action=getRekapTabungan&nama=${encodeURIComponent(nama)}&kelas=${encodeURIComponent(kelas)}&bulan=${encodeURIComponent(bulanValue)}&tanggal=${encodeURIComponent(tanggalValue)}`);
     const data = await res.json(); 
     
@@ -144,71 +142,84 @@ async function exportTabunganFilter() {
         return; 
     }
 
-    // 3. Mapping data transaksi murni & pastikan konversi ke angka BENAR
-    const transaksi = {};
-    data.data.forEach(r => {
-        // Ambil tanggal angka (1-31)
-        const tgl = String(r.tanggal).includes("/") ? parseInt(r.tanggal.split("/")[0]) : new Date(r.tanggal).getDate();
-        
-        // Bersihkan nominal. Jika ada tanda minus untuk penarikan, pertahankan.
-        let nominalBersih = String(r.nominal || "0").replace(/[^0-9-]/g, ""); // Hapus titik/koma ribuan, sisakan minus jika ada
-        let nilaiNominal = parseFloat(nominalBersih) || 0;
-
-        // Akumulasikan jika ada lebih dari 1 transaksi di tanggal yang sama
-        transaksi[tgl] = (transaksi[tgl] || 0) + nilaiNominal; 
-    });
-
-    // 4. Perhitungan Saldo Berjalan Kumulatif
-    const saldoPerHari = {}; 
+    // Ambil saldo awal dari API
     let berjalan = 0;
-
     if (data.saldoAwal) {
         let saldoAwalBersih = String(data.saldoAwal).replace(/[^0-9-]/g, "");
         berjalan = parseFloat(saldoAwalBersih) || 0;
     }
 
-    // Loop 1 sampai 31 untuk mengisi saldo harian secara estafet
-    for (let i = 1; i <= 31; i++) { 
-        if (transaksi[i] !== undefined) { 
-            berjalan += transaksi[i]; 
-        }
-        saldoPerHari[i] = berjalan; 
-    }
-
-    // [DEBUGGING]
-    console.log("Data Transaksi Per Tanggal:", transaksi);
-    console.log("Hasil Saldo Berjalan Per Tanggal:", saldoPerHari);
-
-    // 5. Pengaturan Font untuk Angka
+    // Pengaturan cetak PDF
     doc.setFont("helvetica", "normal");
     doc.setFontSize(7); 
-    
-    const yStart = 3.0; // Batas atas baris pertama
-    const rowHeight = 0.32; // Jarak antar baris buku tabungan
+    const yStart = 3.0; 
+    const rowHeight = 0.32; 
     const rightAlign = (text, x, y) => { doc.text(text, x, y, { align: "right" }); };
-    
-    // 6. Cetak data nominal & saldo berjalan ke PDF berdasarkan TANGGAL NYATA
-    for (let i = 1; i <= 31; i++) {
-        // Hanya cetak baris jika pada tanggal tersebut MEMANG ADA transaksi murni
-        if (transaksi[i] !== undefined && transaksi[i] !== 0) {
-            const nominal = "Rp " + transaksi[i].toLocaleString("id-ID");
-            const saldoTxt = "Rp " + saldoPerHari[i].toLocaleString("id-ID");
+
+    // KONDISI 1: Jika user memfilter tanggal tertentu (Hanya menampilkan transaksi spesifik rapat dari atas)
+    if (tanggalValue !== "") {
+        let barisKe = 0;
+
+        data.data.forEach(r => {
+            let nominalBersih = String(r.nominal || "0").replace(/[^0-9-]/g, "");
+            let nilaiNominal = parseFloat(nominalBersih) || 0;
             
-            if (i <= 16) { 
-                // Kolom Kiri: Posisi Y dihitung berdasarkan tanggal (i - 1) agar melompat sesuai barisnya
-                let yL = yStart + ((i - 1) * rowHeight);
-                rightAlign(nominal, 3.1, yL); 
+            // Saldo berjalan langsung ditambahkan secara berurutan sesuai data yang masuk
+            berjalan += nilaiNominal; 
+
+            const nominalTxt = "Rp " + nilaiNominal.toLocaleString("id-ID");
+            const saldoTxt = "Rp " + berjalan.toLocaleString("id-ID");
+
+            // Mengisi kolom kiri atau kanan secara berurutan (maksimal 16 baris per kolom)
+            if (barisKe < 16) {
+                let yL = yStart + (barisKe * rowHeight);
+                rightAlign(nominalTxt, 3.1, yL); 
                 rightAlign(saldoTxt, 5.7, yL); 
-            } else { 
-                // Kolom Kanan: Tanggal 17 adalah baris pertama di kolom kanan (17 - 17 = 0)
-                let yR = yStart + ((i - 17) * rowHeight);
-                rightAlign(nominal, 10.6, yR); 
+            } else if (barisKe < 32) {
+                let yR = yStart + ((barisKe - 16) * rowHeight);
+                rightAlign(nominalTxt, 10.6, yR); 
                 rightAlign(saldoTxt, 13.2, yR); 
+            }
+            barisKe++;
+        });
+
+    } 
+    // KONDISI 2: Jika melihat satu bulan penuh (Logika posisi pas sesuai angka tanggal)
+    else {
+        const transaksi = {};
+        data.data.forEach(r => {
+            const tgl = String(r.tanggal).includes("/") ? parseInt(r.tanggal.split("/")[0]) : new Date(r.tanggal).getDate();
+            let nominalBersih = String(r.nominal || "0").replace(/[^0-9-]/g, "");
+            let nilaiNominal = parseFloat(nominalBersih) || 0;
+            transaksi[tgl] = (transaksi[tgl] || 0) + nilaiNominal; 
+        });
+
+        const saldoPerHari = {}; 
+        for (let i = 1; i <= 31; i++) { 
+            if (transaksi[i] !== undefined) { 
+                berjalan += transaksi[i]; 
+            }
+            saldoPerHari[i] = berjalan; 
+        }
+
+        for (let i = 1; i <= 31; i++) {
+            if (transaksi[i] !== undefined && transaksi[i] !== 0) {
+                const nominal = "Rp " + transaksi[i].toLocaleString("id-ID");
+                const saldoTxt = "Rp " + saldoPerHari[i].toLocaleString("id-ID");
+                
+                if (i <= 16) { 
+                    let yL = yStart + ((i - 1) * rowHeight);
+                    rightAlign(nominal, 3.1, yL); 
+                    rightAlign(saldoTxt, 5.7, yL); 
+                } else { 
+                    let yR = yStart + ((i - 17) * rowHeight);
+                    rightAlign(nominal, 10.6, yR); 
+                    rightAlign(saldoTxt, 13.2, yR); 
+                }
             }
         }
     }
     
-    // Unduh PDF
     doc.save(`Buku_Tabungan_Filter_${nama}.pdf`);
 }
 
