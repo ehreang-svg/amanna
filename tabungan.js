@@ -232,27 +232,6 @@ if (
     alert(`Tidak ada transaksi pada tanggal ${targetTanggal}`);
     return;
 }
-    } else {
-        // -----------------------------------------------------------------
-        // KONDISI CETAK BULANAN PENUH (Bagi Kolom Kiri & Kanan Otomatis)
-        // -----------------------------------------------------------------
-        for (let i = 1; i <= 31; i++) {
-            if (transaksiPerHari[i] !== undefined && transaksiPerHari[i] !== 0) {
-                const nominal = "Rp " + transaksiPerHari[i].toLocaleString("id-ID");
-                const saldoTxt = "Rp " + saldoPerHari[i].toLocaleString("id-ID");
-                
-                if (i <= 16) { 
-                    let yL = yStart + ((i - 1) * rowHeight);
-                    rightAlign(nominal, 3.1, yL); 
-                    rightAlign(saldoTxt, 5.7, yL); 
-                } else { 
-                    let yR = yStart + ((i - 17) * rowHeight);
-                    rightAlign(nominal, 10.6, yR); 
-                    rightAlign(saldoTxt, 13.2, yR); 
-                }
-            }
-        }
-    }
     
     // 5. Unduh hasil cetakan buku tabungan filter
     doc.save(`Buku_Tabungan_Filter_${nama}.pdf`);
