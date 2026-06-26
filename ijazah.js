@@ -77,11 +77,12 @@ async function cetakIjazah() {
 
     try {
 
-        const res = await fetch(
-            TABUNGAN_API +
-            "?action=cetakIjazah&nik=" +
-            encodeURIComponent(nik)
-        );
+       const url =
+  TABUNGAN_API +
+  "?action=cetakIjazah" +
+  "&nik=" + encodeURIComponent(nik);
+
+const res = await fetch(url);
 
         const json = await res.json();
 
