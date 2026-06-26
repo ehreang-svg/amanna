@@ -1101,38 +1101,36 @@ placeholder="Masukkan NISN">
 <!-- ================= CETAK IJAZAH ================= -->
 <div id="ijazahPage" class="hidden page">
 
-<div class="card">
+    <div class="card">
 
-<button class="back" onclick="goBack()" style="margin-bottom: 24px;">
-<span style="margin-right: 8px;">←</span> Kembali
-</button>
+        <button class="back" onclick="goBack()" style="margin-bottom:24px;">
+            <span style="margin-right:8px;">←</span> Kembali
+        </button>
 
-<br>
+        <br>
 
-<h2 class="titleMD">CETAK IJAZAH</h2>
+        <h2 class="titleMD">CETAK IJAZAH</h2>
 
-<label>Kelas</label>
+        <label>Kelas</label>
 
-<select id="kelasIjazah" onchange="loadNamaIjazah()">
-<option value="">Pilih Kelas</option>
-</select>
+        <select id="kelasIjazah" onchange="loadNamaIjazah()">
+            <option value="">Pilih Kelas</option>
+        </select>
 
-<br><br>
+        <br><br>
 
-<label>Nama</label>
+        <label>Nama</label>
 
-<select id="namaIjazah">
-<option value="">Pilih Nama</option>
-</select>
+        <select id="namaIjazah">
+            <option value="">Pilih Nama</option>
+        </select>
 
-<br><br>
+        <br><br>
 
-<button onclick="nav('ijazahPage')">
-    🖨Cetak Ijazah
-</button>
+        <button onclick="cetakIjazah()">
+            🖨 Cetak Ijazah
+        </button>
 
+    </div>
 
-</div>
-
-</div>
 </div>
