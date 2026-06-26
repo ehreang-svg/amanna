@@ -1134,3 +1134,36 @@ placeholder="Masukkan NISN">
     </div>
 
 </div>
+
+<div id="ijazahMDPage" class="hidden page">
+
+    <button class="btn-small btn-back" onclick="goBack()">⬅ Kembali</button>
+
+    <h2 class="titleMD">CETAK IJAZAH MD</h2>
+
+    <label>Kelas</label>
+
+    <select id="kelasIjazahMD" onchange="loadNamaIjazahMD()">
+        <option value="">Pilih Kelas</option>
+    </select>
+
+    <br><br>
+
+    <label>Nama Siswa</label>
+
+    <select id="namaIjazahMD">
+        <option value="">Pilih Nama</option>
+    </select>
+
+    <br><br>
+
+    <button
+        id="btnCetakIjazahMD"
+        class="btn-primary"
+        onclick="cetakIjazahMD()">
+
+        🖨 Cetak Ijazah MD
+
+    </button>
+
+</div>
