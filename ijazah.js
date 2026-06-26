@@ -1,39 +1,35 @@
-async function loadKelasIjazah(){
+async function loadKelasIjazah() {
 
-    try{
+    try {
 
-        const res = await fetch(API_URL + "?action=getDataSiswa");
-
+        const res = await fetch(TABUNGAN_API + "?action=getDataSiswa");
         const json = await res.json();
 
-        if(!json.status){
-
-            alert("Data siswa gagal dimuat");
-
+        if (!json.status) {
+            alert(json.message);
             return;
-
         }
 
         dataIjazah = json.data;
 
-        const kelas = [...new Set(
-            dataIjazah.map(x=>x.kelas)
-        )].sort();
+        const kelasUnik = [...new Set(dataIjazah.map(s => s.kelas))]
+            .filter(k => k)
+            .sort();
 
-        const select = document.getElementById("kelasIjazah");
+        const kelas = document.getElementById("kelasIjazah");
 
-        select.innerHTML="<option value=''>Pilih Kelas</option>";
+        kelas.innerHTML = "<option value=''>Pilih Kelas</option>";
 
-        kelas.forEach(k=>{
-
-            select.innerHTML+=`<option>${k}</option>`;
-
+        kelasUnik.forEach(k => {
+            kelas.innerHTML += `<option value="${k}">${k}</option>`;
         });
 
-    }catch(err){
+        document.getElementById("namaIjazah").innerHTML =
+            "<option value=''>Pilih Nama</option>";
 
-        alert(err);
-
+    } catch (err) {
+        console.error(err);
+        alert("Gagal memuat data siswa.");
     }
 
 }
