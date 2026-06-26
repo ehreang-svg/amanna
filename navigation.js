@@ -26,6 +26,7 @@ const pages = [
     "dataSiswaPage",
     "exportIdentitasPage",
    "ijazahPage",
+   "ijazahMDPage",
      "raportMDPage"
 ];
 /* ===========================
@@ -121,7 +122,12 @@ if (
 ) {
     loadKelasIjazah();
 }
-
+if (
+    id === "ijazahMDPage" &&
+    typeof loadKelasIjazahMD === "function"
+) {
+    loadKelasIjazahMD();
+}
 if (
     id === "editIdentitasPage" &&
     typeof loadKelasEditIdentitas === "function"
