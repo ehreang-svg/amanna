@@ -73,7 +73,7 @@ async function cetakIjazah(){
 
     const res=await fetch(
 
-        API_URL+
+        TABUNGAN_API+
 
         "?action=cetakIjazah&nik="+
 
