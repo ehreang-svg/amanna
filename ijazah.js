@@ -59,39 +59,51 @@ function loadNamaIjazah(){
 
 }
 
-async function cetakIjazah(){
+async function cetakIjazah() {
 
-    const nik=document.getElementById("namaIjazah").value;
+    const nik = document.getElementById("namaIjazah").value;
 
-    if(!nik){
-
-        alert("Pilih siswa.");
-
+    if (!nik) {
+        alert("Silakan pilih siswa terlebih dahulu.");
         return;
-
     }
 
-    const res=await fetch(
+    // Loading sederhana
+    const tombol = event.target;
+    const teksAsli = tombol.innerHTML;
 
-        TABUNGAN_API+
+    tombol.disabled = true;
+    tombol.innerHTML = "⏳ Sedang membuat PDF...";
 
-        "?action=cetakIjazah&nik="+
+    try {
 
-        encodeURIComponent(nik)
+        const res = await fetch(
+            TABUNGAN_API +
+            "?action=cetakIjazah&nik=" +
+            encodeURIComponent(nik)
+        );
 
-    );
+        const json = await res.json();
 
-    const json=await res.json();
+        tombol.disabled = false;
+        tombol.innerHTML = teksAsli;
 
-    if(json.status){
+        if (!json.status) {
+            alert(json.message);
+            return;
+        }
 
-        window.open(json.url,"_blank");
+        alert("✅ Ijazah berhasil dibuat.");
 
-    }else{
+        window.open(json.url, "_blank");
 
-        alert(json.message);
+    } catch (err) {
+
+        tombol.disabled = false;
+        tombol.innerHTML = teksAsli;
+
+        alert("Terjadi kesalahan.\n\n" + err);
 
     }
 
 }
-
