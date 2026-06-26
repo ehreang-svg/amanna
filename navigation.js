@@ -115,6 +115,12 @@ if (
 ) {
     openIdentitasPage();
 }
+   if (
+    id === "ijazahPage" &&
+    typeof loadKelasIjazah === "function"
+) {
+    loadKelasIjazah();
+}
 
 if (
     id === "editIdentitasPage" &&
