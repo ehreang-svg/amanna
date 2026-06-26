@@ -14,3 +14,4 @@ let dataSiswaRaport = [];
 let dataSiswaKognitif = [];
 let dataSoal=[];
 let dataIjazah = [];
+let dataIjazahMD = [];
