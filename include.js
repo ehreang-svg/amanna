@@ -1,6 +1,6 @@
 async function loadPages() {
     const app = document.getElementById("app");
-    
+
     // 1. Ambil file HTML eksternal
     const res = await fetch("page.html");
     app.innerHTML = await res.text();
