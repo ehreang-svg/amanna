@@ -68,6 +68,7 @@ async function cetakIjazah() {
         return;
     }
 
+    
     // Loading sederhana
     const tombol = event.target;
     const teksAsli = tombol.innerHTML;
