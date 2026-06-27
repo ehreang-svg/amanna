@@ -1,7 +1,6 @@
 async function loadKelasIjazah() {
 
     try {
-
         const res = await fetch(TABUNGAN_API + "?action=getDataSiswa");
         const json = await res.json();
 
