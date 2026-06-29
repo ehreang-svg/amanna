@@ -66,6 +66,7 @@ async function simpanTabungan() {
         });
 
         const hasil = await res.json();
+        console.log(hasil);
 
         alert(hasil.message);
 
