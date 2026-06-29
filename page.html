@@ -1,405 +1,201 @@
-<!-- ================= SPLASH ================= -->
+<!-- SPLASH -->
 <div class="splash" id="splash">
-
-    <img src="https://iili.io/CKpliI1.png">
-
-    <h1>YAYASAN AMANNA</h1>
-
-    <p>Sistem Informasi Sekolah Modern</p>
-
+<img src="https://iili.io/CKpliI1.png">
+<h1>YAYASAN AMANNA</h1>
+<p>Sistem Informasi Sekolah Modern</p>
 </div>
 
-
-
-<!-- ================= LOGIN ================= -->
+    
+<!-- LOGIN -->
 <div class="auth-box hidden" id="loginPage">
-
-    <h2>LOGIN AKUN</h2>
-
-    <input id="u" placeholder="Username">
-
-    <input id="p"
-           type="password"
-           placeholder="Password">
-
-    <button onclick="login()">
-        Masuk
-    </button>
-
+<h2>LOGIN AKUN</h2>
+<input id="u" placeholder="Username">
+<input id="p" type="password" placeholder="Password">
+<button onclick="login()">Masuk</button>
 </div>
 
 
-
-<!-- ================= DASHBOARD ================= -->
+<!-- DASHBOARD -->
 <div class="page hidden" id="dashboard">
-
-    <div class="topbar">
-
-        <div class="title">
-            Dashboard
-        </div>
-
-        <div class="logout"
-             onclick="logout()">
-
-            Logout
-
-        </div>
-
-    </div>
-
-
-    <!-- PROFILE -->
-
-    <div class="profile"
-         onclick="openEditAkun()">
-
-        <img id="foto">
-
-        <div>
-
-            <h2 id="nama"></h2>
-
-            <h3 id="status"></h3>
-
-            <p id="kelas"></p>
-
-            <div class="login"
-                 onclick="openEditAkun()">
-
-                Edit Akun
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- JADWAL -->
-
-    <div class="jadwal-container">
-
-        <div class="card jadwal-card">
-
-            <h3>Jadwal Saat Ini</h3>
-
-            <div id="jadwalSekarang"></div>
-
-        </div>
-
-
-        <div class="card jadwal-card">
-
-            <h3>Jadwal Hari Ini</h3>
-
-            <select id="pilihKelas"
-                    onchange="loadJadwalHariIni()">
-
-                <option value="">Pilih Kelas</option>
-
-                <option value="RA.A">RA.A</option>
-                <option value="RA.B">RA.B</option>
-
-                <option value="KELAS 1">KELAS 1</option>
-                <option value="KELAS 2">KELAS 2</option>
-                <option value="KELAS 3">KELAS 3</option>
-                <option value="KELAS 4">KELAS 4</option>
-                <option value="KELAS 5A">KELAS 5</option>
-                <option value="KELAS 5B">KELAS 5B</option>
-                <option value="KELAS 6">KELAS 6</option>
-
-            </select>
-
-            <div id="jadwalHariIni"></div>
-
-        </div>
-
-    </div>
-
-
-    <!-- MENU -->
-
-    <div class="grid"
-         id="menuBox">
-
-    </div>
-
+<div class="topbar">
+<div class="title">Dashboard</div>
+<div class="logout" onclick="logout()">Logout</div>
 </div>
 
+<div class="profile" onclick="openEditAkun()">
+<img id="foto">
+<div>
+<h2 id="nama"></h2>
+<h3 id="status"></h3>
+<p id="kelas"></p>
 
+<div class="login" onclick="openEditAkun()">Edit Akun</div>
+</div>
+</div>
 
-<!-- ================= EDIT AKUN ================= -->
-
-<div class="page hidden"
-     id="editAkun">
+    
+<div class="jadwal-container">
+    <div class="card jadwal-card">
+        <h3>Jadwal Saat Ini</h3>
+        <div id="jadwalSekarang"></div>
+    </div>
+    
+    <div class="card jadwal-card">
+    <h3>Jadwal Hari Ini</h3>
+    <select id="pilihKelas" onchange="loadJadwalHariIni()">
+        <option value="">Pilih Kelas</option>
+        <option value="RA.A">RA.A</option>
+        <option value="RA.B">RA.B</option>
+        <option value="KELAS 1">KELAS 1</option>
+        <option value="KELAS 2">KELAS 2</option>
+        <option value="KELAS 3">KELAS 3</option>
+        <option value="KELAS 4">KELAS 4</option>
+        <option value="KELAS 5A">KELAS 5</option>
+        <option value="KELAS 5B">KELAS 5B</option>
+        <option value="KELAS 6">KELAS 6</option>
+    </select>
+    <div id="jadwalHariIni"></div>
+</div>
+</div>
+<br>
+<div class="grid" id="menuBox"></div>
+</div>
+    
+<!--EDIT AKUN-->
+<div class="page hidden" id="editAkun">
 
     <div class="topbar">
-
-        <div class="title">
-
-            Edit Akun
-
-        </div>
-
-        <div class="logout"
-             onclick="nav('dashboard')">
-
-            Kembali
-
-        </div>
-
+        <div class="title">Edit Akun</div>
+        <div class="logout" onclick="nav('dashboard')">Kembali</div>
     </div>
-
 
     <div class="card">
 
-        <div class="photo-preview">
-
+        <center>
             <img id="previewFoto"
-                 src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
+                 src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                 style="width:120px;height:120px;border-radius:50%;object-fit:cover;margin-bottom:10px;">
+        </center>
+        
+        <input type="file" id="fotoFile" accept="image/*">
 
-        </div>
+        <input type="text" id="editNama" placeholder="Nama">
 
-        <input type="file"
-               id="fotoFile"
-               accept="image/*">
+        <input type="text" id="editUsername" placeholder="Username">
 
-        <input type="text"
-               id="editNama"
-               placeholder="Nama">
+        <input type="password" id="editPassword" placeholder="Password Baru">
 
-        <input type="text"
-               id="editUsername"
-               placeholder="Username">
+        <br><br>
 
-        <input type="password"
-               id="editPassword"
-               placeholder="Password Baru">
-
-        <button onclick="simpanAkun()">
-
-            Simpan Perubahan
-
-        </button>
+        <button onclick="simpanAkun()">Simpan Perubahan</button>
 
     </div>
-
+</div>    
+<!-- SUBMENU -->
+<div class="page hidden" id="submenuPage">
+<div class="back" onclick="goBack()">← Kembali</div>
+<h2 id="menuTitle"></h2>
+<br>
+<div class="grid" id="subBox"></div>
 </div>
 
-
-
-<!-- ================= SUBMENU ================= -->
-
-<div class="page hidden"
-     id="submenuPage">
-
-    <div class="back"
-         onclick="goBack()">
-
-        ← Kembali
-
-    </div>
-
-    <h2 id="menuTitle"></h2>
-
-    <div class="grid"
-         id="subBox">
-
-    </div>
-
+<!-- CONTENT -->
+<div class="page hidden" id="contentPage">
+<div class="back" onclick="goBack()">← Kembali</div>
+<div class="card">
+<h2 id="contentTitle"></h2>
+<br>
+<div id="contentBody"></div>
+</div>
 </div>
 
-
-
-<!-- ================= CONTENT ================= -->
-
-<div class="page hidden"
-     id="contentPage">
-
-    <div class="back"
-         onclick="goBack()">
-
-        ← Kembali
-
-    </div>
-
-    <div class="card">
-
-        <h2 id="contentTitle"></h2>
-
-        <div id="contentBody"></div>
-
-    </div>
-
-</div>
-<!-- ================= ABSENSI GURU ================= -->
-
+<!-- ABSEN -->
 <div class="page hidden" id="absenGuruPage">
-
-    <div class="back" onclick="goBack()">
-        ← Kembali
-    </div>
-
-    <div class="card">
-
-        <h2>Absensi Guru</h2>
-
-        <input
-            id="absenNama"
-            readonly>
-
-        <input
-            id="kehadiran"
-            value="HADIR"
-            readonly>
-
-        <input
-            type="file"
-            id="fotoAbsen"
-            accept="image/*"
-            capture="environment">
-
-        <button onclick="submitAbsen()">
-            Absen Sekarang
-        </button>
-
-        <div id="lokasiStatus"></div>
-
-    </div>
-
+<div class="back" onclick="goBack()">← Kembali</div>
+<div class="card">
+<h2>Absensi Guru</h2>
+<br>
+<input id="absenNama" readonly>
+<input id="kehadiran" value="HADIR" readonly>
+<input type="file" id="fotoAbsen" accept="image/*" capture="environment">
+<button onclick="submitAbsen()">Absen Sekarang</button>
+<br><br>
+<div id="lokasiStatus"></div>
+</div>
 </div>
 
-
-
-<!-- ================= ABSENSI SISWA ================= -->
-
+<!-- ABSEN SISWA -->
 <div class="page hidden" id="absenSiswaPage">
+<div class="back" onclick="goBack()">← Kembali</div>
 
-    <div class="back" onclick="goBack()">
-        ← Kembali
-    </div>
+<div class="card">
+<h2>Absensi Siswa</h2>
+<br>
 
-    <div class="card">
+<!-- PILIH KELAS -->
+<select id="kelasFilter" onchange="filterKelas()">
+<option value="">Pilih Kelas</option>
+</select>
 
-        <h2>Absensi Siswa</h2>
+<!-- PILIH SISWA (sesuai kelas) -->
+<select id="namaSiswa" onchange="pilihSiswa()">
+<option value="">Pilih Nama Siswa</option>
+</select>
 
-        <select
-            id="kelasFilter"
-            onchange="filterKelas()">
+<input id="kelasSiswa" readonly placeholder="Kelas">
 
-            <option value="">
-                Pilih Kelas
-            </option>
+<select id="kehadiranSiswa">
+<option value="HADIR">HADIR</option>
+<option value="IZIN">IZIN</option>
+<option value="SAKIT">SAKIT</option>
+</select>
 
-        </select>
-
-        <select
-            id="namaSiswa"
-            onchange="pilihSiswa()">
-
-            <option value="">
-                Pilih Nama Siswa
-            </option>
-
-        </select>
-
-        <input
-            id="kelasSiswa"
-            placeholder="Kelas"
-            readonly>
-
-        <select id="kehadiranSiswa">
-
-            <option value="HADIR">
-                HADIR
-            </option>
-
-            <option value="IZIN">
-                IZIN
-            </option>
-
-            <option value="SAKIT">
-                SAKIT
-            </option>
-
-        </select>
-
-        <button onclick="submitAbsenSiswa()">
-            Simpan Absensi
-        </button>
-
-    </div>
+<button onclick="submitAbsenSiswa()">Simpan Absensi</button>
 
 </div>
+</div>
 
-
-
-<!-- ================= REKAP ABSENSI GURU ================= -->
-
+<!-- REKAP ABSEN -->
 <div class="page hidden" id="rekapPage">
-
-    <div class="back" onclick="goBack()">
-        ← Kembali
-    </div>
-
-    <div class="card">
-
-        <h2>Rekap Absensi Guru</h2>
-
-        <button onclick="exportPDF()">
-            Export Rekap PDF
-        </button>
-
-        <select
-            id="filterBulan"
-            onchange="loadRekap()">
-
-            <option value="">Semua Bulan</option>
-
-            <option>Januari</option>
-            <option>Februari</option>
-            <option>Maret</option>
-            <option>April</option>
-            <option>Mei</option>
-            <option>Juni</option>
-            <option>Juli</option>
-            <option>Agustus</option>
-            <option>September</option>
-            <option>Oktober</option>
-            <option>November</option>
-            <option>Desember</option>
-
-        </select>
-
-        <div id="rekapBox"></div>
-
-    </div>
-
+<div class="back" onclick="goBack()">← Kembali</div>
+<div class="card">
+<h2>Rekap Absensi Guru</h2>
+<br>
+<button onclick="exportPDF()">Export Rekap PDF</button>
+<br>
+<select id="filterBulan" onchange="loadRekap()">
+<option value="">Semua Bulan</option>
+<option>Januari</option>
+<option>Februari</option>
+<option>Maret</option>
+<option>April</option>
+<option>Mei</option>
+<option>Juni</option>
+<option>Juli</option>
+<option>Agustus</option>
+<option>September</option>
+<option>Oktober</option>
+<option>November</option>
+<option>Desember</option>
+</select>
+<div id="rekapBox"></div>
+</div>
 </div>
 
-
-
-<!-- ================= REKAP ABSENSI SISWA ================= -->
-
+<!-- REKAP SISWA -->
 <div class="page hidden" id="rekapSiswaPage">
 
-    <div class="back" onclick="goBack()">
-        ← Kembali
-    </div>
+    <div class="back" onclick="goBack()">← Kembali</div>
 
     <div class="card">
 
         <h2>Rekap Absensi Siswa</h2>
 
-        <select
-            id="filterBulanSiswa"
-            onchange="loadRekapSiswa()">
+        <br>
 
-            <option value="">
-                Semua Bulan
-            </option>
-
+        <!-- FILTER BULAN -->
+        <select id="filterBulanSiswa" onchange="loadRekapSiswa()">
+            <option value="">Semua Bulan</option>
             <option>Januari</option>
             <option>Februari</option>
             <option>Maret</option>
@@ -412,32 +208,29 @@
             <option>Oktober</option>
             <option>November</option>
             <option>Desember</option>
-
         </select>
 
-        <select
-            id="filterKelas"
-            onchange="gantiKelasRekap()">
+        <br><br>
 
-            <option value="">
-                Semua Kelas
-            </option>
-
+        <!-- FILTER KELAS -->
+        <select id="filterKelas" onchange="gantiKelasRekap()">
+            <option value="">Semua Kelas</option>
         </select>
 
-        <select
-            id="filterNamaSiswaRekap"
-            onchange="loadRekapSiswa()">
+        <br><br>
 
-            <option value="">
-                Semua Siswa
-            </option>
-
+        <!-- FILTER SISWA -->
+        <select id="filterNamaSiswaRekap" onchange="loadRekapSiswa()">
+            <option value="">Semua Siswa</option>
         </select>
+
+        <br><br>
 
         <button onclick="exportPDFSiswa()">
             Export Rekap PDF
         </button>
+
+        <br><br>
 
         <div id="rekapSiswaBox"></div>
 
@@ -445,179 +238,76 @@
 
 </div>
 
-
-
-<!-- ================= INPUT TABUNGAN ================= -->
-
+<!-- TABUNGAN -->
 <div class="page hidden" id="tabunganPage">
-
-    <div class="back" onclick="goBack()">
-        ← Kembali
-    </div>
-
-    <div class="card">
-
-        <h2>Input Tabungan</h2>
-
-        <select
-            id="tabKelas"
-            onchange="loadNamaTabungan()">
-
-            <option value="">
-                Pilih Kelas
-            </option>
-
-        </select>
-
-        <select id="tabNama">
-
-            <option value="">
-                Pilih Nama Siswa
-            </option>
-
-        </select>
-
-        <input
-            id="tabNominal"
-            type="number"
-            placeholder="Nominal Tabungan">
-
-        <button onclick="simpanTabungan()">
-            Simpan Tabungan
-        </button>
-
-    </div>
-
+<div class="back" onclick="goBack()">← Kembali</div>
+<div class="card">
+<h2>Input Tabungan</h2>
+<br>
+<select id="tabKelas" onchange="loadNamaTabungan()"><option value="">Pilih Kelas</option></select>
+<select id="tabNama"><option value="">Pilih Nama Siswa</option></select>
+<input id="tabNominal" type="number" placeholder="Nominal Tabungan">
+<button onclick="simpanTabungan()">Simpan Tabungan</button>
 </div>
-
-
-
-<!-- ================= REKAP TABUNGAN ================= -->
+</div>
 
 <div class="page hidden" id="rekapTabunganPage">
-
-    <div class="back" onclick="goBack()">
-        ← Kembali
+  <button class="back" onclick="goBack()">← Kembali ke Dashboard</button>
+  
+  <div class="card">
+    <h2 style="margin-bottom: 24px; font-size: 22px; color: var(--text-main); border-left: 4px solid var(--accent-color); padding-left: 12px;">Rekap Tabungan Siswa</h2>
+    
+    <div class="gridMD" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
+      <div class="form-group">
+        <label for="filterKelasTabungan">Filter Kelas</label>
+        <select id="filterKelasTabungan" onchange="loadFilterNamaTabungan();loadRekapTabungan()">
+          <option value="">Semua Kelas</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="filterNamaTabungan">Nama Siswa</label>
+        <select id="filterNamaTabungan" onchange="loadRekapTabungan()">
+          <option value="">Semua Siswa</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="filterTanggalTabungan">Tanggal Spesifik</label>
+        <input type="text" id="filterTanggalTabungan" placeholder="dd/MM/yyyy">
+      </div>
+      
+      <div class="form-group">
+        <label for="filterBulanTabungan">Bulan</label>
+        <select id="filterBulanTabungan">
+          <option value="">Semua Bulan</option>
+          <option value="01">Januari</option>
+          <option value="02">Februari</option>
+          <option value="03">Maret</option>
+          <option value="04">April</option>
+          <option value="05">Mei</option>
+          <option value="06">Juni</option>
+          <option value="07">Juli</option>
+          <option value="08">Agustus</option>
+          <option value="09">September</option>
+          <option value="10">Oktober</option>
+          <option value="11">November</option>
+          <option value="12">Desember</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="data-toolbar" style="margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 10px;">
+      <button onclick="loadRekapTabungan()" style="width: auto; padding: 12px 24px; background: var(--primary-gradient);">🔍 Tampilkan Data</button>
+      <button onclick="exportBukuTabungan()" class="btn-add" style="width: auto; padding: 12px 20px;">📥 Cetak Buku Tabungan</button>
+      <button onclick="cetakKwitansi()" class="btn-print" style="width: auto; padding: 12px 20px;">🖨️ Cetak Kwitansi</button>
+      <button onclick="exportTabunganFilter()" class="btn-print" style="width: auto; padding: 12px 20px;">🖨️Cetak Tabungan Sesuai Tanggal</button>
     </div>
 
-    <div class="card">
-
-        <h2>Rekap Tabungan Siswa</h2>
-
-        <div class="gridMD">
-
-            <div class="form-group">
-
-                <label>Filter Kelas</label>
-
-                <select
-                    id="filterKelasTabungan"
-                    onchange="loadFilterNamaTabungan();loadRekapTabungan()">
-
-                    <option value="">
-                        Semua Kelas
-                    </option>
-
-                </select>
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Nama Siswa</label>
-
-                <select
-                    id="filterNamaTabungan"
-                    onchange="loadRekapTabungan()">
-
-                    <option value="">
-                        Semua Siswa
-                    </option>
-
-                </select>
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Tanggal</label>
-
-                <input
-                    id="filterTanggalTabungan"
-                    placeholder="dd/MM/yyyy">
-
-            </div>
-
-            <div class="form-group">
-
-                <label>Bulan</label>
-
-                <select id="filterBulanTabungan">
-
-                    <option value="">
-                        Semua Bulan
-                    </option>
-
-                    <option value="01">Januari</option>
-                    <option value="02">Februari</option>
-                    <option value="03">Maret</option>
-                    <option value="04">April</option>
-                    <option value="05">Mei</option>
-                    <option value="06">Juni</option>
-                    <option value="07">Juli</option>
-                    <option value="08">Agustus</option>
-                    <option value="09">September</option>
-                    <option value="10">Oktober</option>
-                    <option value="11">November</option>
-                    <option value="12">Desember</option>
-
-                </select>
-
-            </div>
-
-        </div>
-
-        <div class="data-toolbar">
-
-            <button onclick="loadRekapTabungan()">
-                🔍 Tampilkan Data
-            </button>
-
-            <button
-                class="btn-add"
-                onclick="exportBukuTabungan()">
-
-                📥 Cetak Buku Tabungan
-
-            </button>
-
-            <button
-                class="btn-print"
-                onclick="cetakKwitansi()">
-
-                🖨️ Cetak Kwitansi
-
-            </button>
-
-            <button
-                class="btn-print"
-                onclick="exportTabunganFilter()">
-
-                🖨️ Cetak Tabungan
-
-            </button>
-
-        </div>
-
-        <div
-            id="rekapTabunganBox"
-            class="table-card">
-
-        </div>
-
-    </div>
-
+    <div id="rekapTabunganBox" class="table-card" style="border: none; box-shadow: none;"></div>
+  </div>
 </div>
+
 <div class="page hidden" id="raportPage">
   <button class="back" onclick="goBack()">← Kembali</button>
   
