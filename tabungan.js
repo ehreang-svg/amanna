@@ -2,6 +2,8 @@ async function loadKelasTabungan() {
     try {
         const res = await fetch(TABUNGAN_API + "?action=getDataSiswa");
         const data = await res.json();
+        console.log(data);
+console.log(data.data);
 
         if (!data.status) {
             alert("Gagal memuat data siswa");
@@ -9,6 +11,7 @@ async function loadKelasTabungan() {
         }
 
         dataSiswaTabungan = data.data;
+        console.table(dataSiswaTabungan);
 
         const kelasUnik = [...new Set(data.data.map(x => x.kelas))].sort();
 
@@ -81,19 +84,24 @@ function loadNamaTabungan() {
 
     const kelas = tabKelas.value.trim();
 
-    tabNama.innerHTML = '<option value="">Pilih Nama Siswa</option>';
+    tabNama.innerHTML = `<option value="">Pilih Nama Siswa</option>`;
 
     if (!kelas) return;
 
     const siswa = dataSiswaTabungan
-        .filter(s => String(s.kelas).trim() === kelas)
-        .sort((a, b) => a.nama.localeCompare(b.nama));
+        .filter(s => String(s.kelas || "").trim() === kelas)
+        .sort((a, b) => String(a.nama || "").localeCompare(String(b.nama || "")));
 
     siswa.forEach(s => {
+
+        if (!s.nama) return;
+
         tabNama.innerHTML += `
             <option value="${s.nama}">
                 ${s.nama}
-            </option>`;
+            </option>
+        `;
+
     });
 
 }
