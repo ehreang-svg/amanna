@@ -78,7 +78,6 @@ async function simpanTabungan() {
 }
 
 function loadNamaTabungan() {
-    console.log(data.data);
 
     const kelas = tabKelas.value.trim();
 
@@ -106,7 +105,6 @@ function loadNamaTabungan() {
     });
 
 }
-
 async function loadFilterKelasTabungan(){
     try{
         const res = await fetch(TABUNGAN_API + "?action=getDataSiswa"); const data = await res.json(); if(!data.status) return;
